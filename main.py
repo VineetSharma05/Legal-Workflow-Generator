@@ -7,7 +7,7 @@ import legal_workflow_generator.rag as rag
 
 def main():
     if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} [setup|ingest]")
+        print(f"Usage: {sys.argv[0]} [setup|ingest|embed]")
         exit(1)
 
     if sys.argv[1] == "setup":
@@ -26,6 +26,14 @@ def main():
             dataset = json.load(f)
 
         rag.ingestion.ingest(dataset)
+
+    elif sys.argv[1] == "embed":
+        rag.embeddings.run()
+
+    else:
+        print(f"Unknown command: {sys.argv[1]}")
+        print(f"Usage: {sys.argv[0]} [setup|ingest|embed]")
+        exit(1)
 
 
 if __name__ == "__main__":

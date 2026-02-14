@@ -1,3 +1,4 @@
+import os
 from typing import List
 import psycopg2
 from psycopg2.extras import execute_batch, Json
@@ -13,6 +14,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
     conn = psycopg2.connect(
         dbname=config.DB_NAME,
         user=config.DB_USER,
+        password=os.environ.get("PGPASSWORD"),
         host=config.DB_HOST,
         port=config.DB_PORT,
     )
