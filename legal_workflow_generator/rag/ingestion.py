@@ -9,6 +9,7 @@ import legal_workflow_generator.config.values as config
 
 def ingest(laws: List[T.LawSchema]) -> None:
     if not laws:
+        print("No laws provided for ingestion")
         return
 
     conn = psycopg2.connect(
@@ -68,9 +69,15 @@ def ingest(laws: List[T.LawSchema]) -> None:
     """
 
     prepared_rows = []
+
     for law in laws:
         row = law.copy()
-        row["sub_structure"] = Json(law["sub_structure"])
+
+        row["sub_structure"] = Json(law.get("sub_structure", {}))
+        row["keywords"] = law.get("keywords", [])
+        row["plain_english_summary"] = law.get("plain_english_summary", "")
+        row["penalty_linked"] = law.get("penalty_linked", False)
+
         prepared_rows.append(row)
 
     execute_batch(cur, query, prepared_rows, page_size=100)
@@ -79,4 +86,4 @@ def ingest(laws: List[T.LawSchema]) -> None:
     cur.close()
     conn.close()
 
-    print(f"Ingested {len(laws)} laws")
+    print(f"Ingested {len(laws)} laws successfully")

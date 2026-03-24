@@ -1,0 +1,839 @@
+[
+  {
+    "provision_id": "copyright_act_1957_sec_1",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "1",
+    "title": "Short title, extent and commencement",
+    "text": "(1) This Act may be called the Copyright Act, 1957.",
+    "sub_structure": {
+      "2": "(2) It extends to the whole of India.",
+      "3": "(3) It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint."
+    },
+    "plain_english_summary": "Establishes the official name of the Act and confirms its jurisdiction over the entirety of India.",
+    "keywords": [
+      "commencement",
+      "extent",
+      "preliminary",
+      "Copyright Act"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_2",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "2",
+    "title": "Interpretation",
+    "text": "In this Act, unless the context otherwise requires,-",
+    "sub_structure": {
+      "ff": "\"communication to the public\" means making any work or performance available for being seen or heard or otherwise enjoyed by the public directly or by any means of display or diffusion...",
+      "m": "\"infringing copy\" means- (i) in relation to a literary, dramatic, musical or artistic work, a reproduction thereof otherwise than in the form of a cinematograph film... if such reproduction, copy or sound recording is made or imported in contravention of the provisions of this Act;",
+      "o": "\"literary work\" includes computer programmes, tables and compilations including computer databases;"
+    },
+    "plain_english_summary": "Defines key terms used in the Act. Crucially for tech startups, it classifies 'computer programmes' and 'computer databases' as literary works, thereby granting them copyright protection.",
+    "keywords": [
+      "definitions",
+      "literary work",
+      "computer programmes",
+      "infringing copy",
+      "communication to the public"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_3",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "3",
+    "title": "Meaning of publication",
+    "text": "For the purposes of this Act, \"publication\" means making a work available to the public by issue of copies or by communicating the work to the public.",
+    "sub_structure": {},
+    "plain_english_summary": "Defines publication as issuing physical copies or making a work digitally available/communicated to the public.",
+    "keywords": [
+      "publication",
+      "issue of copies",
+      "communicating to public"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_4",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "4",
+    "title": "When work not deemed to be published or performed in public",
+    "text": "Except in relation to infringement of copyright, a work shall not be deemed to be published or performed in public, if published, or performed in public, without the licence of the owner of the copyright.",
+    "sub_structure": {},
+    "plain_english_summary": "If someone publishes or performs a work without the permission of the copyright owner, it does not legally count as an official 'publication', except when considering it an infringement.",
+    "keywords": [
+      "unauthorized publication",
+      "licence",
+      "infringement"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_5",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "5",
+    "title": "When work deemed to be first published in India",
+    "text": "For the purposes of this Act, a work published in India shall be deemed to be first published in India, notwithstanding that it has been published simultaneously in some other country, unless such other country provides a shorter term of copyright for such work; and a work shall be deemed to be published simultaneously in India and in another country if the time between the publication in India and the publication in such other country does not exceed thirty days...",
+    "sub_structure": {},
+    "plain_english_summary": "If an app or software is released in India and another country within 30 days of each other, it is legally considered to be 'first published' in India for the purposes of local copyright protection.",
+    "keywords": [
+      "first published",
+      "simultaneous publication",
+      "thirty days"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_6",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "6",
+    "title": "Certain disputes to be decided by Appellate Board",
+    "text": "If any question arises- (a) whether a work has been published or as to the date on which a work was published... or (b) whether the term of copyright for any work is shorter in any other country... it shall be referred to the Appellate Board constituted under section 11 whose decision thereon shall be final:",
+    "sub_structure": {
+      "proviso": "Provided that if in the opinion of the Appellate Board, the issue of copies or communication to the public referred to in section 3 was of an insignificant nature, it shall not be deemed to be publication for the purposes of that section."
+    },
+    "plain_english_summary": "If there is a dispute about whether a work was actually published, or when it was published, the Appellate Board makes the final decision.",
+    "keywords": [
+      "disputes",
+      "Appellate Board",
+      "date of publication"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_7",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "7",
+    "title": "Nationality of author where the making of unpublished work is extended over considerable period",
+    "text": "Where, in the case of an unpublished work, the making of the work is extended over a considerable period, the author of the work shall, for the purposes of this Act, be deemed to be a citizen of, or domiciled in, that country of which he was a citizen or wherein he was domiciled during any substantial part of that period.",
+    "sub_structure": {},
+    "plain_english_summary": "If an unpublished work takes a long time to create, the author's nationality is determined by where they were a citizen or lived for the majority of that creation period.",
+    "keywords": [
+      "nationality",
+      "author",
+      "unpublished work",
+      "domicile"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_8",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "8",
+    "title": "Domicile of corporations",
+    "text": "For the purposes of this Act, a body corporate shall be deemed to be domiciled in India if it is incorporated under any law in force in India.",
+    "sub_structure": {},
+    "plain_english_summary": "A company or startup is considered to be 'domiciled' (resident) in India if it is officially incorporated under Indian law.",
+    "keywords": [
+      "domicile",
+      "body corporate",
+      "incorporation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_9",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "COPYRIGHT OFFICE AND APPELLATE BOARD",
+    "number": "9",
+    "title": "Copyright Office",
+    "text": "(1) There shall be established for the purposes of this Act an office to be called the Copyright Office.",
+    "sub_structure": {
+      "2": "(2) The Copyright Office shall be under the immediate control of the Registrar of Copyrights who shall act under the superintendence and direction of the Central Government.",
+      "3": "(3) There shall be a seal for the Copyright Office."
+    },
+    "plain_english_summary": "Establishes a dedicated Copyright Office overseen by the Registrar of Copyrights and directed by the Central Government.",
+    "keywords": [
+      "Copyright Office",
+      "Registrar of Copyrights"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_10",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "COPYRIGHT OFFICE AND APPELLATE BOARD",
+    "number": "10",
+    "title": "Registrar and Deputy Registrars of Copyrights",
+    "text": "(1) The Central Government shall appoint a Registrar of Copyrights and may appoint one or more Deputy Registrars of Copyrights.",
+    "sub_structure": {
+      "2": "(2) A Deputy Registrar of Copyrights shall discharge under the superintendence and direction of the Registrar of Copyrights such functions of the Registrar under this Act as the Registrar may, from time to time, assign to him..."
+    },
+    "plain_english_summary": "The Central Government appoints the Registrar of Copyrights and Deputy Registrars who manage the copyright registration and dispute procedures.",
+    "keywords": [
+      "Registrar of Copyrights",
+      "Deputy Registrar",
+      "appointment"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_11",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "COPYRIGHT OFFICE AND APPELLATE BOARD",
+    "number": "11",
+    "title": "Appellate Board",
+    "text": "(1) The Appellate Board established under section 83 of the Trade Marks Act, 1999 (47 of 1999) shall, on and from the commencement of Part XIV of Chapter VI of the Finance Act, 2017, be the Appellate Board for the purposes of this Act and the said Appellate Board shall exercise the jurisdiction, powers and authority conferred on it by or under this Act.",
+    "sub_structure": {},
+    "plain_english_summary": "The same Appellate Board used for Trademarks acts as the Appellate Board for Copyright issues, handling higher-level disputes.",
+    "keywords": [
+      "Appellate Board",
+      "Trade Marks Act",
+      "jurisdiction"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-05-26"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_12",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "COPYRIGHT OFFICE AND APPELLATE BOARD",
+    "number": "12",
+    "title": "Powers and procedure of Appellate Board",
+    "text": "(1) The Appellate Board shall, subject to any rules that may be made under this Act, have power to regulate its own procedure, including the fixing of places and times of its sittings:",
+    "sub_structure": {
+      "7": "(7) The Appellate Board shall be deemed to be a civil court for the purposes of sections 345 and 346 of the Code of Criminal Procedure, 1973 (2 of 1974) and all proceedings before the Board shall be deemed to be judicial proceedings..."
+    },
+    "plain_english_summary": "Outlines the powers of the Appellate Board, giving it the authority of a civil court and designating its hearings as official judicial proceedings.",
+    "keywords": [
+      "Appellate Board powers",
+      "civil court",
+      "judicial proceedings"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_13",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "COPYRIGHT",
+    "number": "13",
+    "title": "Works in which copyright subsists",
+    "text": "(1) Subject to the provisions of this section and the other provisions of this Act, copyright shall subsist throughout India in the following classes of works, that is to say,- (a) original literary, dramatic, musical and artistic works; (b) cinematograph films; and (c) sound recording.",
+    "sub_structure": {
+      "2": "(2) Copyright shall not subsist in any work specified in sub-section (1)... unless- (i) in the case of a published work, the work is first published in India, or where the work is first published outside India, the author is at the date of such publication... a citizen of India;",
+      "3": "(3) Copyright shall not subsist- (a) in any cinematograph film if a substantial part of the film is an infringement of the copyright in any other work;"
+    },
+    "plain_english_summary": "Identifies exactly what can be copyrighted: original literary/dramatic/artistic works (which includes software), movies, and sound recordings. It excludes works that heavily infringe on other existing copyrighted material.",
+    "keywords": [
+      "subsistence of copyright",
+      "literary works",
+      "original works",
+      "infringement limit"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_14",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "COPYRIGHT",
+    "number": "14",
+    "title": "Meaning of copyright",
+    "text": "For the purposes of this Act, \"copyright\" means the exclusive right subject to the provisions of this Act, to do or authorise the doing of any of the following acts in respect of a work or any substantial part thereof, namely-",
+    "sub_structure": {
+      "a": "(a) in the case of a literary, dramatic or musical work, not being a computer programme,- (i) to reproduce the work in any material form including the storing of it in any medium by electronic means; (ii) to issue copies of the work to the public... (vi) to make any adaptation of the work;",
+      "b": "(b) in the case of a computer programme: (i) to do any of the acts specified in clause (a); (ii) to sell or give on commercial rental or offer for sale or for commercial rental any copy of the computer programmer..."
+    },
+    "plain_english_summary": "Defines exactly what a copyright owner is allowed to do. For software/code (computer programmes), it includes the exclusive right to reproduce it, adapt it, sell it, or rent it commercially.",
+    "keywords": [
+      "exclusive right",
+      "reproduce",
+      "adaptation",
+      "commercial rental",
+      "computer programme"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1995-05-10"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_15",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "COPYRIGHT",
+    "number": "15",
+    "title": "Special provision regarding Copyright in designs registered or Capable of being registered under the Designs Act, 2000",
+    "text": "(1) Copyright shall not subsist under this Act in any design which is registered under the Designs Act, 2000 (16 of 2000).",
+    "sub_structure": {
+      "2": "(2) Copyright in any design, which is capable of being registered under the Designs Act, 2000 (16 of 2000) but which has not been so registered, shall cease as soon as any article to which the design has been applied has been reproduced more than fifty times by an industrial process..."
+    },
+    "plain_english_summary": "If you register a product's physical design under the Designs Act, it loses its protection under the Copyright Act. If you don't register it, its copyright automatically vanishes after the product is manufactured industrially more than 50 times.",
+    "keywords": [
+      "design copyright overlap",
+      "industrial process",
+      "Designs Act",
+      "reproduced fifty times"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2012-06-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_16",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "COPYRIGHT",
+    "number": "16",
+    "title": "No copyright except as provided in this Act",
+    "text": "No person shall be entitled to copyright or any similar right in any work, whether published or unpublished, otherwise than under and in accordance with the provisions of this Act or of any other law for the time being in force, but nothing in this section shall be construed as abrogating any right or jurisdiction to restrain a breach of trust or confidence.",
+    "sub_structure": {},
+    "plain_english_summary": "There are no common law copyrights in India; all copyright claims must stem directly from this Act. However, NDAs and breach of confidence claims (like stealing a startup idea) are still separate, valid legal actions.",
+    "keywords": [
+      "statutory right",
+      "breach of trust",
+      "confidence",
+      "no common law copyright"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_17",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "OWNERSHIP OF COPYRIGHT AND THE RIGHTS OF THE OWNER",
+    "number": "17",
+    "title": "First owner of copyright",
+    "text": "Subject to the provisions of this Act, the author of a work shall be the first owner of the copyright therein:",
+    "sub_structure": {
+      "c": "(c) in the case of a work made in the course of the author's employment under a contract of service or apprenticeship... the employer shall, in the absence of any agreement to the contrary, be the first owner of the copyright therein;"
+    },
+    "plain_english_summary": "Normally, the creator of a work owns the copyright. However, for startups, if an employee writes code or creates content as part of their job (under a contract of service), the company automatically owns the copyright, unless an agreement says otherwise.",
+    "keywords": [
+      "first owner",
+      "author",
+      "employer ownership",
+      "contract of service",
+      "employment"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_18",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "OWNERSHIP OF COPYRIGHT AND THE RIGHTS OF THE OWNER",
+    "number": "18",
+    "title": "Assignment of copyright",
+    "text": "(1) The owner of the copyright in an existing work or the prospective owner of the copyright in a future work may assign to any person the copyright either wholly or partially and either generally or subject to limitations and either for the whole term of the copyright or any part thereof:",
+    "sub_structure": {
+      "proviso_1": "Provided that in the case of the assignment of copyright in any future work, the assignment shall take effect only when the work comes into existence.",
+      "proviso_2": "Provided further that no such assignment shall be applied to any medium or mode of exploitation of the work which did not exit or was not in commercial use at the time when the assignment was made..."
+    },
+    "plain_english_summary": "A copyright owner can transfer or sell (assign) their rights entirely or partially. Crucially, if you assign rights today, that assignment doesn't cover new technologies or mediums that haven't been invented yet, unless explicitly stated.",
+    "keywords": [
+      "assignment",
+      "future work",
+      "mode of exploitation",
+      "transfer of rights"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1958-01-21"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_19",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "OWNERSHIP OF COPYRIGHT AND THE RIGHTS OF THE OWNER",
+    "number": "19",
+    "title": "Mode of assignment",
+    "text": "(1) No assignment of the copyright in any work shall be valid unless it is in writing signed by the assignor or by his duly authorised agent.",
+    "sub_structure": {
+      "2": "(2) The assignment of copyright in any work shall identify such work, and shall specify the rights assigned and the duration and territorial extent of such assignment.",
+      "5": "(5) If the period of assignment is not stated, it shall be deemed to be five years from the date of assignment.",
+      "6": "(6) If the territorial extent of assignment of the rights is not specified, it shall be presumed to extend within India."
+    },
+    "plain_english_summary": "All copyright transfers must be in writing. If a startup acquires copyright but forgets to specify the time limit or geography in the contract, the law automatically defaults the transfer to just 5 years and limits it only to India.",
+    "keywords": [
+      "mode of assignment",
+      "in writing",
+      "default five years",
+      "default territory India"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1995-05-10"
+  },
+  {
+    "provision_id": "copyright_act_1957_sec_19A",
+    "statute_id": "copyright_act_1957",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "OWNERSHIP OF COPYRIGHT AND THE RIGHTS OF THE OWNER",
+    "number": "19A",
+    "title": "Disputes with respect to assignment of copyright",
+    "text": "(1) If an assignee fails to make sufficient exercise of the rights assigned to him, and such failure is not attributable to any act or omission of the assignor, then, the Appellate Board may, on receipt of a complaint from the assignor and after holding such inquiry as it may deem necessary, revoke such assignment.",
+    "sub_structure": {
+      "2": "(2) If any dispute arises with respect to the assignment of any copyright, the Appellate Board may... pass such order as it may deem fit including an order for the recovery of any royalty payable:"
+    },
+    "plain_english_summary": "If someone buys the rights to your work but never uses or publishes it, the Appellate Board can revoke the transfer and give the rights back to the original creator.",
+    "keywords": [
+      "disputes",
+      "revocation of assignment",
+      "Appellate Board",
+      "failure to exercise rights"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1995-05-10"
+  },
+  {
+    "provision_id": "it_act_2000_sec_1",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "1",
+    "title": "Short title, extent, commencement and application",
+    "text": "(1) This Act may be called the Information Technology Act, 2000.",
+    "sub_structure": {
+      "2": "(2) It shall extend to the whole of India and, save as otherwise provided in this Act, it applies also to any offence or contravention thereunder committed outside India by any person."
+    },
+    "plain_english_summary": "This establishes the IT Act, noting that it has extraterritorial reach—meaning it can penalize someone for hacking or cybercrimes committed against Indian systems even if they are physically outside India.",
+    "keywords": [
+      "commencement",
+      "extent",
+      "extraterritorial application",
+      "IT Act"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_2",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "2",
+    "title": "Definitions",
+    "text": "(1) In this Act, unless the context otherwise requires,-",
+    "sub_structure": {
+      "a": "(a) \"access\" with its grammatical variations and cognate expressions means gaining entry into, instructing or communicating with the logical, arithmetical, or memory function resources of a computer, computer system or computer network;",
+      "t": "(t) \"electronic record\" means data, record or data generated, image or sound stored, received or sent in an electronic form or micro film or computer generated micro fiche;",
+      "w": "(w) \"intermediary\", with respect to any particular electronic records, means any person who on behalf of another person receives, stores or transmits that record or provides any service with respect to that record and includes telecom service providers, network service providers, internet service providers, web-hosting service providers..."
+    },
+    "plain_english_summary": "Defines core technical terms. For startups, the most important definition is 'intermediary', which classifies SaaS companies, cloud hosts, and search engines as entities that store or handle data on behalf of others.",
+    "keywords": [
+      "definitions",
+      "intermediary",
+      "electronic record",
+      "access",
+      "computer network"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_3",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "DIGITAL SIGNATURE AND ELECTRONIC SIGNATURE",
+    "number": "3",
+    "title": "Authentication of electronic records",
+    "text": "(1) Subject to the provisions of this section any subscriber may authenticate an electronic record by affixing his digital signature.",
+    "sub_structure": {
+      "2": "(2) The authentication of the electronic record shall be effected by the use of asymmetric crypto system and hash function which envelop and transform the initial electronic record into another electronic record."
+    },
+    "plain_english_summary": "Legalizes the use of digital signatures to authenticate digital documents, specifically validating the use of asymmetric cryptography and hash functions.",
+    "keywords": [
+      "authentication",
+      "digital signature",
+      "asymmetric crypto system",
+      "hash function"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_3A",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "DIGITAL SIGNATURE AND ELECTRONIC SIGNATURE",
+    "number": "3A",
+    "title": "Electronic signature",
+    "text": "(1) Notwithstanding anything contained in section 3, but subject to the provisions of sub-section (2), a subscriber may authenticate any electronic record by such electronic signature or electronic authentication technique which- (a) is considered reliable; and (b) may be specified in the Second Schedule.",
+    "sub_structure": {},
+    "plain_english_summary": "Expands beyond traditional 'digital signatures' to allow alternative forms of 'electronic signatures', provided the technique is reliable and officially recognized by the government.",
+    "keywords": [
+      "electronic signature",
+      "authentication technique",
+      "reliable signature"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2009-10-27"
+  },
+  {
+    "provision_id": "it_act_2000_sec_4",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "4",
+    "title": "Legal recognition of electronic records",
+    "text": "Where any law provides that information or any other matter shall be in writing or in the typewritten or printed form, then, notwithstanding anything contained in such law, such requirement shall be deemed to have been satisfied if such information or matter is- (a) rendered or made available in an electronic form; and (b) accessible so as to be usable for a subsequent reference.",
+    "sub_structure": {},
+    "plain_english_summary": "This is a foundational rule: if any old law requires a document to be in physical 'writing', a digital or electronic document is legally equivalent and acceptable, as long as it can be accessed later.",
+    "keywords": [
+      "legal recognition",
+      "electronic records",
+      "in writing",
+      "digital equivalence"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_5",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "5",
+    "title": "Legal recognition of electronic signatures",
+    "text": "Where any law provides that information or any other matter shall be authenticated by affixing the signature or any document shall be signed or bear the signature of any person, then, notwithstanding anything contained in such law, such requirement shall be deemed to have been satisfied, if such information or matter is authenticated by means of electronic signature affixed in such manner as may be prescribed by the Central Government.",
+    "sub_structure": {},
+    "plain_english_summary": "If any law requires a physical signature, a valid electronic signature carries the exact same legal weight.",
+    "keywords": [
+      "electronic signatures",
+      "legal recognition",
+      "digital signing"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_6",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "6",
+    "title": "Use of electronic records and electronic signatures in Government and its agencies",
+    "text": "(1) Where any law provides for- (a) the filing of any form, application or any other document with any office, authority, body or agency owned or controlled by the appropriate Government in a particular manner; (b) the issue or grant of any licence, permit, sanction or approval by whatever name called in a particular manner; (c) the receipt or payment of money in a particular manner, then, notwithstanding anything contained in any other law for the time being in force, such requirement shall be deemed to have been satisfied if such filing, issue, grant, receipt or payment, as the case may be, is effected by means of such electronic form as may be prescribed by the appropriate Government.",
+    "sub_structure": {},
+    "plain_english_summary": "Allows citizens and companies to file forms, get licenses, and make payments to the government electronically, rather than using paper systems.",
+    "keywords": [
+      "e-governance",
+      "government filings",
+      "electronic payments",
+      "electronic licenses"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_6A",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "6A",
+    "title": "Delivery of services by service provider",
+    "text": "(1) The appropriate Government may, for the purposes of this Chapter and for efficient delivery of services to the public through electronic means authorise, by order, any service provider to set up, maintain and upgrade the computerised facilities and perform such other services as it may specify, by notification in the Official Gazette.",
+    "sub_structure": {
+      "2": "(2) The appropriate Government may also authorise any service provider authorised under sub-section (1) to collect, retain and appropriate such service charges, as may be prescribed by the appropriate Government for the purpose of providing such services, from the person availing such service."
+    },
+    "plain_english_summary": "The government can hire private companies (service providers) to deliver digital public services and allows those companies to collect a service charge from users.",
+    "keywords": [
+      "service provider",
+      "delivery of services",
+      "service charges",
+      "e-governance"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2009-10-27"
+  },
+  {
+    "provision_id": "it_act_2000_sec_7",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "7",
+    "title": "Retention of electronic records",
+    "text": "(1) Where any law provides that documents, records or information shall be retained for any specific period, then, that requirement shall be deemed to have been satisfied if such documents, records or information are retained in the electronic form, if- (a) the information contained therein remains accessible so as to be usable for a subsequent reference: (b) the electronic record is retained in the format in which it was originally generated, sent or received... (c) the details which will facilitate the identification of the origin, destination, date and time of despatch or receipt of such electronic record are available in the electronic record...",
+    "sub_structure": {},
+    "plain_english_summary": "If the law requires you to keep a document for a certain number of years, keeping a digital copy counts, as long as it remains accessible, hasn't been altered, and retains its metadata (like creation date and origin).",
+    "keywords": [
+      "retention",
+      "electronic records",
+      "metadata",
+      "document storage"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_7A",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "7A",
+    "title": "Audit of documents, etc., maintained in electronic form",
+    "text": "Where in any law for the time being in force, there is a provision for audit of documents, records or information, that provision shall also be applicable for audit of documents, records or information processed and maintained in the electronic form.",
+    "sub_structure": {},
+    "plain_english_summary": "Any laws that require an audit of business documents apply equally to documents that are kept entirely digitally.",
+    "keywords": [
+      "audit",
+      "electronic documents",
+      "digital records"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2009-10-27"
+  },
+  {
+    "provision_id": "it_act_2000_sec_8",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "8",
+    "title": "Publication of rule, regulation, etc., in Electronic Gazette",
+    "text": "Where any law provides that any rule, regulation, order, bye-law, notification or any other matter shall be published in the Official Gazette, then, such requirement shall be deemed to have been satisfied if such rule, regulation, order, bye-law, notification or any other matter is published in the Official Gazette or Electronic Gazette...",
+    "sub_structure": {},
+    "plain_english_summary": "Allows the government to publish official rules and laws digitally in an 'Electronic Gazette' instead of exclusively printing them on paper.",
+    "keywords": [
+      "publication",
+      "Electronic Gazette",
+      "Official Gazette"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_9",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "9",
+    "title": "Sections 6, 7 and 8 not to confer right to insist document should be accepted in electronic form",
+    "text": "Nothing contained in sections 6, 7 and 8 shall confer a right upon any person to insist that any Ministry or Department of the Central Government or the State Government or any authority or body established by or under any law or controlled or funded by the Central or State Government should accept, issue, create, retain and preserve any document in the form of electronic records or effect any monetary transaction in the electronic form.",
+    "sub_structure": {},
+    "plain_english_summary": "While electronic documents are legally valid, citizens cannot force a government department to accept digital forms or payments if that specific department's systems aren't set up for it yet.",
+    "keywords": [
+      "no right to insist",
+      "electronic acceptance",
+      "government departments"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_10",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "10",
+    "title": "Power to make rules by Central Government in respect of electronic signature",
+    "text": "The Central Government may, for the purposes of this Act, by rules, prescribe- (a) the type of electronic signature; (b) the manner and format in which the electronic signature shall be affixed; (c) the manner or procedure which facilitates identification of the person affixing the electronic signature; (d) control processes and procedures to ensure adequate integrity, security and confidentiality...",
+    "sub_structure": {},
+    "plain_english_summary": "The Central Government has the authority to make rules dictating exactly how electronic signatures must be formatted, verified, and secured.",
+    "keywords": [
+      "rulemaking power",
+      "electronic signature standards",
+      "security procedures"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_10A",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "ELECTRONIC GOVERNANCE",
+    "number": "10A",
+    "title": "Validity of contracts formed through electronic means",
+    "text": "Where in a contract formation, the communication of proposals, the acceptance of proposals, the revocation of proposals and acceptances, as the case may be, are expressed in electronic form or by means of an electronic records, such contract shall not be deemed to be unenforceable solely on the ground that such electronic form or means was used for that purpose.",
+    "sub_structure": {},
+    "plain_english_summary": "Critically validates digital contracts (like 'Clickwrap' or SaaS Terms of Service), stating that a contract is fully enforceable even if the entire agreement and acceptance happened electronically.",
+    "keywords": [
+      "validity of contracts",
+      "electronic means",
+      "digital contracts",
+      "enforceability"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2009-10-27"
+  },
+  {
+    "provision_id": "it_act_2000_sec_11",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "ATTRIBUTION, ACKNOWLEDGMENT AND DESPATCH OF ELECTRONIC RECORDS",
+    "number": "11",
+    "title": "Attribution of electronic records",
+    "text": "An electronic record shall be attributed to the originator- (a) if it was sent by the originator himself; (b) by a person who had the authority to act on behalf of the originator in respect of that electronic record; or (c) by an information system programmed by or on behalf of the originator to operate automatically.",
+    "sub_structure": {},
+    "plain_english_summary": "If an email or digital action is sent by you, sent by someone you authorized, or sent by an automated script/system you set up, you are legally held responsible as the 'originator'.",
+    "keywords": [
+      "attribution",
+      "originator",
+      "automated system",
+      "authorized sender"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_12",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "ATTRIBUTION, ACKNOWLEDGMENT AND DESPATCH OF ELECTRONIC RECORDS",
+    "number": "12",
+    "title": "Acknowledgment of receipt",
+    "text": "(1) Where the originator has not stipulated that the acknowledgment of receipt of electronic record be given in a particular form or by a particular method, an acknowledgment may be given by- (a) any communication by the addressee, automated or otherwise; or (b) any conduct of the addressee, sufficient to indicate to the originator that the electronic record has been received.",
+    "sub_structure": {
+      "2": "(2) Where the originator has stipulated that the electronic record shall be binding only on receipt of an acknowledgment of such electronic record by him, then unless acknowledgment has been so received, the electronic record shall he deemed to have been never sent by the originator."
+    },
+    "plain_english_summary": "An acknowledgment that a digital message was received can be an automated reply or even an action taken by the receiver. If you specify that a contract is only valid once receipt is acknowledged, it holds no legal weight until that acknowledgment occurs.",
+    "keywords": [
+      "acknowledgment of receipt",
+      "automated communication",
+      "binding electronic record"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_13",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "ATTRIBUTION, ACKNOWLEDGMENT AND DESPATCH OF ELECTRONIC RECORDS",
+    "number": "13",
+    "title": "Time and place of despatch and receipt of electronic record",
+    "text": "(1) Save as otherwise agreed to between the originator and the addressee, the despatch of an electronic record occurs when it enters a computer resource outside the control of the originator.",
+    "sub_structure": {
+      "3": "(3) Save as otherwise agreed to between the originator and the addressee, an electronic record is deemed to be despatched at the place where the originator has his place of business, and is deemed to be received at the place where the addressee has his place of business."
+    },
+    "plain_english_summary": "A message is considered 'sent' the moment it leaves your server. Legally, a message is treated as being sent from your primary business address and received at the recipient's primary business address, regardless of where the physical servers are located.",
+    "keywords": [
+      "time of despatch",
+      "place of receipt",
+      "place of business",
+      "jurisdiction"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_14",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "SECURE ELECTRONIC RECORDS AND SECURE ELECTRONIC SIGNATURE",
+    "number": "14",
+    "title": "Secure electronic record",
+    "text": "Where any security procedure has been applied to an electronic record at a specific point of time, then such record shall he deemed to be a secure electronic record from such point of time to the time of verification.",
+    "sub_structure": {},
+    "plain_english_summary": "Once an official security procedure (like encryption) is applied to a digital document, the law officially recognizes it as a 'secure electronic record'.",
+    "keywords": [
+      "secure electronic record",
+      "security procedure",
+      "verification"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2000-10-17"
+  },
+  {
+    "provision_id": "it_act_2000_sec_15",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "SECURE ELECTRONIC RECORDS AND SECURE ELECTRONIC SIGNATURE",
+    "number": "15",
+    "title": "Secure electronic signature",
+    "text": "An electronic signature shall be deemed to be a secure electronic signature if- (i) the signature creation data, at the time of affixing signature, was under the exclusive control of signatory and no other person; and (ii) the signature creation data was stored and affixed in such exclusive manner as may be prescribed.",
+    "sub_structure": {
+      "explanation": "Explanation. In case of digital signature, the \"signature creation data\" means the private key of the subscriber."
+    },
+    "plain_english_summary": "An electronic signature is only legally deemed 'secure' if the person signing it had exclusive control over their private key (password/hardware token) when the signature was made.",
+    "keywords": [
+      "secure electronic signature",
+      "exclusive control",
+      "private key",
+      "signature creation data"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2009-10-27"
+  },
+  {
+    "provision_id": "it_act_2000_sec_16",
+    "statute_id": "information_technology_act_2000",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "SECURE ELECTRONIC RECORDS AND SECURE ELECTRONIC SIGNATURE",
+    "number": "16",
+    "title": "Security procedures and practices",
+    "text": "The Central Government may, for the purposes of sections 14 and 15, prescribe the security procedures and practices: Provided that in prescribing such security procedures and practices, the Central Government shall have regard to the commercial circumstances, nature of transactions and such other related factors as it may consider appropriate.",
+    "sub_structure": {},
+    "plain_english_summary": "The Central Government sets the standards for what counts as a legally 'secure' procedure, and must take commercial reality and industry transaction types into account when making these rules.",
+    "keywords": [
+      "security procedures",
+      "practices",
+      "commercial circumstances",
+      "Central Government powers"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2009-10-27"
+  }
+]

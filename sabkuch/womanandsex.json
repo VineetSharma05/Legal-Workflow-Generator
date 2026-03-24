@@ -1,0 +1,945 @@
+[
+  {
+    "provision_id": "posh_act_2013_sec_1",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "1",
+    "title": "Short title, extent and commencement",
+    "text": "This Act may be called the Sexual Harassment of Women at Workplace (Prevention, Prohibition and Redressal) Act, 2013. [cite: 60]",
+    "sub_structure": {
+      "2": "It extends to the whole of India. [cite: 61]",
+      "3": "It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint. [cite: 62]"
+    },
+    "plain_english_summary": "This section establishes the official name of the POSH Act and confirms that it applies across the entirety of India.",
+    "keywords": [
+      "commencement",
+      "extent",
+      "POSH Act",
+      "preliminary"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_2",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "2",
+    "title": "Definitions",
+    "text": "In this Act, unless the context otherwise requires,- [cite: 63]",
+    "sub_structure": {
+      "a": "\"aggrieved woman\" means in relation to a workplace, a woman, of any age whether employed or not, who alleges to have been subjected to any act of sexual harassment by the respondent; [cite: 64, 65]",
+      "f": "\"employee\" means a person employed at a workplace for any work on regular, temporary, ad hoc or daily wage basis... includes a co-worker, a contract worker, probationer, trainee... [cite: 79]",
+      "g": "\"employer\" means in any workplace... any person responsible for the management, supervision and control of the workplace. [cite: 80, 82]",
+      "n": "\"sexual harassment\" includes... physical contact and advances; or a demand or request for sexual favours; or making sexually coloured remarks; or showing pornography; or any other unwelcome physical, verbal or non-verbal conduct of sexual nature; [cite: 94, 95, 96, 97, 98, 99, 100]",
+      "o": "\"workplace\" includes any private sector organisation or a private venture, undertaking, enterprise... carrying on commercial, professional... activities... [cite: 101, 103]"
+    },
+    "plain_english_summary": "Defines key terms for startups, notably establishing that 'sexual harassment' covers verbal, physical, and non-verbal unwelcome conduct. It broadly defines 'employee' (including interns and contractors) and defines 'employer' as anyone managing the workplace.",
+    "keywords": [
+      "definitions",
+      "sexual harassment",
+      "aggrieved woman",
+      "employee",
+      "employer",
+      "workplace"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_3",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "3",
+    "title": "Prevention of sexual harassment",
+    "text": "No woman shall be subjected to sexual harassment at any workplace. [cite: 109]",
+    "sub_structure": {
+      "2_i": "implied or explicit promise of preferential treatment in her employment; or [cite: 112]",
+      "2_ii": "implied or explicit threat of detrimental treatment in her employment; or [cite: 113]",
+      "2_iv": "interference with her work or creating an intimidating or offensive or hostile work environment for her; or [cite: 115]",
+      "2_v": "humiliating treatment likely to affect her health or safety. [cite: 116]"
+    },
+    "plain_english_summary": "Strictly prohibits sexual harassment at work. It clarifies that harassment isn't just physical; creating a hostile work environment, threatening a woman's job, or offering promotions for sexual favors all constitute harassment.",
+    "keywords": [
+      "prevention",
+      "hostile work environment",
+      "threats",
+      "preferential treatment",
+      "intimidation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_4",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "CONSTITUTION OF INTERNAL COMPLAINTS COMMITTEE",
+    "number": "4",
+    "title": "Constitution of Internal Complaints Committee",
+    "text": "Every employer of a workplace shall, by an order in writing, constitute a Committee to be known as the \"Internal Complaints Committee\": [cite: 119, 120]",
+    "sub_structure": {
+      "2_a": "a Presiding Officer who shall be a woman employed at a senior level at workplace from amongst the employees: [cite: 124]",
+      "2_b": "not less than two Members from amongst employees preferably committed to the cause of women or who have had experience in social work or have legal knowledge; [cite: 127]",
+      "2_c": "one member from amongst non-governmental organisations or associations... familiar with the issues relating to sexual harassment: [cite: 128]",
+      "2_proviso": "Provided that at least one-half of the total Members so nominated shall be women. [cite: 129]",
+      "3": "The Presiding Officer and every Member of the Internal Committee shall hold office for such period, not exceeding three years... [cite: 130]"
+    },
+    "plain_english_summary": "Startups must legally create an Internal Complaints Committee (ICC). The ICC must be led by a senior female employee, include at least two other employees, and have one external member (like an NGO rep). At least 50% of the committee must be women.",
+    "keywords": [
+      "Internal Complaints Committee",
+      "ICC",
+      "presiding officer",
+      "external member",
+      "committee constitution"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_5",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "CONSTITUTION OF LOCAL COMPLAINTS COMMITTEE",
+    "number": "5",
+    "title": "Notification of District Officer",
+    "text": "The appropriate Government may notify a District Magistrate or Additional District Magistrate or the Collector or Deputy Collector as a District Officer for every District to exercise powers or discharge functions under this Act. [cite: 140]",
+    "sub_structure": {},
+    "plain_english_summary": "The government will appoint a District Officer (like a District Magistrate) in every district to oversee the enforcement of this Act at the local level.",
+    "keywords": [
+      "District Officer",
+      "District Magistrate",
+      "local enforcement",
+      "notification"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_6",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "CONSTITUTION OF LOCAL COMPLAINTS COMMITTEE",
+    "number": "6",
+    "title": "Constitution and jurisdiction of Local Committee",
+    "text": "Every District Officer shall constitute in the district concerned, a committee to be known as the \"[Local Committee]\" to receive complaints of sexual harassment from establishments where the [Internal Committee] has not been constituted due to having less than ten workers or if the complaint is against the employer himself. [cite: 141, 144]",
+    "sub_structure": {
+      "2": "The District Officer shall designate one nodal officer in every block, taluka and tehsil... to receive complaints and forward the same to the concerned [Local Committee] within a period of seven days. [cite: 145]"
+    },
+    "plain_english_summary": "If a startup has fewer than 10 employees (and thus doesn't need its own ICC), or if the founder/employer is the one accused of harassment, the victim can complain directly to a government-run Local Committee.",
+    "keywords": [
+      "Local Committee",
+      "small startups",
+      "complaint against employer",
+      "jurisdiction",
+      "less than ten workers"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_7",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "CONSTITUTION OF LOCAL COMPLAINTS COMMITTEE",
+    "number": "7",
+    "title": "Composition, tenure and other terms and conditions of Local Committee",
+    "text": "The [Local Committee] shall consist of the following members to be nominated by the District Officer... [cite: 147, 148]",
+    "sub_structure": {
+      "1_a": "a Chairperson to be nominated from amongst the eminent women in the field of social work and committed to the cause of women; [cite: 149]",
+      "1_c": "two Members, of whom at least one shall be a woman, to be nominated from amongst such non-governmental organisations or associations... [cite: 151]",
+      "2": "The Chairperson and every Member of the Local Committee shall hold office for such period, not exceeding three years... [cite: 155]"
+    },
+    "plain_english_summary": "Outlines the structure of the government's Local Committee, which must be led by an eminent woman in social work and include NGO representatives, serving terms of up to three years.",
+    "keywords": [
+      "Local Committee composition",
+      "chairperson",
+      "tenure",
+      "social work"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_8",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "CONSTITUTION OF LOCAL COMPLAINTS COMMITTEE",
+    "number": "8",
+    "title": "Grants and audit",
+    "text": "The Central Government may, after due appropriation made by Parliament by law in this behalf, make to the State Government grants of such sums of money as the Central Government my think fit, for being utilised for the payment of fees or allowances referred to in sub-section (4) of section 7. [cite: 164, 168]",
+    "sub_structure": {
+      "4": "The accounts of the agency referred to in sub-section (2) shall be maintained and audited in such manner as may... be prescribed... [cite: 171]"
+    },
+    "plain_english_summary": "Details how the Central Government provides funding to State Governments to pay the fees and allowances of the Local Committee members, subject to proper auditing.",
+    "keywords": [
+      "grants",
+      "audit",
+      "central government funding",
+      "local committee fees"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_9",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "COMPLAINT",
+    "number": "9",
+    "title": "Complaint of sexual harassment",
+    "text": "Any aggrieved woman may make, in writing, a complaint of sexual harassment at workplace to the Internal Committee if so constituted, or the Local Committee... within a period of three months from the date of incident and in case of a series of incidents, within a period of three months from the date of last incident: [cite: 173]",
+    "sub_structure": {
+      "1_proviso_1": "where such complaint cannot be made in writing, the Presiding Officer... shall render all reasonable assistance to the woman for making the complaint in writing: [cite: 174]",
+      "1_proviso_2": "the Internal Committee or, as the case may be, the Local Committee may, for the reasons to be recorded in writing, extend the time limit not exceeding three months... [cite: 175]",
+      "2": "Where the aggrieved woman is unable to make a complaint on account of her physical or mental incapacity or death or otherwise, her legal heir or such other person as may be prescribed may make a complaint... [cite: 176]"
+    },
+    "plain_english_summary": "A victim must file a written complaint to the company's ICC within 3 months of the harassment incident. The ICC can extend this deadline by another 3 months if needed. If the victim cannot write or is incapacitated, the committee must help her, or her legal heir can file it.",
+    "keywords": [
+      "complaint filing",
+      "three months limit",
+      "written complaint",
+      "legal heir",
+      "time extension"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_10",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "COMPLAINT",
+    "number": "10",
+    "title": "Conciliation",
+    "text": "The Internal Committee or, as the case may be, the Local Committee, may, before initiating an inquiry under section 11 and at the request of the aggrieved woman take steps to settle the matter between her and the respondent through conciliation: [cite: 177]",
+    "sub_structure": {
+      "1_proviso": "Provided that no monetary settlement shall be made as a basis of conciliation. [cite: 178]",
+      "2": "Where settlement has been arrived at... the Internal Committee... shall record the settlement so arrived and forward the same to the employer or the District Officer to take action as specified... [cite: 179]",
+      "4": "Where a settlement is arrived at under sub-section (1), no further inquiry shall be conducted by the Internal Committee... [cite: 181]"
+    },
+    "plain_english_summary": "Before a formal inquiry starts, the victim can request the ICC to try and settle the issue with the accused through conciliation. However, the company cannot use money to settle the issue at this stage. If settled, the inquiry stops.",
+    "keywords": [
+      "conciliation",
+      "settlement",
+      "no monetary settlement",
+      "inquiry pause"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_11",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "11",
+    "title": "Inquiry into complaint",
+    "text": "Subject to the provisions of section 10, the Internal Committee or the Local Committee, as the case may be, shall, where the respondent is an employee, proceed to make inquiry into the complaint in accordance with the provisions of the service rules applicable to the respondent and where no such rules exist, in such manner as may be prescribed... [cite: 182]",
+    "sub_structure": {
+      "3": "For the purpose of making an inquiry under sub-section (1), the Internal Committee or the Local Committee, as the case may be, shall have the same powers as are vested in a civil court the Code of Civil Procedure, 1908... when trying a suit... [cite: 188]",
+      "4": "The inquiry under sub-section (1) shall be completed within a period of ninety days. [cite: 192]"
+    },
+    "plain_english_summary": "If conciliation fails or isn't requested, the committee must conduct a formal inquiry. During this inquiry, the committee has the same powers as a civil court (like summoning witnesses and demanding documents). The inquiry must be completed within 90 days.",
+    "keywords": [
+      "inquiry",
+      "service rules",
+      "civil court powers",
+      "90 days",
+      "summoning witnesses"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_12",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "12",
+    "title": "Action during pendency of inquiry",
+    "text": "During the pendency of an inquiry on a written request made by the aggrieved woman, the Internal Committee or the local Committee, as the case may be, may recommend to the employer to- [cite: 195]",
+    "sub_structure": {
+      "1_a": "transfer the aggrieved woman or the respondent to any other workplace; or [cite: 196]",
+      "1_b": "grant leave to the aggrieved woman up to a period of three months; or [cite: 197]",
+      "1_c": "grant such other relief to the aggrieved woman a may be prescribed. [cite: 198]",
+      "2": "The leave granted to the aggrieved woman under this section shall be in addition to the leave she would be otherwise entitled. [cite: 199]"
+    },
+    "plain_english_summary": "While the investigation is ongoing, a victim can request the company to transfer her or the accused, or grant her up to 3 months of paid leave (which does not consume her regular leave balance) to ensure her safety and comfort.",
+    "keywords": [
+      "pendency of inquiry",
+      "transfer",
+      "leave",
+      "three months leave",
+      "interim relief"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_13",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "13",
+    "title": "Inquiry report",
+    "text": "On the completion of an inquiry under this Act, the Internal Committee or the Local Committee, as the case may be, shall provide a report of its findings to the employer... within a period of ten days from the date of completion of the inquiry... [cite: 201]",
+    "sub_structure": {
+      "2": "Where the... Committee... arrives at the conclusion that the allegation against the respondent has not been proved, it shall recommend to the employer... that no action is required to be taken in the matter. [cite: 202]",
+      "3_i": "to take action for sexual harassment as a misconduct in accordance with the provisions of the service rules applicable... [cite: 204, 205]",
+      "3_ii": "to deduct, notwithstanding anything in the service rules applicable... from the salary or wages of the respondent such sum as it may consider appropriate to be paid to the aggrieved woman... [cite: 204, 206]",
+      "4": "The employer or the District Officer shall act upon the recommendation within sixty days of its receipt by him. [cite: 209]"
+    },
+    "plain_english_summary": "After the 90-day inquiry, the committee has 10 days to submit a report. If the accused is found guilty, the committee can recommend taking disciplinary action and deducting compensation directly from the accused's salary. The employer must enforce this within 60 days.",
+    "keywords": [
+      "inquiry report",
+      "misconduct",
+      "salary deduction",
+      "compensation",
+      "60 days"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_14",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "14",
+    "title": "Punishment for false or malicious complaint and false evidence",
+    "text": "Where the... Committee... arrives at a conclusion that the allegation against the respondent is malicious or the aggrieved woman... has made the complaint knowing it to be false or... has produced any forged or misleading document, it may recommend to the employer... to take action against the woman or the person who has made the complaint... [cite: 210, 211]",
+    "sub_structure": {
+      "1_proviso_1": "Provided that a mere inability to substantiate a complaint or provide adequate proof need not attract action against the complainant under this section: [cite: 212]",
+      "1_proviso_2": "Provided further that the malicious intent on part of the complainant shall be established after an inquiry... before any action is recommended. [cite: 213]",
+      "2": "Where the... Committee... arrives at a conclusion that during the inquiry any witness has given false evidence... it may recommend to the employer... to take action... [cite: 214]"
+    },
+    "plain_english_summary": "If the committee proves that a complaint was intentionally false or malicious, or if a witness lied, the company can punish the liar. However, simply failing to prove an allegation due to lack of evidence does not mean the complaint was false or malicious.",
+    "keywords": [
+      "false complaint",
+      "malicious complaint",
+      "forged document",
+      "false evidence",
+      "punishment"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_15",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "15",
+    "title": "Determination of compensation",
+    "text": "For the purpose of determining the sums to be paid to the aggrieved woman under clause (ii) of sub-section (3) of section 13, the Internal Committee or the Local Committee, as the case may be, shall have regard to- [cite: 215]",
+    "sub_structure": {
+      "a": "the mental trauma, pain, suffering and emotional distress caused to the aggrieved woman; [cite: 216]",
+      "b": "the loss in the career opportunity due to the incident of sexual harassment; [cite: 217]",
+      "c": "medical expenses incurred by the victim for physical or psychiatric treatment; [cite: 218]",
+      "d": "the income and financial status of the respondent; [cite: 219]",
+      "e": "feasibility of such payment in lump sum or in instalments. [cite: 220]"
+    },
+    "plain_english_summary": "When deciding how much money the harasser must pay the victim, the committee must look at the victim's trauma, medical bills, lost career opportunities, and the harasser's financial ability to pay.",
+    "keywords": [
+      "compensation",
+      "mental trauma",
+      "medical expenses",
+      "loss of career",
+      "financial status"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_16",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "16",
+    "title": "Prohibition of publication or making known contents of complaint and inquiry proceedings",
+    "text": "Notwithstanding anything contained in the Right to Information Act, 2005 (22 of 2005), the contents of the complaint made under section 9, the identity and addresses of the aggrieved woman, respondent and witnesses, any information relating to conciliation and inquiry proceedings... shall not be published, communicated or made known to the public, press and media in any manner: [cite: 222, 223]",
+    "sub_structure": {
+      "proviso": "Provided that information may be disseminated regarding the justice secured to any vicitim of sexual harassment under this Act without disclosing the name, address, identity or any other particulars calculated to lead to the identification of the aggrieved woman and witnesses. [cite: 224]"
+    },
+    "plain_english_summary": "POSH proceedings are strictly confidential. No one can leak the identities of the victim, accused, or witnesses, nor can they share the contents of the complaint with the media or public. Companies can only announce that justice was served without revealing identifying details.",
+    "keywords": [
+      "confidentiality",
+      "prohibition of publication",
+      "media",
+      "Right to Information Act",
+      "identity protection"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_17",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "17",
+    "title": "Penalty for publication or making known contents of complaint and inquiry proceedings",
+    "text": "Where any person entrusted with the duty to handle or deal with the complaint, inquiry or any recommendations or action to be taken under the provisions of this Act, contravenes the provisions of section 16, he shall be liable for penalty in accordance with the provisions of the service rules applicable to the said person or where no such service rules exist, in such manner as may be prescribed. [cite: 225]",
+    "sub_structure": {},
+    "plain_english_summary": "If any committee member, HR personnel, or company official leaks confidential information regarding a sexual harassment case, they will be penalized under the company's service rules.",
+    "keywords": [
+      "penalty for publication",
+      "breach of confidentiality",
+      "service rules"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_18",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "INQUIRY INTO COMPLAINT",
+    "number": "18",
+    "title": "Appeal",
+    "text": "Any person aggrieved from the recommendations made under sub-section (2) of section 13 or under clause (i) or clause (ii) of sub-section (3) of section 13 or sub-section (1) or sub-section (2) of section 14 or section 17 or non-implementation of such recommendations may prefer an appeal to the court or tribunal in accordance with the provisions of the service rules applicable... [cite: 226, 227]",
+    "sub_structure": {
+      "2": "The appeal under sub-section (1) shall be preferred within a period of ninety days of the recommendations. [cite: 228]"
+    },
+    "plain_english_summary": "If either the victim or the accused is unhappy with the committee's final decision, or if the employer fails to implement the decision, they have 90 days to file an appeal with a court or tribunal.",
+    "keywords": [
+      "appeal",
+      "court or tribunal",
+      "90 days",
+      "aggrieved person"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_19",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VI",
+    "chapter_title": "DUTIES OF EMPLOYER",
+    "number": "19",
+    "title": "Duties of employer",
+    "text": "Every employer shall- (a) provide a safe working environment at the workplace with shall include safety from the persons coming into contact at the workplace; [cite: 231, 232]",
+    "sub_structure": {
+      "b": "display at any conspicuous place in the workplace, the penal consequences of sexual harassments; and the order constituting, the Internal Committee... [cite: 233, 234]",
+      "c": "organise workshops and awareness programmes at regular intervals for sensitising the employees... [cite: 235]",
+      "d": "provide necessary facilities to the Internal Committee... for dealing with the complaint and conducting an inquiry; [cite: 236]",
+      "g": "provide assistance to the woman if she so chooses to file a complaint in relation to the offence under the Indian Penal Code... [cite: 239]",
+      "i": "treat sexual harassment as a misconduct under the service rules and initiate action for such misconduct; [cite: 242]"
+    },
+    "plain_english_summary": "Startups and employers have a strict legal duty to provide a safe workplace. They must display the names of the ICC members in the office, conduct regular anti-harassment training for employees, officially label sexual harassment as 'misconduct' in the employee handbook, and help victims file a police complaint if requested.",
+    "keywords": [
+      "duties of employer",
+      "safe working environment",
+      "workshops",
+      "awareness programmes",
+      "police complaint assistance"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_20",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VII",
+    "chapter_title": "DUTIES AND POWERS OF DISTRICT OFFICER",
+    "number": "20",
+    "title": "Duties and powers of District Officer",
+    "text": "The District Officer shall, (a) monitor the timely submission of report furnished by the Local Committee; [cite: 246, 247]",
+    "sub_structure": {
+      "b": "take such measures as may be necessary for engaging non-governmental organisations for creation of awareness on sexual harassment and the rights of the women. [cite: 248]"
+    },
+    "plain_english_summary": "The government's appointed District Officer is responsible for making sure the Local Committees submit their reports on time and working with NGOs to raise awareness about women's rights regarding workplace harassment.",
+    "keywords": [
+      "District Officer",
+      "monitoring",
+      "NGOs",
+      "awareness",
+      "local committee reports"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_21",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "21",
+    "title": "Committee to submit annual report",
+    "text": "The Internal Committee or the Local Committee, as the case may be, shall in each calendar year prepare, in such form and at such time as may be prescribed, an annual report and submit the same to the employer and the District Officer. [cite: 250]",
+    "sub_structure": {
+      "2": "The District Officer shall forward a brief report on the annual reports received under sub-section (1) to the State Government. [cite: 251]"
+    },
+    "plain_english_summary": "Every year, the company's Internal Complaints Committee (ICC) must prepare an annual report detailing its activities and submit it to both the employer (the startup) and the government's District Officer.",
+    "keywords": [
+      "annual report",
+      "ICC reporting",
+      "district officer",
+      "compliance report"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_22",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "22",
+    "title": "Employer to include information in annual report",
+    "text": "The employer shall include in its report the number of cases filed, if any, and their disposal under this Act in the annual report of his organisation or where no such report is required to be prepared, intimate such number of cases, if any, to the District Officer. [cite: 252]",
+    "sub_structure": {},
+    "plain_english_summary": "Startups must publicly declare the number of sexual harassment cases filed and resolved in their company's official annual report. If the startup isn't legally required to publish an annual report, they must send these numbers directly to the District Officer.",
+    "keywords": [
+      "employer annual report",
+      "case disclosure",
+      "public reporting",
+      "case disposal"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_23",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "23",
+    "title": "Appropriate Government to monitor implementation and maintain data",
+    "text": "The appropriate Government shall monitor the implementation of this Act and maintain date on the number of cases filed and disposed of in respect of all cases of sexual harassment at workplace. [cite: 253]",
+    "sub_structure": {},
+    "plain_english_summary": "The government is required to actively track how well this law is being followed and keep a centralized database of how many workplace harassment cases are filed and resolved.",
+    "keywords": [
+      "government monitoring",
+      "data maintenance",
+      "implementation tracking"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_24",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "24",
+    "title": "Appropriate Government to take measures to publicise the Act",
+    "text": "The appropriate Government may, subject to the availability of financial and other resources,- [cite: 254, 255]",
+    "sub_structure": {
+      "a": "develop relevant information, education, communication and training materials, and organise awareness programmes, to advance the understanding of the public of the provisions of this Act... [cite: 256]",
+      "b": "formulate orientation and training programmes for the members of the [Local Committee]. [cite: 257]"
+    },
+    "plain_english_summary": "The government is responsible for creating educational materials and running awareness campaigns to help the public understand the POSH Act, as well as training the members of the Local Committees.",
+    "keywords": [
+      "awareness programmes",
+      "training materials",
+      "publicise act",
+      "education"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_25",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "25",
+    "title": "Power to call for information and inspection of records",
+    "text": "The appropriate Government, on being satisfied that it is necessary in the public interest or in the interest of women employees at a workplace to do so, by order in writing,- [cite: 259]",
+    "sub_structure": {
+      "1_a": "call upon any employer or District Officer to furnish in writing such information relating to sexual harassment as it may require; [cite: 260]",
+      "1_b": "authorise any officer to make inspection of the records and workplace in relation to sexual harassment, who shall submit a report of such inspection... [cite: 261]",
+      "2": "Every employer and District Officer shall produce on demand before the officer making the inspection all information, records and other documents in his custody... [cite: 262]"
+    },
+    "plain_english_summary": "The government has the right to demand written information about sexual harassment issues from a startup and can send an officer to inspect the startup's workplace and internal records. The startup is legally obligated to hand over these documents during an inspection.",
+    "keywords": [
+      "inspection of records",
+      "workplace inspection",
+      "furnish information",
+      "government audit"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_26",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "26",
+    "title": "Penalty for non-compliance with provisions of Act",
+    "text": "Where the employer fails to- (a) constitute an Internal Committee under sub-section (1) of section 4; [cite: 263]",
+    "sub_structure": {
+      "1_b": "take action under sections 13, 14 and 22; and [cite: 266]",
+      "1_c": "contravenes or attempts to contravene or abets contravention of other provisions of this Act or any rules made thereunder, he shall be punishable with fine which may extend to fifty thousand rupees. [cite: 267, 268]",
+      "2_i": "If any employer, after having been previously convicted of an offence punishable under this Act subsequently commits and is convicted of the same offence, he shall be liable to- twice the punishment, which might have been imposed on a first conviction... [cite: 269, 270]",
+      "2_ii": "cancellation, of his licence or withdrawal, or non-renewal, or approval, or cancellation of the registration, as the case may be, by the Government or local authority required for carrying on his business or activity. [cite: 272]"
+    },
+    "plain_english_summary": "If a startup fails to set up an Internal Complaints Committee (ICC) or ignores the committee's recommendations, they can be fined up to 50,000 rupees. If they repeat the offense, the fine is doubled, and the government can legally cancel their business licenses and shut down their operations.",
+    "keywords": [
+      "penalty",
+      "50000 rupees fine",
+      "cancellation of licence",
+      "non-compliance",
+      "repeat offence",
+      "business closure"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_27",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "27",
+    "title": "Cognizance of offence by courts",
+    "text": "No court shall take cognizance of any offence punishable under this Act or any rules made thereunder, save on a complaint made by the aggrieved woman or any person authorised by the Internal Committee or Local Committee in this behalf. [cite: 273]",
+    "sub_structure": {
+      "2": "No court inferior to that of a Metropolitan Magistrate or a Judicial Magistrate of the first class shall try any offence punishable under this Act. [cite: 274]",
+      "3": "Every offence under this Act shall be non-cognizable. [cite: 275]"
+    },
+    "plain_english_summary": "A regular court will only hear a case about a POSH Act violation if the complaint is brought forward by the victim herself or someone officially authorized by the ICC. These offences are 'non-cognizable', meaning the police cannot make an arrest without a warrant.",
+    "keywords": [
+      "cognizance",
+      "court jurisdiction",
+      "non-cognizable offence",
+      "Metropolitan Magistrate"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_28",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "28",
+    "title": "Act not in derogation of any other law",
+    "text": "The provisions of this Act shall be in addition to and not in derogation of the provisions of any other law for the time being in force. [cite: 276]",
+    "sub_structure": {},
+    "plain_english_summary": "The POSH Act does not replace any other existing laws (like the Indian Penal Code). Its rules act as an additional layer of compliance and protection on top of whatever else is already legally required.",
+    "keywords": [
+      "derogation",
+      "additional law",
+      "existing laws"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_29",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "29",
+    "title": "Power of appropriate Government to make rules",
+    "text": "The Central Government may, by notification in the Official Gazette, make rules for carrying out the provisions of this Act. [cite: 277]",
+    "sub_structure": {
+      "2": "In particular and without prejudice to the generality of the foregoing power, such rules may provide for all or any of the following matters... [cite: 278]",
+      "3": "Every rule made by the Central Government under this Act shall be laid as soon as may be after it is made, before each House of Parliament... [cite: 295]",
+      "4": "Any rule made under sub-section (4) of section 8 by the State Government shall be laid, as soon as may be after it is made, before each House of the State Legislature... [cite: 298]"
+    },
+    "plain_english_summary": "The Central Government is authorized to create specific, detailed rules (like forms and procedures) to carry out the broader principles of the POSH Act. These rules must be presented to and approved by Parliament.",
+    "keywords": [
+      "rulemaking power",
+      "central government",
+      "parliament",
+      "official gazette"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "posh_act_2013_sec_30",
+    "statute_id": "posh_act_2013",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "30",
+    "title": "Power to remove difficulties",
+    "text": "If any difficulty arises in giving effect to the provisions of this Act, the Central Government may, by order published in the Official Gazette, make such provisions, not inconsistent with the provisions of this Act, as may appear to it to be necessary for removing the difficulty: [cite: 299]",
+    "sub_structure": {
+      "1_proviso": "Provided that no such order shall be made under this section after the expiry of a period of two years from the commencement of this Act. [cite: 300]",
+      "2": "Every order made under this section shall be laid, as soon as may be after it is made, before each House of Parliament. [cite: 301]"
+    },
+    "plain_english_summary": "For the first two years after the Act passed, the Central Government had the special power to issue orders to quickly fix any practical difficulties that arose while implementing the new law.",
+    "keywords": [
+      "remove difficulties",
+      "two years limit",
+      "central government order"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2013-12-09"
+  },
+  {
+    "provision_id": "era_1976_sec_1",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "1",
+    "title": "Short title, extent and commencement",
+    "text": "This Act may be called the Equal Remuneration Act, 1976.",
+    "sub_structure": {
+      "2": "It extends to the whole of India.",
+      "3": "It shall come into force on such date, not being later than three years from the passing of this Act, as the Central Government may, by notification, appoint and different dates may be appointed for different establishments or employments."
+    },
+    "plain_english_summary": "This section outlines the name of the Act and establishes that it applies to the entirety of India.",
+    "keywords": [
+      "commencement",
+      "extent",
+      "preliminary",
+      "equal remuneration"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_2",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "2",
+    "title": "Definitions",
+    "text": "In this Act, unless the context otherwise requires.-",
+    "sub_structure": {
+      "c": "\"employer\" has the meaning assigned to it in clause (f) of section 2 of the Payment of Gratuity Act, 1972 (39 of 1972);",
+      "g": "\"remuneration\" means the basic wage or salary, and any additional emoluments whatsoever payable, either in cash or in kind, to a person employed in respect of employment or work done in such employment, if the terms of the contract of employment, express or implied, were fulfilled;",
+      "h": "\"same work or work of a similar nature\" means work in respect of which the skill, effort and responsibility required are the same, when performed under similar working conditions, by a man or a woman and the differences, if any, between the skill, effort and responsibility required of a man and those required of a woman are not of practical importance in relation to the terms and conditions of employment;"
+    },
+    "plain_english_summary": "Defines key terms for startups. 'Remuneration' includes basic salary plus any additional cash or in-kind perks. 'Same work or work of a similar nature' means jobs requiring the same skill, effort, and responsibility under similar conditions, regardless of minor differences.",
+    "keywords": [
+      "definitions",
+      "remuneration",
+      "same work",
+      "work of a similar nature",
+      "employer"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_3",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "3",
+    "title": "Act to have over riding effect",
+    "text": "The provisions of this Act shall have effect notwithstanding anything inconsistent therewith contained in any other law or in the terms of any award, agreement or contract of service, whether made before or after the commencement of this Act, or in any instrument having effect under any law for the time being in force.",
+    "sub_structure": {},
+    "plain_english_summary": "The rules of this Act override any other conflicting laws, employment contracts, or company agreements. A startup cannot use an employment contract to bypass the requirement for equal pay.",
+    "keywords": [
+      "overriding effect",
+      "contract of service",
+      "agreements",
+      "inconsistent laws"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_4",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "PAYMENT OF REMUNERATION AT EQUAL RATES TO MEN AND WOMEN WORKERS AND OTHER MATTERS",
+    "number": "4",
+    "title": "Duty of employer to pay equal remuneration to men and women workers for same work or work of a similar nature",
+    "text": "No employer shall pay to any worker, employed by him in an establishment or employment, remuneration, whether payable in cash or in kind, at rates less favourable than those at which remuneration is paid by him to the workers of the opposite sex in such establishment or employment for performing the same work or work of a similar nature.",
+    "sub_structure": {
+      "2": "No employer shall, for the purpose of complying with the provisions of sub-section (1), reduce the rate of remuneration of any worker.",
+      "3": "Where, in an establishment or employment, the rates of remuneration payable before the commencement of this Act for men and women workers for the same work or work of a similar nature are different only on the ground of sex, then the higher... or, as the case may be, the highest... of such rates shall be the rate at which remuneration shall be payable..."
+    },
+    "plain_english_summary": "Employers are legally obligated to pay men and women equally for the same or similar work. To fix a pay gap, a startup cannot lower anyone's salary; instead, they must raise the lower-paid employee's salary to match the higher rate.",
+    "keywords": [
+      "equal pay",
+      "equal remuneration",
+      "same work",
+      "wage reduction prohibited",
+      "pay gap"
+    ],
+    "penalty_linked": true,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_5",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "PAYMENT OF REMUNERATION AT EQUAL RATES TO MEN AND WOMEN WORKERS AND OTHER MATTERS",
+    "number": "5",
+    "title": "No discrimination to be made while recruiting men and women workers",
+    "text": "On and from the commencement of this Act, no employer shall while making recruitment for the same work or work of a similar nature, or in any condition of service subsequent to recruitment such as promotions, training or transfer, make any discrimination against women except where the employment of women in such work is prohibited or restricted by or under any law for the time being in force:",
+    "sub_structure": {
+      "proviso": "Provided that the provisions of this section shall not affect any priority or reservation for Scheduled Castes or Scheduled Tribes, ex-servicemen, retrenched employees or any other class or category of persons in the matter of recruitment to the posts in an establishment or employment."
+    },
+    "plain_english_summary": "Startups are strictly prohibited from discriminating against women during hiring, promotions, training opportunities, or transfers, unless a specific law restricts women from doing that exact type of work. Standard legal reservations (like SC/ST) still apply.",
+    "keywords": [
+      "discrimination",
+      "recruitment",
+      "promotions",
+      "training",
+      "transfers",
+      "hiring"
+    ],
+    "penalty_linked": true,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_6",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "PAYMENT OF REMUNERATION AT EQUAL RATES TO MEN AND WOMEN WORKERS AND OTHER MATTERS",
+    "number": "6",
+    "title": "Advisory Committee",
+    "text": "For the purpose of providing increasing employment opportunities for women, the appropriate Government shall constitute one or more Advisory Committees to advise it with regard to the extent to which women may be employed in such establishments or employments as the Central Government may, by notification, specify in this behalf.",
+    "sub_structure": {
+      "2": "Every Advisory Committee shall consist of not less than ten persons, to be nominated by the appropriate Government, of which one-half shall be women.",
+      "5": "The appropriate Government may, after considering the advice tendered to it by the Advisory Committee... issue such directions in respect of employment of women workers, as the appropriate Government may think fit."
+    },
+    "plain_english_summary": "The government will form Advisory Committees (with at least 50% women members) to figure out how to increase employment opportunities for women. The government can issue binding directions to companies based on this advice.",
+    "keywords": [
+      "advisory committee",
+      "employment opportunities",
+      "government directions",
+      "women representation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_7",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "PAYMENT OF REMUNERATION AT EQUAL RATES TO MEN AND WOMEN WORKERS AND OTHER MATTERS",
+    "number": "7",
+    "title": "Power of appropriate Government to appoint authorities for hearing and deciding claims and complaints",
+    "text": "The appropriate Government may, by notification, appoint such officers, not below the rank of a Labour Officer, as it thinks fit to be the authorities for the purpose of hearing and deciding- (a) Complaints with regard to the contravention of any provision of this Act; (b) claims arising out of non-payment of wages at equal rates to men and women workers for the same work or work of a similar nature...",
+    "sub_structure": {
+      "4_i": "in the case of a claim arising out of non-payment of wages at equal rates... that payment he made to the worker of the amount by which the wages payable to him exceed the amount actually paid;",
+      "5": "Every authority appointed under sub-section (1) shall have all the powers of a Civil Court under the Code of Civil Procedure, 1908... for the purpose of taking evidence and of enforcing the attendance of witnesses and compelling the production of documents...",
+      "6": "Any employer or worker aggrieved by any order made by an authority appointed under sub-section (1), on a complaint or claim may, within thirty days from the date of the order, prefer an appeal to such authority as the appropriate Government may... specify..."
+    },
+    "plain_english_summary": "The government will appoint authorities to hear complaints about unequal pay or discrimination. These authorities have civil court powers and can legally order a startup to pay the missing wage difference to the underpaid employee. These rulings can be appealed within 30 days.",
+    "keywords": [
+      "claims and complaints",
+      "wage disputes",
+      "civil court powers",
+      "appeals",
+      "backpay"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_8",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "8",
+    "title": "Duty of employers to maintain registers",
+    "text": "On and from the commencement of this Act, every employer shall maintain such registers and other documents in relation to the workers employed by him as may be prescribed.",
+    "sub_structure": {},
+    "plain_english_summary": "Startups and employers must maintain specific legal registers and paperwork regarding their employees to prove they are complying with the equal pay laws.",
+    "keywords": [
+      "registers",
+      "documents",
+      "record keeping",
+      "compliance records"
+    ],
+    "penalty_linked": true,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_9",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "9",
+    "title": "Inspectors",
+    "text": "The appropriate Government may, by notification, appoint such persons as it may think fit to be Inspectors for the purpose of making an investigation as to whether the provisions of this Act, or the rules made thereunder, are being complied with by employers...",
+    "sub_structure": {
+      "3_a": "enter, at any reasonable time, with such assistance as he thinks fit, any building, factory, premises or vessel;",
+      "3_b": "require any employer to produce any register, muster-roll or other documents relating to the employment of workers, and examine such documents;",
+      "3_d": "examine the employer, his agent or servant or any other person found in charge of the establishment...",
+      "4": "Any person required by an Inspector to produce any register or other document or to give any information shall comply with such requisition."
+    },
+    "plain_english_summary": "The government appoints Inspectors who have the legal right to enter a startup's premises at any reasonable time, demand to see employee registers, and interrogate the founders or managers to ensure they are paying men and women equally.",
+    "keywords": [
+      "inspectors",
+      "investigation",
+      "workplace entry",
+      "document examination",
+      "interrogation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "1976-03-08"
+  },
+  {
+    "provision_id": "era_1976_sec_10",
+    "statute_id": "equal_remuneration_act_1976",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "10",
+    "title": "Penalties",
+    "text": "If after the commencement of this Act, any employer, being required by or under the Act, so to do- (a) omits or fails to maintain any register or other document in relation to workers employed by him... he shall be punishable with simple imprisonment for a term which may extend to one month or with fine which may extend to ten thousand rupees or with both.",
+    "sub_structure": {
+      "1_b": "omits or fails to produce any register, muster-roll or other document relating to the employment of workers, or",
+      "1_c": "omits or refuses to give any evidence or prevents his agent... from giving evidence, or",
+      "2": "If, after the commencement of this Act, any employer- (a) makes any recruitment in contravention of the provisions of this Act, or (b) makes any payment of remuneration at unequal rates... or (c) makes any discrimination... he shall be punishable with fine which shall not be less than ten thousand rupees but which may extend to twenty thousand rupees or with imprisonment for a term which shall be not less than three months but which may extend to one year or with both..."
+    },
+    "plain_english_summary": "Startups face strict criminal penalties for non-compliance. Failing to keep records or cooperating with inspectors can lead to a 10,000 rupee fine and a month in jail. Actually paying unequal wages or discriminating in hiring leads to fines between 10,000 and 20,000 rupees, and between three months to a year in jail for the first offense.",
+    "keywords": [
+      "penalties",
+      "imprisonment",
+      "fines",
+      "unequal pay penalty",
+      "failure to maintain registers",
+      "discrimination penalty"
+    ],
+    "penalty_linked": true,
+    "effective_date": "1976-03-08"
+  }
+]

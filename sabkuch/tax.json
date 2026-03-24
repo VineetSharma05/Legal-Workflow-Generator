@@ -1,0 +1,1020 @@
+[
+  {
+    "provision_id": "gst_comp_act_2017_sec_1",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "1",
+    "title": "Short title, extent and commencement",
+    "text": "This Act may be called the Goods and Services Tax (Compensation to States) Act, 2017.",
+    "sub_structure": {
+      "2": "It extends to the whole of India.",
+      "3": "It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint."
+    },
+    "plain_english_summary": "This section outlines the name of the Act, which provides compensation to Indian States for revenue lost due to the implementation of GST, and confirms it applies to all of India.",
+    "keywords": [
+      "commencement",
+      "extent",
+      "compensation to states"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_2",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "2",
+    "title": "Definitions",
+    "text": "In this Act, unless the context otherwise requires,-",
+    "sub_structure": {
+      "c": "\"cess\" means the goods and services tax compensation cess levied under section 8;",
+      "d": "\"compensation\" means an amount, in the form of goods and services tax compensation, as determined under section 7;",
+      "f": "\"Fund\" means the Goods and Services Tax Compensation Fund referred to in section 10;",
+      "k": "\"projected growth rate\" means the rate of growth projected for the transition period as per section 3;",
+      "r": "\"transition period\" means a period of five years from the transition date;"
+    },
+    "plain_english_summary": "Defines the key terms used in the Act, such as what constitutes the compensation 'cess' (an additional tax), the 'Fund' where this money is kept, and the 'transition period' (five years).",
+    "keywords": [
+      "definitions",
+      "cess",
+      "compensation",
+      "transition period",
+      "GST compensation fund"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_3",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "3",
+    "title": "Projected growth rate",
+    "text": "The projected nominal growth rate of revenue subsumed for a State during the transition period shall be fourteen per cent. per annum.",
+    "sub_structure": {},
+    "plain_english_summary": "For the purpose of calculating compensation, the government assumes that a State's tax revenue would have grown by exactly 14% every year if GST had not been implemented.",
+    "keywords": [
+      "projected growth rate",
+      "14 percent",
+      "revenue growth"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_4",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "4",
+    "title": "Base year",
+    "text": "For the purpose of calculating the compensation amount payable in any financial year during the transition period, the financial year ending 31st March, 2016, shall be taken as the base year.",
+    "sub_structure": {},
+    "plain_english_summary": "The financial year 2015-2016 is designated as the 'base year'. All future revenue loss calculations are measured against the tax revenue a state collected during this specific year.",
+    "keywords": [
+      "base year",
+      "2015-2016",
+      "compensation calculation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_5",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "5",
+    "title": "Base year revenue",
+    "text": "Subject to the provision of sub-sections (2), (3), (4), (5) and (6), the base year revenue for a State shall be the sum of the revenue collected by the State and the local bodies during the base year, on account of the taxes levied by the respective State or Union and net of refunds, with respect to the following taxes, imposed by the respective State or Union, which are subsumed into goods and services tax...",
+    "sub_structure": {
+      "1_a": "the value added tax, sales tax, purchase tax, tax collected on works contract...",
+      "1_b": "the central sales tax levied under the Central Sales Tax Act, 1956...",
+      "1_c": "the entry tax, octroi, local body tax...",
+      "1_proviso_a": "Provided that the revenue collected during the base year in a State... under the following taxes shall not be included... on the sale or purchase of petroleum crude, high speed diesel, motor spirit (commonly known as petrol), natural gas, aviation turbine fuel and alcoholic liquor for human consumption;"
+    },
+    "plain_english_summary": "This defines exactly which old taxes (like VAT, Octroi, and Central Sales Tax) are added together to calculate a State's 'base year revenue'. It explicitly excludes taxes collected on alcohol and petroleum products, as those were not subsumed into GST.",
+    "keywords": [
+      "base year revenue",
+      "subsumed taxes",
+      "VAT",
+      "petroleum exclusion",
+      "alcohol exclusion"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_6",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "6",
+    "title": "Projected revenue for any year",
+    "text": "The projected revenue for any year in a State shall be calculated by applying the projected growth rate over the base year revenue of that State.",
+    "sub_structure": {
+      "illustration": "If the base year revenue for 2015-16 for a concerned State... is one hundred rupees, then the projected revenue for financial year 2018-19 shall be as follows- Projected Revenue for 2018-19=100 (1+14/100)^3"
+    },
+    "plain_english_summary": "To find out what a State 'should' have earned in a given year, the government takes the 2015-16 base revenue and mathematically compounds it by 14% for every year that has passed.",
+    "keywords": [
+      "projected revenue",
+      "compound growth",
+      "calculation formula"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_7",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "7",
+    "title": "Calculation and release of compensation",
+    "text": "The compensation under this Act shall be payable to any State during the transition period.",
+    "sub_structure": {
+      "2": "The compensation payable to a State shall be provisionally calculated and released at the end of every two months period, and shall be finally calculated for every financial year after the receipt of final revenue figures...",
+      "3_c": "the total compensation payable in any financial year shall be the difference between the projected revenue for any financial year and the actual revenue collected by a State..."
+    },
+    "plain_english_summary": "States are paid their GST compensation every two months. The exact amount owed is the difference between what they actually collected in GST and their 14% 'projected revenue'. Overpayments are adjusted at the end of the year.",
+    "keywords": [
+      "compensation release",
+      "bi-monthly payments",
+      "revenue shortfall",
+      "calculation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_8",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "8",
+    "title": "Levy and collection of cess",
+    "text": "There shall be levied a cess on such intra-State supplies of goods or services or both... and such inter-State supplies of goods or services or both... for the purposes of providing compensation to the States for loss of revenue arising on account of implementation of the goods and services tax...",
+    "sub_structure": {
+      "1_proviso": "Provided that no such cess shall be leviable on supplies made by a taxable person who has decided to opt for composition levy under section 10 of the Central Goods and Services Tax Act.",
+      "2": "The cess shall be levied on such supplies of goods and services as are specified in column (2) of the Schedule, on the basis of value, quantity or on such basis at such rate not exceeding the rate set forth..."
+    },
+    "plain_english_summary": "To fund the state payouts, the Central Government levies an extra 'Compensation Cess' on top of standard GST for specific luxury or 'sin' goods (like cars, tobacco, and aerated drinks). Businesses using the GST composition scheme do not charge this cess.",
+    "keywords": [
+      "compensation cess",
+      "levy",
+      "composition levy exemption",
+      "schedule of goods"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_8A",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "8A",
+    "title": "Power not to recover cess not levied or short levied as a result of general practice",
+    "text": "Notwithstanding anything contained in this Act, if the Government is satisfied that- (a) a practice was, or is, generally prevalent regarding levy of cess (including non-levy thereof) on any supply of goods or services or both; and (b) such supplies were, or are, liable to,- (i) cess, in cases where according to the said practice, cess was not, or is not being, levied... the Government may... direct that the whole of the cess payable on such supplies... shall not be required to be paid...",
+    "sub_structure": {},
+    "plain_english_summary": "If businesses in an industry widely misunderstood the rules and failed to charge the cess (or charged too little) due to a general industry practice, the Government has the power to forgive the debt and not force them to back-pay the uncollected cess.",
+    "keywords": [
+      "short levy",
+      "non-levy",
+      "general practice",
+      "forgiveness of cess"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_9",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "9",
+    "title": "Returns, payments and refunds",
+    "text": "Every taxable person, making a taxable supply of goods or services or both, shall- (a) pay the amount of cess as payable under this Act in such manner; (b) furnish such returns in such forms, along with the returns to be filed under the Central Goods and Services Tax Act; and (c) apply for refunds of such cess paid in such form, as may be prescribed.",
+    "sub_structure": {
+      "2": "For all purposes of furnishing of returns and claiming refunds... the provisions of the Central Goods and Services Tax Act and the rules made thereunder, shall, as far as may be, apply in relation to the levy and collection of the cess..."
+    },
+    "plain_english_summary": "Businesses that sell goods subject to the compensation cess must pay it, file returns for it, and claim refunds using the exact same systems and paperwork they use for their regular Central GST returns.",
+    "keywords": [
+      "returns",
+      "payments",
+      "refunds",
+      "CGST alignment"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_10",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "10",
+    "title": "Crediting proceeds of cess to Fund",
+    "text": "The proceeds of the cess leviable under section 8 and such other amounts as may be recommended by the Council, shall be credited to a non-lapsable Fund known as the Goods and Services Tax Compensation Fund, which shall form part of the public account of India and shall be utilised for purposes specified in the said section.",
+    "sub_structure": {
+      "2": "All amounts payable to the States under section 7 shall be paid out of the Fund.",
+      "3": "Fifty per cent. of the amount remaining unutilised in the Fund at the end of the transition period shall be transferred to the Consolidated Fund of India as the share of Centre, and the balance fifty per cent. shall be distributed amongst the States..."
+    },
+    "plain_english_summary": "All money collected from the cess goes into a dedicated, non-lapsable 'Compensation Fund'. This fund is strictly used to pay states. Any money left over after the 5-year transition period ends will be split 50/50 between the Central Government and the States.",
+    "keywords": [
+      "Compensation Fund",
+      "proceeds of cess",
+      "unutilised funds",
+      "50/50 split"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_11",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "11",
+    "title": "Other provisions relating to cess",
+    "text": "The provisions of the Central Goods and Services Tax Act, and the rules made thereunder, including those relating to assessment, input tax credit, non-levy, short-levy, interest, appeals, offences and penalties, shall, as far as may be, mutatis mutandis, apply, in relation to the levy and collection of the cess...",
+    "sub_structure": {
+      "2_proviso": "Provided that the input tax credit in respect of cess on supply of goods and services leviable under section 8, shall be utilised only towards payment of said cess on supply of goods and services leviable under the said section."
+    },
+    "plain_english_summary": "Standard CGST and IGST rules regarding penalties, audits, and appeals also apply to the compensation cess. Crucially, a business can only use Input Tax Credit (ITC) earned from paying cess to offset future cess liabilities—it cannot be used to offset regular GST liabilities.",
+    "keywords": [
+      "input tax credit",
+      "ITC offset limitation",
+      "penalties",
+      "appeals"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_12",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "12",
+    "title": "Power to make rules",
+    "text": "The Central Government shall, on the recommendations of the Council, by notification in the Official Gazette, make rules for carrying out the provisions of this Act.",
+    "sub_structure": {},
+    "plain_english_summary": "The Central Government, acting on the GST Council's advice, has the authority to create specific operational rules to enforce this Act.",
+    "keywords": [
+      "rulemaking power",
+      "Central Government",
+      "GST Council"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_13",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "13",
+    "title": "Laying of rules before Parliament",
+    "text": "Every rule made under this Act by the Central Government shall be laid, as soon as may be after it is made, before each House of Parliament, while it is in session, for a total period of thirty days...",
+    "sub_structure": {},
+    "plain_english_summary": "Any new rules created under this Act must be presented to both Houses of Parliament for 30 days to allow for parliamentary review and potential modification.",
+    "keywords": [
+      "Parliamentary review",
+      "laying of rules",
+      "thirty days"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "gst_comp_act_2017_sec_14",
+    "statute_id": "gst_compensation_to_states_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "14",
+    "title": "Power to remove difficulties",
+    "text": "If any difficulty arises in giving effect to the provisions of this Act, the Central Government may, on the recommendations of the Council, by order published in the Official Gazette, make such provisions, not inconsistent with the provisions of this Act, as appear to it to be necessary or expedient for removing the difficulty:",
+    "sub_structure": {
+      "1_proviso": "Provided that no order shall be made under this section after the expiry of five years from the commencement of this Act."
+    },
+    "plain_english_summary": "For the first five years after this Act was implemented, the Central Government had emergency powers to issue orders to resolve any unforeseen practical difficulties in executing the law.",
+    "keywords": [
+      "remove difficulties",
+      "five years limit",
+      "emergency powers"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "cgst_ext_jk_act_2017_sec_1",
+    "statute_id": "cgst_extension_to_jk_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "1",
+    "title": "Short title and commencement",
+    "text": "This Act may be called the Central Goods and Services Tax (Extension to Jammu and Kashmir) Act, 2017.",
+    "sub_structure": {
+      "2": "It shall be deemed to have come into force on the 8th day of July, 2017."
+    },
+    "plain_english_summary": "Establishes the name of the Act which retroactively extends the Central GST laws into Jammu and Kashmir effective from July 8, 2017.",
+    "keywords": [
+      "commencement",
+      "Jammu and Kashmir",
+      "retroactive application"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-08"
+  },
+  {
+    "provision_id": "cgst_ext_jk_act_2017_sec_2",
+    "statute_id": "cgst_extension_to_jk_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "2",
+    "title": "Extension and amendment of Central Goods and Services Tax Act, 2017",
+    "text": "The Central Goods and Services Tax Act, 2017 (12 of 2017) (hereinafter referred to as the principal Act) and all rules, notifications and orders made thereunder by the Central Government are hereby extended to, and shall be in force in, the State of Jammu and Kashmir.",
+    "sub_structure": {
+      "2_a": "in section 1, in sub-section (2), the words \"except the State of Jammu and Kashmir\" shall be omitted;",
+      "2_c_ii": "\"Provided that for the State of Jammu and Kashmir, the State Bench of the Goods and Services Tax Appellate Tribunal constituted under this Act shall be the State Appellate Tribunal constituted under the Jammu and Kashmir Goods and Services Tax Act, 2017:\""
+    },
+    "plain_english_summary": "This section officially forces the main CGST Act to apply inside Jammu and Kashmir. It goes through the original CGST Act and systematically deletes the phrase 'except the State of Jammu and Kashmir' wherever it previously appeared, ensuring a unified tax code.",
+    "keywords": [
+      "extension of act",
+      "amendment of CGST",
+      "appellate tribunal integration"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-08"
+  },
+  {
+    "provision_id": "cgst_ext_jk_act_2017_sec_3",
+    "statute_id": "cgst_extension_to_jk_act_2017",
+    "provision_type": "Section",
+    "chapter": null,
+    "chapter_title": null,
+    "number": "3",
+    "title": "Repeal and saving",
+    "text": "The Central Goods and Services Tax (Extension to Jammu and Kashmir) Ordinance, 2017 (Ord. 3 of 2017) is hereby repealed.",
+    "sub_structure": {
+      "2": "Notwithstanding such repeal, anything done or any action taken under the said Ordinance shall be deemed to have been done or taken under the corresponding provisions of this Act."
+    },
+    "plain_english_summary": "Before this Act was passed, the government used a temporary executive 'Ordinance' to extend GST to J&K. This section cancels that temporary Ordinance but ensures that any legal actions taken while the Ordinance was active remain valid under this new permanent Act.",
+    "keywords": [
+      "repeal of ordinance",
+      "saving clause",
+      "legal validity"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-08"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_1",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "1",
+    "title": "Short title, extent and commencement",
+    "text": "(1) This Act may be called the Integrated Goods and Services Tax Act, 2017.",
+    "sub_structure": {
+      "2": "(2) It shall extend to the whole of India.",
+      "3": "(3) It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint: Provided that different dates may be appointed for different provisions of this Act..."
+    },
+    "plain_english_summary": "This section establishes the official name of the IGST Act and confirms that it applies uniformly across the entirety of India.",
+    "keywords": [
+      "commencement",
+      "extent",
+      "IGST Act",
+      "preliminary"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-06-22"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_2",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "2",
+    "title": "Definitions",
+    "text": "In this Act, unless the context otherwise requires,-",
+    "sub_structure": {
+      "6": "\"export of services\" means the supply of any service when,- (i) the supplier of service is located in India; (ii) the recipient of service is located outside India; (iii) the place of supply of service is outside India; (iv) the payment for such service has been received... in convertible foreign exchange...",
+      "13": "\"intermediary\" means a broker, an agent or any other person... who arranges or facilitates the supply of goods or services or both, or securities, between two or more persons, but does not include a person who supplies such goods or services... on his own account;",
+      "14": "\"location of the recipient of services\" means,- (a) where a supply is received at a place of business for which the registration has been obtained, the location of such place of business...",
+      "17": "\"online information and database access or retrieval services\" means services whose delivery is mediated by information technology over the internet or an electronic network... and includes electronic services such as,- (i) advertising on the internet; (ii) providing cloud services..."
+    },
+    "plain_english_summary": "Defines vital terms for digital and cross-border businesses. Crucially for software startups, it defines 'export of services' (requiring foreign currency payment) and 'online information and database access or retrieval services' (OIDAR), which directly covers cloud computing, SaaS, and digital content delivery.",
+    "keywords": [
+      "definitions",
+      "export of services",
+      "intermediary",
+      "OIDAR",
+      "cloud services",
+      "location of recipient"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-06-22"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_3",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "ADMINISTRATION",
+    "number": "3",
+    "title": "Appointment of officers",
+    "text": "The Board may appoint such central tax officers as it thinks fit for exercising the powers under this Act.",
+    "sub_structure": {},
+    "plain_english_summary": "The Central Board of Indirect Taxes and Customs has the authority to appoint tax officers to enforce the IGST Act.",
+    "keywords": [
+      "appointment",
+      "officers",
+      "administration",
+      "board"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-06-22"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_4",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "ADMINISTRATION",
+    "number": "4",
+    "title": "Authorisation of officers of State tax or Union territory tax as proper officer in certain circumstances",
+    "text": "Without prejudice to the provisions of this Act, the officers appointed under the State Goods and Services Tax Act or the Union Territory Goods and Services Tax Act are authorised to be the proper officers for the purposes of this Act, subject to such exceptions and conditions as the Government shall... specify.",
+    "sub_structure": {},
+    "plain_english_summary": "To prevent administrative overlap, State and Union Territory GST officers are legally authorized to act as IGST officers, ensuring businesses do not have to deal with multiple distinct sets of tax authorities for the same transaction.",
+    "keywords": [
+      "authorisation",
+      "state tax officers",
+      "proper officer",
+      "cross-empowerment"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_5",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "LEVY AND COLLECTION OF TAX",
+    "number": "5",
+    "title": "Levy and collection",
+    "text": "(1) Subject to the provisions of sub-section (2), there shall be levied a tax called the integrated goods and services tax on all inter-State supplies of goods or services or both, except on the supply of alcoholic liquor for human consumption... at such rates, not exceeding forty per cent., as may be notified...",
+    "sub_structure": {
+      "3": "(3) The Government may... specify categories of supply of goods or services or both, the tax on which shall be paid on reverse charge basis by the recipient of such goods or services...",
+      "5": "(5) The Government may... specify categories of services, the tax on inter-State supplies of which shall be paid by the electronic commerce operator if such services are supplied through it...",
+      "5_proviso": "Provided that where an electronic commerce operator does not have a physical presence in the taxable territory, any person representing such electronic commerce operator... shall be liable to pay tax..."
+    },
+    "plain_english_summary": "This is the core charging section. It imposes IGST (up to a maximum of 40%) on all interstate transactions. It also introduces the 'reverse charge mechanism' (where the buyer pays the tax instead of the seller) and strictly holds e-commerce platforms liable for paying the tax on services provided through their apps or websites.",
+    "keywords": [
+      "levy",
+      "collection",
+      "inter-state supply",
+      "reverse charge",
+      "electronic commerce operator",
+      "tax liability"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_6",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "LEVY AND COLLECTION OF TAX",
+    "number": "6",
+    "title": "Power to grant exemption from tax",
+    "text": "(1) Where the Government is satisfied that it is necessary in the public interest so to do, it may, on the recommendations of the Council, by notification, exempt generally, either absolutely or subject to such conditions as may be specified therein, goods or services or both of any specified description from the whole or any part of the tax leviable thereon...",
+    "sub_structure": {
+      "2": "(2) Where the Government is satisfied that it is necessary in the public interest so to do, it may... by special order in each case, under circumstances of an exceptional nature to be stated in such order, exempt from payment of tax any goods or services or both on which tax is leviable."
+    },
+    "plain_english_summary": "The Central Government holds the power to exempt specific goods or services from IGST if it benefits the public interest, either by issuing broad notifications or special case-by-case orders.",
+    "keywords": [
+      "exemption",
+      "public interest",
+      "notification",
+      "tax relief"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_6A",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "LEVY AND COLLECTION OF TAX",
+    "number": "6A",
+    "title": "Power not to recover Goods and Services Tax not levied or short-levied as a result of general practice",
+    "text": "Notwithstanding anything contained in this Act, if the Government is satisfied that- (a) a practice was, or is, generally prevalent regarding levy of integrated tax (including non-levy thereof) on any supply of goods or services or both; and (b) such supplies were, or are, liable to- (i) integrated tax, in cases where according to the said practice, integrated tax was not, or is not being, levied... the Government may... direct that the whole of the integrated tax payable on such supplies... shall not be required to be paid...",
+    "sub_structure": {},
+    "plain_english_summary": "If an entire industry misunderstood the tax laws and failed to charge the correct IGST due to a widespread standard practice, the Government has the special power to waive the collection of those back taxes so businesses aren't unfairly crippled.",
+    "keywords": [
+      "short-levied",
+      "non-levy",
+      "general practice",
+      "tax waiver",
+      "industry practice"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_7",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "DETERMINATION OF NATURE OF SUPPLY",
+    "number": "7",
+    "title": "Inter-State supply",
+    "text": "(1) Subject to the provisions of section 10, supply of goods, where the location of the supplier and the place of supply are in- (a) two different States; (b) two different Union territories; or (c) a State and a Union territory, shall be treated as a supply of goods in the course of inter-State trade or commerce.",
+    "sub_structure": {
+      "2": "(2) Supply of goods imported into the territory of India, till they cross the customs frontiers of India, shall be treated to be a supply of goods in the course of inter-State trade or commerce.",
+      "4": "(4) Supply of services imported into the territory of India shall be treated to be a supply of services in the course of inter-State trade or commerce.",
+      "5_b": "(5) Supply of goods or services or both,- ... (b) to or by a Special Economic Zone developer or a Special Economic Zone unit... shall be treated to be a supply of goods or services or both in the course of inter-State trade or commerce."
+    },
+    "plain_english_summary": "Legally defines an 'inter-state' supply. For startups, it is vital to know that all imported services (like paying a foreign company for SaaS tools) and all transactions with Special Economic Zones (SEZs) are automatically treated as inter-state transactions liable for IGST, regardless of physical location.",
+    "keywords": [
+      "inter-state supply",
+      "import of services",
+      "Special Economic Zone",
+      "SEZ",
+      "customs frontiers"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_8",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "DETERMINATION OF NATURE OF SUPPLY",
+    "number": "8",
+    "title": "Intra-State supply",
+    "text": "(1) Subject to the provisions of section 10, supply of goods where the location of the supplier and the place of supply of goods are in the same State or same Union territory shall be treated as intra-State supply:",
+    "sub_structure": {
+      "1_proviso": "Provided that the following supply of goods shall not be treated as intra-State supply, namely:- (i) supply of goods to or by a Special Economic Zone developer or a Special Economic Zone unit; (ii) goods imported into the territory of India till they cross the customs frontiers of India...",
+      "2": "(2) Subject to the provisions of section 12, supply of services where the location of the supplier and the place of supply of services are in the same State or same Union territory shall be treated as intra-State supply..."
+    },
+    "plain_english_summary": "Defines an 'intra-state' supply (where a transaction occurs entirely within one state). It reiterates the exception that even if an SEZ is in the same city as the supplier, transactions with it can never be considered intra-state.",
+    "keywords": [
+      "intra-state supply",
+      "same state",
+      "SEZ exception"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_9",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "DETERMINATION OF NATURE OF SUPPLY",
+    "number": "9",
+    "title": "Supplies in territorial waters",
+    "text": "Notwithstanding anything contained in this Act,- (a) where the location of the supplier is in the territorial waters, the location of such supplier; or (b) where the place of supply is in the territorial waters, the place of supply, shall, for the purposes of this Act, be deemed to be in the coastal State or Union territory where the nearest point of the appropriate baseline is located.",
+    "sub_structure": {},
+    "plain_english_summary": "If a transaction or supply takes place out in the ocean within India's territorial waters, the law assigns that transaction to whichever Indian state or Union territory's coastline is geographically closest.",
+    "keywords": [
+      "territorial waters",
+      "coastal state",
+      "nearest point",
+      "baseline"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_10",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "PLACE OF SUPPLY OF GOODS OR SERVICES OR BOTH",
+    "number": "10",
+    "title": "Place of supply of goods other than supply of goods imported into, or exported from India",
+    "text": "(1) The place of supply of goods, other than supply of goods imported into, or exported from India, shall be as under,- (a) where the supply involves movement of goods... the place of supply of such goods shall be the location of the goods at the time at which the movement of goods terminates for delivery to the recipient;",
+    "sub_structure": {
+      "1_b": "(b) where the goods are delivered by the supplier to a recipient or any other person on the direction of a third person... it shall be deemed that the said third person has received the goods and the place of supply of such goods shall be the principal place of business of such person;",
+      "1_c": "(c) where the supply does not involve movement of goods... the place of supply shall be the location of such goods at the time of the delivery to the recipient;"
+    },
+    "plain_english_summary": "This rule determines where a domestic sale of physical goods actually takes place for tax purposes. If the goods are shipped, the 'place of supply' is the final delivery destination.",
+    "keywords": [
+      "place of supply",
+      "movement of goods",
+      "domestic sale",
+      "delivery"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_11",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "PLACE OF SUPPLY OF GOODS OR SERVICES OR BOTH",
+    "number": "11",
+    "title": "Place of supply of goods imported into, or exported from India",
+    "text": "The place of supply of goods,- (a) imported into India shall be the location of the importer; (b) exported from India shall be the location outside India.",
+    "sub_structure": {},
+    "plain_english_summary": "A straightforward rule for cross-border goods: If a startup imports hardware, the place of supply is their office in India. If they export hardware, the place of supply is the foreign country.",
+    "keywords": [
+      "import of goods",
+      "export of goods",
+      "location of importer",
+      "place of supply"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_12",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "PLACE OF SUPPLY OF GOODS OR SERVICES OR BOTH",
+    "number": "12",
+    "title": "Place of supply of services where location of supplier and recipient is in India",
+    "text": "(1) The provisions of this section shall apply to determine the place of supply of services where the location of supplier of services and the location of the recipient of services is in India.",
+    "sub_structure": {
+      "2_a": "(a) made to a registered person shall be the location of such person;",
+      "2_b": "(b) made to any person other than a registered person shall be,- (i) the location of the recipient where the address on record exists; and (ii) the location of the supplier of services in other cases.",
+      "12": "(12) The place of supply of banking and other financial services, including stock broking services to any person shall be the location of the recipient of services on the records of the supplier of services:"
+    },
+    "plain_english_summary": "Determines the 'place of supply' for services happening within India. The golden rule is: If the buyer is a GST-registered business, the place of supply is the buyer's location. If the buyer is an unregistered consumer, it's their address on record.",
+    "keywords": [
+      "domestic services",
+      "registered person",
+      "B2B services",
+      "B2C services",
+      "place of supply"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_13",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "PLACE OF SUPPLY OF GOODS OR SERVICES OR BOTH",
+    "number": "13",
+    "title": "Place of supply of services where location of supplier or location of recipient is outside India",
+    "text": "(1) The provisions of this section shall apply to determine the place of supply of services where the location of the supplier of services or the location of the recipient of services is outside India.",
+    "sub_structure": {
+      "2": "(2) The place of supply of services except the services specified in sub-sections (3) to (13) shall be the location of the recipient of services...",
+      "12": "(12) The place of supply of online information and database access or retrieval services shall be the location of the recipient of services.",
+      "12_explanation": "Explanation. For the purposes of this sub-section, person receiving such services shall be deemed to be located in the taxable territory, if any two of the following non-contradictory conditions are satisfied, namely:- (a) the location of address presented by the recipient of services through internet is in the taxable territory; (b) the credit card... has been issued in the taxable territory; (c) the billing address..."
+    },
+    "plain_english_summary": "Crucial for tech startups exporting software or services. Generally, if you sell a service to a foreign client, the place of supply is the foreign client's location (making it an export). For digital services (OIDAR), complex IP and billing address tests determine where the customer actually is.",
+    "keywords": [
+      "export of services",
+      "OIDAR",
+      "digital services",
+      "cross-border",
+      "IP address test"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_14",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "PLACE OF SUPPLY OF GOODS OR SERVICES OR BOTH",
+    "number": "14",
+    "title": "Special provision for payment of tax by a supplier of online information and database access or retrieval services",
+    "text": "(1) On supply of online information and database access or retrieval services by any person located in a non-taxable territory and received by a non-taxable online recipient, the supplier of services located in a non-taxable territory shall be the person liable for paying integrated tax on such supply of services:",
+    "sub_structure": {
+      "2": "(2) The supplier of online information and database access or retrieval services referred to in sub-section (1) shall, for payment of integrated tax, take a single registration under the Simplified Registration Scheme...",
+      "2_proviso_2": "Provided further that if such supplier does not have a physical presence or does not have a representative for any purpose in the taxable territory, he may appoint a person in the taxable territory for the purpose of paying integrated tax and such person shall be liable..."
+    },
+    "plain_english_summary": "If a foreign tech company (like Netflix or AWS) sells digital services/cloud storage directly to unregistered Indian consumers, the foreign company is legally forced to register in India under a simplified scheme and pay IGST on those sales.",
+    "keywords": [
+      "OIDAR liability",
+      "foreign supplier",
+      "digital tax",
+      "simplified registration",
+      "B2C digital supply"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_14A",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "PLACE OF SUPPLY OF GOODS OR SERVICES OR BOTH",
+    "number": "14A",
+    "title": "Special provision for specified actionable claims supplied by a person located outside taxable territory",
+    "text": "(1) A supplier of online money gaming... not located in the taxable territory, shall in respect of the supply of online money gaming by him to a person in the taxable territory, be liable to pay integrated tax on such supply.",
+    "sub_structure": {
+      "3": "(3) In case of failure to comply with provisions of sub-section (1) or sub-section (2) by the supplier of the online money gaming... any information generated, transmitted, received or hosted in any computer resource used for supply of online money gaming by such supplier shall be liable to be blocked for access by the public in such manner as specified in the said Act."
+    },
+    "plain_english_summary": "Foreign companies offering online real-money gaming to Indian users must register and pay IGST. If they refuse to comply, the Indian government has the power to ban and block their apps/websites in India.",
+    "keywords": [
+      "online money gaming",
+      "foreign gaming company",
+      "website blocking",
+      "tax liability"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-10-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_15",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VI",
+    "chapter_title": "REFUND OF INTEGRATED TAX TO INTERNATIONAL TOURIST",
+    "number": "15",
+    "title": "Refund of integrated tax paid on supply of goods to tourist leaving India",
+    "text": "The integrated tax paid by tourist leaving India on any supply of goods taken out of India by him shall be refunded in such manner and subject to such conditions and safeguards as may be prescribed.",
+    "sub_structure": {
+      "explanation": "Explanation. For the purposes of this section, the term \"tourist\" means a person not normally resident in India, who enters India for a stay of not more than six months for legitimate non-immigrant purposes."
+    },
+    "plain_english_summary": "Foreign tourists who buy goods in India and take those physical goods back to their home country can claim a refund on the IGST they paid.",
+    "keywords": [
+      "tourist refund",
+      "international tourist",
+      "goods taken out of India"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_16",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VII",
+    "chapter_title": "ZERO RATED SUPPLY",
+    "number": "16",
+    "title": "Zero rated supply",
+    "text": "(1) \"zero rated supply\" means any of the following supplies of goods or services or both, namely:- (a) export of goods or services or both; or (b) supply of goods or services or both [for authorised operations] to a Special Economic Zone developer or a Special Economic Zone unit.",
+    "sub_structure": {
+      "2": "(2) Subject to the provisions of sub-section (5) of section 17 of the Central Goods and Services Tax Act, credit of input tax may be availed for making zero-rated supplies, notwithstanding that such supply may be an exempt supply.",
+      "3": "(3) A registered person making zero rated supply shall be eligible to claim refund of unutilised input tax credit on supply of goods or services or both, without payment of integrated tax, under bond or Letter of Undertaking..."
+    },
+    "plain_english_summary": "Crucial for tech startups: Exports and sales to Special Economic Zones (SEZs) are considered 'zero-rated' (taxed at 0%). Startups can legally claim a cash refund from the government for the GST they paid on business expenses used to create those exported products or services.",
+    "keywords": [
+      "zero rated supply",
+      "exports",
+      "SEZ",
+      "refund",
+      "input tax credit",
+      "Letter of Undertaking"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_17",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "APPORTIONMENT OF TAX AND SETTLEMENT OF FUNDS",
+    "number": "17",
+    "title": "Apportionment of tax and settlement of funds",
+    "text": "(1) Out of the integrated tax paid to the Central Government,- (a) in respect of inter-State supply of goods or services or both to an unregistered person... the amount of tax calculated at the rate equivalent to the central tax on similar intra-State supply shall be apportioned to the Central Government.",
+    "sub_structure": {
+      "2": "(2) The balance amount of integrated tax remaining in the integrated tax account in respect of the supply for which an apportionment to the Central Government has been done under sub-section (1) shall be apportioned to the,- (a) State where such supply takes place; and (b) Central Government where such supply takes place in a Union territory:"
+    },
+    "plain_english_summary": "Details the internal government accounting mechanism for how the Central Government takes the IGST collected from businesses and shares it with the specific State Governments where the goods or services were actually consumed.",
+    "keywords": [
+      "apportionment of tax",
+      "settlement of funds",
+      "central government",
+      "state share"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_17A",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "APPORTIONMENT OF TAX AND SETTLEMENT OF FUNDS",
+    "number": "17A",
+    "title": "Transfer of certain amounts",
+    "text": "Where any amount has been transferred from the electronic cash ledger under this Act to the electronic cash ledger under the State Goods and Services Tax Act or the Union Territory Goods and Services Tax Act, the Government shall transfer to the State tax account or the Union territory tax account, an amount equal to the amount transferred from the electronic cash ledger, in such manner and within such time, as may be prescribed.",
+    "sub_structure": {},
+    "plain_english_summary": "Provides the legal backing for the GST Portal feature that allows businesses to seamlessly transfer their cash balances between their IGST, CGST, and SGST electronic ledgers to pay off different tax liabilities.",
+    "keywords": [
+      "electronic cash ledger",
+      "transfer of amounts",
+      "tax account",
+      "portal funds"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2020-01-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_18",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "APPORTIONMENT OF TAX AND SETTLEMENT OF FUNDS",
+    "number": "18",
+    "title": "Transfer of input tax credit",
+    "text": "On utilisation of credit of integrated tax availed under this Act for payment of,- (a) central tax in accordance with the provisions of sub-section (5) of section 49 of the Central Goods and Services Tax Act, the amount collected as integrated tax shall stand reduced by an amount equal to the credit so utilised and the Central Government shall transfer an amount equal to the amount so reduced from the integrated tax account to the central tax account...",
+    "sub_structure": {
+      "b": "(b) Union territory tax... the amount collected as integrated tax shall stand reduced by an amount equal to the credit so utilised...",
+      "c": "(c) State tax... the amount collected as integrated tax shall stand reduced by an amount equal to the credit so utilised and shall be apportioned to the appropriate State Government...",
+      "explanation": "Explanation. For the purposes of this Chapter, \"appropriate State\" in relation to a taxable person, means the State or Union territory where he is registered or is liable to be registered..."
+    },
+    "plain_english_summary": "When a startup uses its accumulated IGST Input Tax Credit (ITC) to pay off its CGST, SGST, or UTGST liabilities, the government automatically transfers those funds between its internal tax accounts to settle the balance.",
+    "keywords": [
+      "input tax credit",
+      "ITC utilisation",
+      "fund transfer",
+      "tax settlement"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_19",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "APPORTIONMENT OF TAX AND SETTLEMENT OF FUNDS",
+    "number": "19",
+    "title": "Tax wrongfully collected and paid to Central Government or State Government",
+    "text": "(1) A registered person who has paid integrated tax on a supply considered by him to be an inter-State supply, but which is subsequently held to be an intra-State supply, shall be granted refund of the amount of integrated tax so paid in such manner and subject to such conditions as may be prescribed.",
+    "sub_structure": {
+      "2": "(2) A registered person who has paid central tax and State tax or Union territory tax, as the case may be, on a transaction considered by him to be an intra-State supply, but which is subsequently held to be an inter-State supply, shall not be required to pay any interest on the amount of integrated tax payable."
+    },
+    "plain_english_summary": "If a startup accidentally classifies a local sale as an interstate sale (paying IGST instead of CGST/SGST), they can get a refund. Conversely, if they accidentally paid local taxes on an interstate sale, they must pay the correct IGST, but the government waives the interest penalty for the mistake.",
+    "keywords": [
+      "wrongful tax collection",
+      "tax refund",
+      "interest waiver",
+      "inter-state vs intra-state"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_20",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "20",
+    "title": "Application of provisions of Central Goods and Services Tax Act",
+    "text": "Subject to the provisions of this Act and the rules made thereunder, the provisions of Central Goods and Services Tax Act relating to,- (i) scope of supply; (ii) composite supply and mixed supply... (xxv) miscellaneous provisions including the provisions relating to the imposition of interest and penalty, shall, mutatis mutandis, apply, so far as may be, in relation to integrated tax as they apply in relation to central tax as if they are enacted under this Act:",
+    "sub_structure": {
+      "proviso_1": "Provided that in the case of tax deducted at source, the deductor shall deduct tax at the rate of two per cent. from the payment made or credited to the supplier:",
+      "proviso_2": "Provided further that in the case of tax collected at source, the operator shall collect tax at such rate not exceeding two per cent...",
+      "proviso_4": "Provided also that in cases where the penalty is leviable under the Central Goods and Services Tax Act and the State Goods and Services Tax Act... the penalty leviable under this Act shall be the sum total of the said penalties.",
+      "proviso_5": "Provided also that a maximum amount of forty crore rupees shall be payable for each appeal to be filed before the Appellate Authority or the Appellate Tribunal."
+    },
+    "plain_english_summary": "To avoid duplicating the entire rulebook, the IGST Act simply copies the rules of the main CGST Act regarding assessments, audits, penalties, and appeals. It specifies that TDS (Tax Deducted at Source) and TCS (Tax Collected at Source) for IGST are capped at 2%, and appeal deposits are capped at 40 crore rupees.",
+    "keywords": [
+      "application of CGST",
+      "TDS",
+      "TCS",
+      "penalties",
+      "appeal cap"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2017-06-22"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_21",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "21",
+    "title": "Import of services made on or after the appointed day",
+    "text": "Import of services made on or after the appointed day shall be liable to tax under the provisions of this Act regardless of whether the transactions for such import of services had been initiated before the appointed day:",
+    "sub_structure": {
+      "proviso_1": "Provided that if the tax on such import of services had been paid in full under the existing law, no tax shall be payable on such import under this Act:",
+      "proviso_2": "Provided further that if the tax on such import of services had been paid in part under the existing law, the balance amount of tax shall be payable on such import under this Act."
+    },
+    "plain_english_summary": "A transitional rule for when GST first launched: If a startup imported a service right as the GST transition happened, they had to pay IGST on it, unless they had already paid the old pre-GST taxes in full.",
+    "keywords": [
+      "import of services",
+      "appointed day",
+      "transitional provisions"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_22",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "22",
+    "title": "Power to make rules",
+    "text": "(1) The Government may, on the recommendations of the Council, by notification, make rules for carrying out the provisions of this Act.",
+    "sub_structure": {
+      "3": "(3) The power to make rules conferred by this section shall include the power to give retrospective effect to the rules or any of them from a date not earlier than the date on which the provisions of this Act come into force.",
+      "4": "(4) Any rules made under sub-section (1) may provide that a contravention thereof shall be liable to a penalty not exceeding ten thousand rupees."
+    },
+    "plain_english_summary": "The Government has the power to write specific rules to enforce the IGST Act. Interestingly, they can apply these rules retroactively (back to the launch date of GST) and can set fines of up to 10,000 rupees for breaking these specific rules.",
+    "keywords": [
+      "rulemaking power",
+      "retrospective effect",
+      "rule violation penalty"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2017-06-22"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_23",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "23",
+    "title": "Power to make regulations",
+    "text": "The Board may, by notification, make regulations consistent with this Act and the rules made thereunder to carry out the provisions of this Act.",
+    "sub_structure": {},
+    "plain_english_summary": "The Central Board of Indirect Taxes and Customs (CBIC) can issue its own regulations to help administer the IGST law on a day-to-day basis.",
+    "keywords": [
+      "regulations",
+      "Board powers",
+      "CBIC"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_24",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "24",
+    "title": "Laying of rules, regulations and notifications",
+    "text": "Every rule made by the Government, every regulation made by the Board and every notification issued by the Government under this Act, shall be laid, as soon as may be, after it is made or issued, before each House of Parliament, while it is in session, for a total period of thirty days...",
+    "sub_structure": {},
+    "plain_english_summary": "Any new rules, regulations, or notifications made under this Act must be presented to both Houses of Parliament for 30 days to allow the legislature to review, modify, or cancel them.",
+    "keywords": [
+      "Parliamentary review",
+      "laying of rules",
+      "thirty days"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  },
+  {
+    "provision_id": "igst_act_2017_sec_25",
+    "statute_id": "igst_act_2017",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "25",
+    "title": "Removal of difficulties",
+    "text": "(1) If any difficulty arises in giving effect to any provision of this Act, the Government may, on the recommendations of the Council, by a general or a special order published in the Official Gazette, make such provisions not inconsistent with the provisions of this Act or the rules or regulations made thereunder, as may be necessary or expedient for the purpose of removing the said difficulty:",
+    "sub_structure": {
+      "1_proviso": "Provided that no such order shall be made after the expiry of a period of five years from the date of commencement of this Act."
+    },
+    "plain_english_summary": "For the first five years after the IGST Act was implemented, the Government had emergency powers to issue orders to fix any unforeseen practical difficulties in applying the new law.",
+    "keywords": [
+      "removal of difficulties",
+      "five years limit",
+      "emergency powers"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2017-07-01"
+  }
+]

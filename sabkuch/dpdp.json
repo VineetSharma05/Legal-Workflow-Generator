@@ -1,0 +1,942 @@
+[
+  {
+    "provision_id": "dpdp_act_2023_sec_1",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "1",
+    "title": "Short title and commencement",
+    "text": "This Act may be called the Digital Personal Data Protection Act, 2023. [cite: 27]",
+    "sub_structure": {
+      "2": "It shall come into force on such date as the Central Government may, by notification in the Official Gazette, appoint and different dates may be appointed for different provisions of this Act... [cite: 28]"
+    },
+    "plain_english_summary": "This section outlines the name of the Act and states that the government will announce when specific parts of the law officially take effect.",
+    "keywords": [
+      "commencement",
+      "notification",
+      "official gazette",
+      "preliminary"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_2",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "2",
+    "title": "Definitions",
+    "text": "In this Act, unless the context otherwise requires,- [cite: 34]",
+    "sub_structure": {
+      "c": "\"Board\" means the Data Protection Board of India established by the Central Government under section 18; [cite: 37]",
+      "i": "\"Data Fiduciary\" means any person who alone or in conjunction with other persons determines the purpose and means of processing of personal data; [cite: 44]",
+      "j": "\"Data Principal\" means the individual to whom the personal data relates... [cite: 45]",
+      "k": "\"Data Processor\" means any person who processes personal data on behalf of a Data Fiduciary; [cite: 49]",
+      "t": "\"personal data\" means any data about an individual who is identifiable by or in relation to such data; [cite: 72]",
+      "u": "\"personal data breach\" means any unauthorised processing of personal data or accidental disclosure, acquisition, sharing, use, alteration, destruction or loss of access to personal data... [cite: 73]"
+    },
+    "plain_english_summary": "This section defines the key terms used throughout the DPDP Act, such as Data Fiduciary (the entity collecting data), Data Principal (the user), and what constitutes a personal data breach.",
+    "keywords": [
+      "definitions",
+      "data fiduciary",
+      "data principal",
+      "data processor",
+      "personal data breach"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_3",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER I",
+    "chapter_title": "PRELIMINARY",
+    "number": "3",
+    "title": "Application of Act",
+    "text": "Subject to the provisions of this Act, it shall apply to the processing of digital personal data within the territory of India where the personal data is collected in digital form; or in non-digital form and digitised subsequently. [cite: 83, 84, 85, 86]",
+    "sub_structure": {
+      "b": "also apply to processing of digital personal data outside the territory of India, if such processing is in connection with any activity related to offering of goods or services to Data Principals within the territory of India; [cite: 87]",
+      "c": "not apply to personal data processed by an individual for any personal or domestic purpose; and personal data that is made or caused to be made publicly available... [cite: 94, 96, 98]"
+    },
+    "plain_english_summary": "The DPDP Act applies to digital personal data processed inside India, and data processed outside India if it involves offering goods/services to people inside India. It does not apply to personal/domestic use or publicly available data.",
+    "keywords": [
+      "jurisdiction",
+      "territory",
+      "application",
+      "publicly available data",
+      "domestic purpose"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_4",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "OBLIGATIONS OF DATA FIDUCIARY",
+    "number": "4",
+    "title": "Grounds for processing personal data",
+    "text": "A person may process the personal data of a Data Principal only in accordance with the provisions of this Act and for a lawful purpose. [cite: 106]",
+    "sub_structure": {
+      "1_a": "for which the Data Principal has given her consent; or [cite: 107]",
+      "1_b": "for certain legitimate uses. [cite: 107]",
+      "2": "For the purposes of this section, the expression 'lawful purpose' means any purpose which is not expressly forbidden by law. [cite: 108]"
+    },
+    "plain_english_summary": "Startups can only process a user's personal data if it is for a lawful purpose, and they either have the user's explicit consent or it falls under a specific 'legitimate use'.",
+    "keywords": [
+      "consent",
+      "lawful purpose",
+      "legitimate uses",
+      "grounds for processing"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_5",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "OBLIGATIONS OF DATA FIDUCIARY",
+    "number": "5",
+    "title": "Notice",
+    "text": "Every request made to a Data Principal under section 6 for consent shall be accompanied or preceded by a notice given by the Data Fiduciary to the Data Principal... [cite: 109]",
+    "sub_structure": {
+      "1_i": "informing her the personal data and the purpose for which the same is proposed to be processed; [cite: 110]",
+      "1_ii": "the manner in which she may exercise her rights under sub-section (4) of section 6 and section 13; [cite: 112]",
+      "1_iii": "the manner in which the Data Principal may make a complaint to the Board... [cite: 113]",
+      "3": "The Data Fiduciary shall give the Data Principal the option to access the contents of the notice referred to in sub-sections (1) and (2) in English or any language specified in the Eighth Schedule to the Constitution. [cite: 132]"
+    },
+    "plain_english_summary": "Before asking for consent, companies must provide a clear notice explaining what data is being collected, why it's being collected, how the user can withdraw consent, and how to file a complaint. This notice must be available in English and other recognized Indian languages.",
+    "keywords": [
+      "notice",
+      "purpose of processing",
+      "languages",
+      "complaint mechanism"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_6",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "OBLIGATIONS OF DATA FIDUCIARY",
+    "number": "6",
+    "title": "Consent",
+    "text": "The consent given by the Data Principal shall be free, specific, informed, unconditional and unambiguous with a clear affirmative action, and shall signify an agreement to the processing of her personal data for the specified purpose and be limited to such personal data as is necessary for such specified purpose. [cite: 133, 134]",
+    "sub_structure": {
+      "4": "Where consent given by the Data Principal is the basis of processing of personal data, such Data Principal shall have the right to withdraw her consent at any time, with the ease of doing so being comparable to the ease with which such consent was given. [cite: 144]",
+      "6": "If a Data Principal withdraws her consent... the Data Fiduciary shall, within a reasonable time, cease and cause its Data Processors to cease processing the personal data... [cite: 150]",
+      "7": "The Data Principal may give, manage, review or withdraw her consent to the Data Fiduciary through a Consent Manager. [cite: 158]"
+    },
+    "plain_english_summary": "User consent must be explicit, clear, and limited only to the data absolutely necessary for the service. Users have the right to withdraw their consent at any time just as easily as they gave it. If withdrawn, the company and its processors must stop using that data.",
+    "keywords": [
+      "consent",
+      "withdrawal of consent",
+      "affirmative action",
+      "consent manager",
+      "data minimization"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_7",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "OBLIGATIONS OF DATA FIDUCIARY",
+    "number": "7",
+    "title": "Certain legitimate uses",
+    "text": "A Data Fiduciary may process personal data of a Data Principal for any of following legitimate uses... [cite: 162]",
+    "sub_structure": {
+      "a": "for the specified purpose for which the Data Principal has voluntarily provided her personal data to the Data Fiduciary, and in respect of which she has not indicated to the Data Fiduciary that she does not consent to the use of her personal data. [cite: 163]",
+      "f": "for responding to a medical emergency involving a threat to the life or immediate threat to the health of the Data Principal or any other individual; [cite: 186]",
+      "i": "for the purposes of employment or those related to safeguarding the employer from loss or liability... or provision of any service or benefit sought by a Data Principal who is an employee. [cite: 191]"
+    },
+    "plain_english_summary": "Companies can process data without explicit consent in specific 'legitimate' situations, such as when a user voluntarily gives their data for a specific task, during medical emergencies, or for standard employment purposes.",
+    "keywords": [
+      "legitimate uses",
+      "voluntary provision",
+      "employment",
+      "medical emergency"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_8",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "OBLIGATIONS OF DATA FIDUCIARY",
+    "number": "8",
+    "title": "General obligations of Data Fiduciary",
+    "text": "A Data Fiduciary shall, irrespective of any agreement to the contrary or failure of a Data Principal to carry out the duties provided under this Act, be responsible for complying with the provisions of this Act... [cite: 192]",
+    "sub_structure": {
+      "2": "A Data Fiduciary may engage, appoint, use or otherwise involve a Data Processor to process personal data on its behalf for any activity related to offering of goods or services to Data Principals only under a valid contract. [cite: 193]",
+      "5": "A Data Fiduciary shall protect personal data in its possession or under its control... by taking reasonable security safeguards to prevent personal data breach. [cite: 198]",
+      "6": "In the event of a personal data breach, the Data Fiduciary shall give the Board and each affected Data Principal, intimation of such breach in such form and manner as may be prescribed. [cite: 199]",
+      "7": "A Data Fiduciary shall, unless retention is necessary for compliance with any law for the time being in force, erase personal data, upon the Data Principal withdrawing her consent or as soon as it is reasonable to assume that the specified purpose is no longer being served... [cite: 200, 201, 208]",
+      "10": "A Data Fiduciary shall establish an effective mechanism to redress the grievances of Data Principals. [cite: 223]"
+    },
+    "plain_english_summary": "Data Fiduciaries must ensure data accuracy, implement security safeguards, and use valid contracts with third-party processors. They must report data breaches to both the government Board and affected users. They must also delete data when it's no longer needed or consent is withdrawn, and maintain a grievance redressal system.",
+    "keywords": [
+      "data processor contracts",
+      "security safeguards",
+      "breach notification",
+      "data erasure",
+      "grievance redressal"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_9",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "OBLIGATIONS OF DATA FIDUCIARY",
+    "number": "9",
+    "title": "Processing of personal data of children",
+    "text": "The Data Fiduciary shall, before processing any personal data of a child or a person with disability who has a lawful guardian obtain verifiable consent of the parent of such child or the lawful guardian... [cite: 225]",
+    "sub_structure": {
+      "2": "A Data Fiduciary shall not undertake such processing of personal data that is likely to cause any detrimental effect on the well-being of a child. [cite: 227]",
+      "3": "A Data Fiduciary shall not undertake tracking or behavioural monitoring of children or targeted advertising directed at children. [cite: 228]"
+    },
+    "plain_english_summary": "To process a child's data (under 18), companies must get verifiable consent from a parent or guardian. Companies are strictly prohibited from tracking children, directing targeted ads at them, or processing data in a way that could harm them.",
+    "keywords": [
+      "children",
+      "parental consent",
+      "tracking",
+      "targeted advertising",
+      "behavioral monitoring"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_10",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER II",
+    "chapter_title": "OBLIGATIONS OF DATA FIDUCIARY",
+    "number": "10",
+    "title": "Additional obligations of Significant Data Fiduciary",
+    "text": "The Central Government may notify any Data Fiduciary or class of Data Fiduciaries as Significant Data Fiduciary, on the basis of an assessment of such relevant factors as it may determine... [cite: 231]",
+    "sub_structure": {
+      "1_factors": "Factors include volume and sensitivity of personal data processed; risk to the rights of Data Principal; potential impact on the sovereignty and integrity of India... [cite: 234, 235, 236]",
+      "2_a": "appoint a Data Protection Officer who shall represent the Significant Data Fiduciary... be based in India; be an individual responsible to the Board of Directors... [cite: 241, 244, 245, 246]",
+      "2_b": "appoint an independent data auditor to carry out data audit... [cite: 248]",
+      "2_c": "undertake... periodic Data Protection Impact Assessment... [cite: 250, 251]"
+    },
+    "plain_english_summary": "If the government classifies a company as a 'Significant Data Fiduciary' (usually due to high data volume or sensitive operations), the company must meet stricter rules. This includes appointing a Data Protection Officer based in India, hiring an independent data auditor, and conducting regular Data Protection Impact Assessments.",
+    "keywords": [
+      "significant data fiduciary",
+      "data protection officer",
+      "data auditor",
+      "data protection impact assessment",
+      "DPIA"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_11",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "11",
+    "title": "Right to access information about personal data",
+    "text": "The Data Principal shall have the right to obtain from the Data Fiduciary to whom she has previously given consent... a summary of personal data which is being processed by such Data Fiduciary and the processing activities undertaken by that Data Fiduciary with respect to such personal data; [cite: 256, 257]",
+    "sub_structure": {
+      "1_b": "the identities of all other Data Fiduciaries and Data Processors with whom the personal data has been shared by such Data Fiduciary, along with a description of the personal data so shared; [cite: 258]",
+      "1_c": "any other information related to the personal data of such Data Principal and its processing, as may be prescribed. [cite: 260]",
+      "2": "Nothing contained in clause (b) or clause (c) of sub-section (1) shall apply in respect of the sharing of any personal data by the said Data Fiduciary with any other Data Fiduciary authorised by law to obtain such personal data... [cite: 261]"
+    },
+    "plain_english_summary": "Users have the right to ask a company for a summary of the personal data it holds on them, what it is doing with that data, and the identities of any third parties the data has been shared with. [cite: 256, 257, 258]",
+    "keywords": [
+      "right to access",
+      "data sharing",
+      "third parties",
+      "user rights",
+      "data summary"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_12",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "12",
+    "title": "Right to correction and erasure of personal data",
+    "text": "A Data Principal shall have the right to correction, completion, updating and erasure of her personal data for the processing of which she has previously given consent... [cite: 271]",
+    "sub_structure": {
+      "2": "A Data Fiduciary shall, upon receiving a request for correction, completion or updating from a Data Principal, (a) correct the inaccurate or misleading personal data; (b) complete the incomplete personal data; and (c) update the personal data. [cite: 272, 273, 274, 275]",
+      "3": "A Data Principal shall make a request in such manner as may be prescribed to the Data Fiduciary for erasure of her personal data, and upon receipt of such a request, the Data Fiduciary shall erase her personal data unless retention of the same is necessary for the specified purpose or for compliance with any law for the time being in force. [cite: 276]"
+    },
+    "plain_english_summary": "Users have the right to ask a startup to correct, update, complete, or completely delete their personal data. The company must comply unless it legally needs to retain the data for compliance reasons. [cite: 271, 272, 276]",
+    "keywords": [
+      "right to correction",
+      "right to erasure",
+      "right to be forgotten",
+      "data deletion",
+      "data accuracy"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_13",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "13",
+    "title": "Right of grievance redressal",
+    "text": "A Data Principal shall have the right to have readily available means of grievance redressal provided by a Data Fiduciary or Consent Manager in respect of any act or omission of such Data Fiduciary or Consent Manager regarding the performance of its obligations... [cite: 277]",
+    "sub_structure": {
+      "2": "The Data Fiduciary or Consent Manager shall respond to any grievances referred to in sub-section (1) within such period as may be prescribed... [cite: 278]",
+      "3": "The Data Principal shall exhaust the opportunity of redressing her grievance under this section before approaching the Board. [cite: 279]"
+    },
+    "plain_english_summary": "Users have the right to an easy-to-use grievance redressal mechanism provided by the company. Users must try to resolve their complaints directly with the company before escalating the issue to the Data Protection Board. [cite: 277, 279]",
+    "keywords": [
+      "grievance redressal",
+      "user complaints",
+      "consent manager",
+      "escalation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_14",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "14",
+    "title": "Right to nominate",
+    "text": "A Data Principal shall have the right to nominate, in such manner as may be prescribed, any other individual, who shall, in the event of death or incapacity of the Data Principal, exercise the rights of the Data Principal in accordance with the provisions of this Act... [cite: 280]",
+    "sub_structure": {
+      "2": "For the purposes of this section, the expression \"incapacity\" means inability to exercise the rights of the Data Principal under the provisions of this Act or the rules made thereunder due to unsoundness of mind or infirmity of body. [cite: 281]"
+    },
+    "plain_english_summary": "A user can nominate another person to exercise their data rights (like requesting data deletion) on their behalf if the user dies or becomes physically or mentally incapacitated. [cite: 280, 281]",
+    "keywords": [
+      "right to nominate",
+      "incapacity",
+      "death of user",
+      "nominee",
+      "delegation of rights"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_15",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "15",
+    "title": "Duties of Data Principal",
+    "text": "A Data Principal shall perform the following duties, namely:- (a) comply with the provisions of all applicable laws for the time being in force while exercising rights under the provisions of this Act; [cite: 282, 283]",
+    "sub_structure": {
+      "b": "to ensure not to impersonate another person while providing her personal data for a specified purpose; [cite: 284]",
+      "c": "to ensure not to suppress any material information while providing her personal data for any document, unique identifier, proof of identity or proof of address issued by the State or any of its instrumentalities; [cite: 285]",
+      "d": "to ensure not to register a false or frivolous grievance or complaint with a Data Fiduciary or the Board; and [cite: 286, 287]",
+      "e": "to furnish only such information as is verifiably authentic, while exercising the right to correction or erasure under the provisions of this Act or the rules made thereunder. [cite: 288]"
+    },
+    "plain_english_summary": "Users also have legal duties. They must not impersonate others, submit fake documents, file fake or frivolous complaints, or provide fake information when asking for data corrections. Breaking these rules can lead to fines for the user. [cite: 282, 284, 285, 286, 288]",
+    "keywords": [
+      "duties",
+      "user obligations",
+      "impersonation",
+      "false complaints",
+      "authentic information"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_16",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "SPECIAL PROVISIONS",
+    "number": "16",
+    "title": "Processing of personal data outside India",
+    "text": "The Central Government may, by notification, restrict the transfer of personal data by a Data Fiduciary for processing to such country or territory outside India as may be so notified. [cite: 295]",
+    "sub_structure": {
+      "2": "Nothing contained in this section shall restrict the applicability of any law for the time being in force in India that provides for a higher degree of protection for or restriction on transfer of personal data by a Data Fiduciary outside India... [cite: 296]"
+    },
+    "plain_english_summary": "The Indian government has the power to create a 'blacklist' of countries where Indian startups and companies are strictly forbidden from transferring user data for processing. Existing laws with stricter data transfer rules still apply. [cite: 295, 296]",
+    "keywords": [
+      "cross-border transfer",
+      "data processing outside India",
+      "international data transfer",
+      "government restrictions"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_17",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "SPECIAL PROVISIONS",
+    "number": "17",
+    "title": "Exemptions",
+    "text": "The provisions of Chapter II, except sub-sections (1) and (5) of section 8, and those of Chapter III and section 16 shall not apply where... processing of personal data is necessary for enforcing any legal right or claim; [cite: 298, 299, 300, 301]",
+    "sub_structure": {
+      "1_b": "the processing of personal data by any court or tribunal or any other body in India which is entrusted by law with the performance of any judicial or quasi-judicial or regulatory or supervisory function... [cite: 302]",
+      "1_c": "personal data is processed in the interest of prevention, detection, investigation or prosecution of any offence or contravention of any law... [cite: 303]",
+      "2_b": "necessary for research, archiving or statistical purposes if the personal data is not to be used to take any decision specific to a Data Principal... [cite: 329]",
+      "3": "The Central Government may... notify certain Data Fiduciaries or class of Data Fiduciaries, including startups, as Data Fiduciaries to whom the provisions of section 5, sub-sections (3) and (7) of section 8 and sections 10 and 11 shall not apply. [cite: 330]"
+    },
+    "plain_english_summary": "Many user rights and company obligations do not apply in specific scenarios, such as legal investigations, court orders, or statistical research. Crucially for founders, the government can exempt notified 'startups' from having to provide data notices, retain data accuracy, or grant user access rights. [cite: 298, 303, 329, 330]",
+    "keywords": [
+      "exemptions",
+      "startups",
+      "legal claims",
+      "research",
+      "investigations"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_18",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "DATA PROTECTION BOARD OF INDIA",
+    "number": "18",
+    "title": "Establishment of Board",
+    "text": "With effect from such date as the Central Government may, by notification, appoint, there shall be established, for the purposes of this Act, a Board to be called the Data Protection Board of India. [cite: 336]",
+    "sub_structure": {
+      "2": "The Board shall be a body corporate by the name aforesaid, having perpetual succession and a common seal, with power, subject to the provisions of this Act, to acquire, hold and dispose of property... [cite: 337]",
+      "3": "The headquarters of the Board shall be at such place as the Central Government may notify. [cite: 338]"
+    },
+    "plain_english_summary": "This section officially establishes the Data Protection Board of India, which will function as an independent corporate body to enforce the Act. [cite: 336, 337]",
+    "keywords": [
+      "data protection board",
+      "establishment",
+      "enforcement body",
+      "regulatory authority"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_19",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "DATA PROTECTION BOARD OF INDIA",
+    "number": "19",
+    "title": "Composition and qualifications for appointment of Chairperson and Members",
+    "text": "The Board shall consist of a Chairperson and such number of other Members as the Central Government may notify. [cite: 339]",
+    "sub_structure": {
+      "2": "The Chairperson and other Members shall be appointed by the Central Government in such manner as may be prescribed. [cite: 340]",
+      "3": "The Chairperson and other Members shall be a person of ability, integrity and standing who possesses special knowledge or practical experience in the fields of data governance, administration or implementation of laws related to social or consumer protection, dispute resolution... and at least one among them shall be an expert in the field of law. [cite: 341]"
+    },
+    "plain_english_summary": "The Data Protection Board will be led by a Chairperson and other members chosen by the government. These individuals must be experts in areas like data governance, law, IT, or consumer protection. [cite: 339, 340, 341]",
+    "keywords": [
+      "board composition",
+      "chairperson",
+      "qualifications",
+      "board members",
+      "experts"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_20",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "DATA PROTECTION BOARD OF INDIA",
+    "number": "20",
+    "title": "Salary, allowances payable to and term of office",
+    "text": "The salary, allowances and other terms and conditions of service of the Chairperson and other Members shall be such as may be prescribed, and shall not be varied to their disadvantage after their appointment. [cite: 342]",
+    "sub_structure": {
+      "2": "The Chairperson and other Members shall hold office for a term of two years and shall be eligible for re-appointment. [cite: 343]"
+    },
+    "plain_english_summary": "The terms of service for the Board members will be defined by the government. Members will serve two-year terms and can be re-appointed. [cite: 342, 343]",
+    "keywords": [
+      "term of office",
+      "salary",
+      "allowances",
+      "two-year term",
+      "re-appointment"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_11",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "11",
+    "title": "Right to access information about personal data",
+    "text": "The Data Principal shall have the right to obtain from the Data Fiduciary to whom she has previously given consent... a summary of personal data which is being processed by such Data Fiduciary and the processing activities undertaken by that Data Fiduciary with respect to such personal data; [cite: 256, 257]",
+    "sub_structure": {
+      "1_b": "the identities of all other Data Fiduciaries and Data Processors with whom the personal data has been shared by such Data Fiduciary, along with a description of the personal data so shared; [cite: 258]",
+      "1_c": "any other information related to the personal data of such Data Principal and its processing, as may be prescribed. [cite: 260]",
+      "2": "Nothing contained in clause (b) or clause (c) of sub-section (1) shall apply in respect of the sharing of any personal data by the said Data Fiduciary with any other Data Fiduciary authorised by law to obtain such personal data... [cite: 261]"
+    },
+    "plain_english_summary": "Users have the right to ask a company for a summary of the personal data it holds on them, what it is doing with that data, and the identities of any third parties the data has been shared with. [cite: 256, 257, 258]",
+    "keywords": [
+      "right to access",
+      "data sharing",
+      "third parties",
+      "user rights",
+      "data summary"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_12",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "12",
+    "title": "Right to correction and erasure of personal data",
+    "text": "A Data Principal shall have the right to correction, completion, updating and erasure of her personal data for the processing of which she has previously given consent... [cite: 271]",
+    "sub_structure": {
+      "2": "A Data Fiduciary shall, upon receiving a request for correction, completion or updating from a Data Principal, (a) correct the inaccurate or misleading personal data; (b) complete the incomplete personal data; and (c) update the personal data. [cite: 272, 273, 274, 275]",
+      "3": "A Data Principal shall make a request in such manner as may be prescribed to the Data Fiduciary for erasure of her personal data, and upon receipt of such a request, the Data Fiduciary shall erase her personal data unless retention of the same is necessary for the specified purpose or for compliance with any law for the time being in force. [cite: 276]"
+    },
+    "plain_english_summary": "Users have the right to ask a startup to correct, update, complete, or completely delete their personal data. The company must comply unless it legally needs to retain the data for compliance reasons. [cite: 271, 272, 276]",
+    "keywords": [
+      "right to correction",
+      "right to erasure",
+      "right to be forgotten",
+      "data deletion",
+      "data accuracy"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_13",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "13",
+    "title": "Right of grievance redressal",
+    "text": "A Data Principal shall have the right to have readily available means of grievance redressal provided by a Data Fiduciary or Consent Manager in respect of any act or omission of such Data Fiduciary or Consent Manager regarding the performance of its obligations... [cite: 277]",
+    "sub_structure": {
+      "2": "The Data Fiduciary or Consent Manager shall respond to any grievances referred to in sub-section (1) within such period as may be prescribed... [cite: 278]",
+      "3": "The Data Principal shall exhaust the opportunity of redressing her grievance under this section before approaching the Board. [cite: 279]"
+    },
+    "plain_english_summary": "Users have the right to an easy-to-use grievance redressal mechanism provided by the company. Users must try to resolve their complaints directly with the company before escalating the issue to the Data Protection Board. [cite: 277, 279]",
+    "keywords": [
+      "grievance redressal",
+      "user complaints",
+      "consent manager",
+      "escalation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_14",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "14",
+    "title": "Right to nominate",
+    "text": "A Data Principal shall have the right to nominate, in such manner as may be prescribed, any other individual, who shall, in the event of death or incapacity of the Data Principal, exercise the rights of the Data Principal in accordance with the provisions of this Act... [cite: 280]",
+    "sub_structure": {
+      "2": "For the purposes of this section, the expression \"incapacity\" means inability to exercise the rights of the Data Principal under the provisions of this Act or the rules made thereunder due to unsoundness of mind or infirmity of body. [cite: 281]"
+    },
+    "plain_english_summary": "A user can nominate another person to exercise their data rights (like requesting data deletion) on their behalf if the user dies or becomes physically or mentally incapacitated. [cite: 280, 281]",
+    "keywords": [
+      "right to nominate",
+      "incapacity",
+      "death of user",
+      "nominee",
+      "delegation of rights"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_15",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER III",
+    "chapter_title": "RIGHTS AND DUTIES OF DATA PRINCIPAL",
+    "number": "15",
+    "title": "Duties of Data Principal",
+    "text": "A Data Principal shall perform the following duties, namely:- (a) comply with the provisions of all applicable laws for the time being in force while exercising rights under the provisions of this Act; [cite: 282, 283]",
+    "sub_structure": {
+      "b": "to ensure not to impersonate another person while providing her personal data for a specified purpose; [cite: 284]",
+      "c": "to ensure not to suppress any material information while providing her personal data for any document, unique identifier, proof of identity or proof of address issued by the State or any of its instrumentalities; [cite: 285]",
+      "d": "to ensure not to register a false or frivolous grievance or complaint with a Data Fiduciary or the Board; and [cite: 286, 287]",
+      "e": "to furnish only such information as is verifiably authentic, while exercising the right to correction or erasure under the provisions of this Act or the rules made thereunder. [cite: 288]"
+    },
+    "plain_english_summary": "Users also have legal duties. They must not impersonate others, submit fake documents, file fake or frivolous complaints, or provide fake information when asking for data corrections. Breaking these rules can lead to fines for the user. [cite: 282, 284, 285, 286, 288]",
+    "keywords": [
+      "duties",
+      "user obligations",
+      "impersonation",
+      "false complaints",
+      "authentic information"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_16",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "SPECIAL PROVISIONS",
+    "number": "16",
+    "title": "Processing of personal data outside India",
+    "text": "The Central Government may, by notification, restrict the transfer of personal data by a Data Fiduciary for processing to such country or territory outside India as may be so notified. [cite: 295]",
+    "sub_structure": {
+      "2": "Nothing contained in this section shall restrict the applicability of any law for the time being in force in India that provides for a higher degree of protection for or restriction on transfer of personal data by a Data Fiduciary outside India... [cite: 296]"
+    },
+    "plain_english_summary": "The Indian government has the power to create a 'blacklist' of countries where Indian startups and companies are strictly forbidden from transferring user data for processing. Existing laws with stricter data transfer rules still apply. [cite: 295, 296]",
+    "keywords": [
+      "cross-border transfer",
+      "data processing outside India",
+      "international data transfer",
+      "government restrictions"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_17",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IV",
+    "chapter_title": "SPECIAL PROVISIONS",
+    "number": "17",
+    "title": "Exemptions",
+    "text": "The provisions of Chapter II, except sub-sections (1) and (5) of section 8, and those of Chapter III and section 16 shall not apply where... processing of personal data is necessary for enforcing any legal right or claim; [cite: 298, 299, 300, 301]",
+    "sub_structure": {
+      "1_b": "the processing of personal data by any court or tribunal or any other body in India which is entrusted by law with the performance of any judicial or quasi-judicial or regulatory or supervisory function... [cite: 302]",
+      "1_c": "personal data is processed in the interest of prevention, detection, investigation or prosecution of any offence or contravention of any law... [cite: 303]",
+      "2_b": "necessary for research, archiving or statistical purposes if the personal data is not to be used to take any decision specific to a Data Principal... [cite: 329]",
+      "3": "The Central Government may... notify certain Data Fiduciaries or class of Data Fiduciaries, including startups, as Data Fiduciaries to whom the provisions of section 5, sub-sections (3) and (7) of section 8 and sections 10 and 11 shall not apply. [cite: 330]"
+    },
+    "plain_english_summary": "Many user rights and company obligations do not apply in specific scenarios, such as legal investigations, court orders, or statistical research. Crucially for founders, the government can exempt notified 'startups' from having to provide data notices, retain data accuracy, or grant user access rights. [cite: 298, 303, 329, 330]",
+    "keywords": [
+      "exemptions",
+      "startups",
+      "legal claims",
+      "research",
+      "investigations"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_18",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "DATA PROTECTION BOARD OF INDIA",
+    "number": "18",
+    "title": "Establishment of Board",
+    "text": "With effect from such date as the Central Government may, by notification, appoint, there shall be established, for the purposes of this Act, a Board to be called the Data Protection Board of India. [cite: 336]",
+    "sub_structure": {
+      "2": "The Board shall be a body corporate by the name aforesaid, having perpetual succession and a common seal, with power, subject to the provisions of this Act, to acquire, hold and dispose of property... [cite: 337]",
+      "3": "The headquarters of the Board shall be at such place as the Central Government may notify. [cite: 338]"
+    },
+    "plain_english_summary": "This section officially establishes the Data Protection Board of India, which will function as an independent corporate body to enforce the Act. [cite: 336, 337]",
+    "keywords": [
+      "data protection board",
+      "establishment",
+      "enforcement body",
+      "regulatory authority"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_19",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "DATA PROTECTION BOARD OF INDIA",
+    "number": "19",
+    "title": "Composition and qualifications for appointment of Chairperson and Members",
+    "text": "The Board shall consist of a Chairperson and such number of other Members as the Central Government may notify. [cite: 339]",
+    "sub_structure": {
+      "2": "The Chairperson and other Members shall be appointed by the Central Government in such manner as may be prescribed. [cite: 340]",
+      "3": "The Chairperson and other Members shall be a person of ability, integrity and standing who possesses special knowledge or practical experience in the fields of data governance, administration or implementation of laws related to social or consumer protection, dispute resolution... and at least one among them shall be an expert in the field of law. [cite: 341]"
+    },
+    "plain_english_summary": "The Data Protection Board will be led by a Chairperson and other members chosen by the government. These individuals must be experts in areas like data governance, law, IT, or consumer protection. [cite: 339, 340, 341]",
+    "keywords": [
+      "board composition",
+      "chairperson",
+      "qualifications",
+      "board members",
+      "experts"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_20",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER V",
+    "chapter_title": "DATA PROTECTION BOARD OF INDIA",
+    "number": "20",
+    "title": "Salary, allowances payable to and term of office",
+    "text": "The salary, allowances and other terms and conditions of service of the Chairperson and other Members shall be such as may be prescribed, and shall not be varied to their disadvantage after their appointment. [cite: 342]",
+    "sub_structure": {
+      "2": "The Chairperson and other Members shall hold office for a term of two years and shall be eligible for re-appointment. [cite: 343]"
+    },
+    "plain_english_summary": "The terms of service for the Board members will be defined by the government. Members will serve two-year terms and can be re-appointed. [cite: 342, 343]",
+    "keywords": [
+      "term of office",
+      "salary",
+      "allowances",
+      "two-year term",
+      "re-appointment"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_31",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VII",
+    "chapter_title": "APPEAL AND ALTERNATE DISPUTE RESOLUTION",
+    "number": "31",
+    "title": "Alternate dispute resolution",
+    "text": "If the Board is of the opinion that any complaint may be resolved by mediation, it may direct the parties concerned to attempt resolution of the dispute through such mediation by such mediator as the parties may mutually agree upon, or as provided for under any law for the time being in force in India. [cite: 441]",
+    "sub_structure": {},
+    "plain_english_summary": "The Board can direct startups and users to resolve their complaints through mediation if it believes the dispute can be settled that way. [cite: 441]",
+    "keywords": [
+      "mediation",
+      "alternate dispute resolution",
+      "complaint resolution",
+      "dispute"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_32",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VII",
+    "chapter_title": "APPEAL AND ALTERNATE DISPUTE RESOLUTION",
+    "number": "32",
+    "title": "Voluntary undertaking",
+    "text": "The Board may accept a voluntary undertaking in respect of any matter related to observance of the provisions of this Act from any person at any stage of a proceeding under section 28. [cite: 442]",
+    "sub_structure": {
+      "2": "The voluntary undertaking referred to in sub-section (1) may include an undertaking to take such action within such time as may be determined by the Board, or refrain from taking such action, and or publicising such undertaking. [cite: 443]",
+      "4": "The acceptance of the voluntary undertaking by the Board shall constitute a bar on proceedings under the provisions of this Act as regards the contents of the voluntary undertaking, except in cases covered by sub-section (5). [cite: 445]",
+      "5": "Where a person fails to adhere to any term of the voluntary undertaking accepted by the Board, such breach shall be deemed to be breach of the provisions of this Act and the Board may... proceed in accordance with the provisions of section 33. [cite: 446]"
+    },
+    "plain_english_summary": "A startup can offer a 'voluntary undertaking' to the Board, promising to fix a compliance issue or take specific actions. If accepted, this can pause proceedings, but breaking the promise counts as a breach of the Act. [cite: 442, 443, 445, 446]",
+    "keywords": [
+      "voluntary undertaking",
+      "compliance promise",
+      "bar on proceedings",
+      "breach of promise"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_33",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "PENALTIES AND ADJUDICATION",
+    "number": "33",
+    "title": "Penalties",
+    "text": "If the Board determines on conclusion of an inquiry that breach of the provisions of this Act or the rules made thereunder by a person is significant, it may, after giving the person an opportunity of being heard, impose such monetary penalty specified in the Schedule. [cite: 449, 453]",
+    "sub_structure": {
+      "2_factors": "While determining the amount of monetary penalty... the Board shall have regard to the following matters, namely:- (a) the nature, gravity and duration of the breach; (b) the type and nature of the personal data affected... (e) whether the person took any action to mitigate the effects and consequences of the breach... [cite: 454, 455, 456, 459]"
+    },
+    "plain_english_summary": "The Board has the power to impose significant monetary penalties (fines) on companies if an inquiry concludes they broke the law. Factors like the gravity of the breach and actions taken to mitigate it are considered. [cite: 449, 453, 454, 455, 459]",
+    "keywords": [
+      "monetary penalty",
+      "fines",
+      "adjudication",
+      "breach significance",
+      "mitigation"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_34",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER VIII",
+    "chapter_title": "PENALTIES AND ADJUDICATION",
+    "number": "34",
+    "title": "Crediting sums realised by way of penalties to Consolidated Fund of India",
+    "text": "All sums realised by way of penalties imposed by the Board under this Act, shall be credited to the Consolidated Fund of India. [cite: 463]",
+    "sub_structure": {},
+    "plain_english_summary": "Any money collected from fines and penalties under this Act goes directly into the Consolidated Fund of India. [cite: 463]",
+    "keywords": [
+      "fines collection",
+      "Consolidated Fund of India",
+      "penalties"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_35",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "35",
+    "title": "Protection of action taken in good faith",
+    "text": "No suit, prosecution or other legal proceedings shall lie against the Central Government, the Board, its Chairperson and any Member, officer or employee thereof for anything which is done or intended to be done in good faith under the provisions of this Act or the rules made thereunder. [cite: 467]",
+    "sub_structure": {},
+    "plain_english_summary": "Government officials and Board members are legally protected from lawsuits for actions they take in good faith while enforcing this Act. [cite: 467]",
+    "keywords": [
+      "good faith protection",
+      "legal immunity",
+      "government officials",
+      "board members"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_36",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "36",
+    "title": "Power to call for information",
+    "text": "The Central Government may, for the purposes of this Act, require the Board and any Data Fiduciary or intermediary to furnish such information as it may call for. [cite: 468]",
+    "sub_structure": {},
+    "plain_english_summary": "The Central Government can demand information from the Board, Data Fiduciaries (startups), or intermediaries for the purposes of administering the Act. [cite: 468]",
+    "keywords": [
+      "furnish information",
+      "government powers",
+      "information request"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_37",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "37",
+    "title": "Power of Central Government to issue directions",
+    "text": "The Central Government or any of its officers specially authorised by it in this behalf may, upon receipt of a reference in writing from the Board... direct any agency of the Central Government or any intermediary to block for access by the public or cause to be blocked for access by the public any such information. [cite: 469, 472]",
+    "sub_structure": {
+      "1_a": "intimates the imposition of monetary penalty by the Board on a Data Fiduciary in two or more instances; and [cite: 470]",
+      "1_b": "advises, in the interests of the general public, the blocking for access by the public to any information generated, transmitted, received, stored or hosted, in any computer resource that enables such Data Fiduciary to carry on any activity relating to offering of goods or services... [cite: 471]",
+      "2": "Every intermediary who receives a direction issued under sub-section (1) shall be bound to comply with the same. [cite: 473]"
+    },
+    "plain_english_summary": "If a company repeatedly violates the Act and is penalized multiple times, the Central Government can order intermediaries to block public access to the company's website or app in the interest of the general public. [cite: 470, 471, 472]",
+    "keywords": [
+      "blocking access",
+      "public access",
+      "repeat offender",
+      "government direction",
+      "website blocking"
+    ],
+    "penalty_linked": true,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_38",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "38",
+    "title": "Consistency with other laws",
+    "text": "The provisions of this Act shall be in addition to and not in derogation of any other law for the time being in force. [cite: 484] In the event of any conflict between a provision of this Act and a provision of any other law for the time being in force, the provision of this Act shall prevail to the extent of such conflict. [cite: 485]",
+    "sub_structure": {},
+    "plain_english_summary": "This law applies alongside other existing Indian laws. However, if there is a conflict between this Act and another law, this Act's rules will override the conflicting parts. [cite: 484, 485]",
+    "keywords": [
+      "consistency",
+      "other laws",
+      "conflict of laws",
+      "prevailing law"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_39",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "39",
+    "title": "Bar of jurisdiction",
+    "text": "No civil court shall have the jurisdiction to entertain any suit or proceeding in respect of any matter for which the Board is empowered under the provisions of this Act and no injunction shall be granted by any court or other authority in respect of any action taken or to be taken in pursuance of any power under the provisions of this Act. [cite: 486]",
+    "sub_structure": {},
+    "plain_english_summary": "Regular civil courts are not allowed to handle cases or grant injunctions on matters that are specifically under the authority of the Data Protection Board. [cite: 486]",
+    "keywords": [
+      "civil court jurisdiction",
+      "bar of jurisdiction",
+      "injunctions"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  },
+  {
+    "provision_id": "dpdp_act_2023_sec_40",
+    "statute_id": "dpdp_act_2023",
+    "provision_type": "Section",
+    "chapter": "CHAPTER IX",
+    "chapter_title": "MISCELLANEOUS",
+    "number": "40",
+    "title": "Power to make rules",
+    "text": "The Central Government may, by notification, and subject to the condition of previous publication, make rules not inconsistent with the provisions of this Act, to carry out the purposes of this Act. [cite: 487]",
+    "sub_structure": {
+      "2_a": "the manner in which the notice given by the Data Fiduciary to a Data Principal shall inform her, under sub-section (1) of section 5; [cite: 489]",
+      "2_c": "the manner of accountability and the obligations of Consent Manager under sub-section (8) of section 6; [cite: 491]",
+      "2_f": "the form and manner of intimation of personal data breach to the Board under sub-section (6) of section 8; [cite: 494]"
+    },
+    "plain_english_summary": "The Central Government has the authority to create and publish specific rules to implement the provisions and purposes of the DPDP Act. [cite: 487, 488]",
+    "keywords": [
+      "rulemaking power",
+      "central government",
+      "notifications",
+      "delegated legislation"
+    ],
+    "penalty_linked": false,
+    "effective_date": "2023-08-11"
+  }
+]

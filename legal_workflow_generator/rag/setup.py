@@ -64,7 +64,7 @@ def run():
             keywords TEXT[],
             penalty_linked BOOLEAN,
             effective_date DATE,
-            embedding vector(384),
+            embedding vector(768),
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)

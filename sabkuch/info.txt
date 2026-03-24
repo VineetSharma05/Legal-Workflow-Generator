@@ -1,0 +1,14 @@
+Current
+
+tax: 46 objects
+dpdp: 40 objects
+employees: 40 objects
+softwarelicensing: 40 objects
+corporategovernance: 40 objects
+
+Total:
+tax: 389 objects
+dpdp: 69 objects
+employees: 94 objects
+softwarelicensing: 476 objetcs
+corporategovernance: 1110 objects

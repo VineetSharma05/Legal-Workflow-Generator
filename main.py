@@ -14,7 +14,7 @@ def main():
         rag.setup.run()
 
     elif sys.argv[1] == "ingest":
-        DATASET_FILE = Path("dataset.json")
+        DATASET_FILE = Path("combined_dataset.json")
 
         if not DATASET_FILE.is_file():
             print(
