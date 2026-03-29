@@ -74,7 +74,7 @@ class HybridSearcher:
 
             semantic_score = row[0]
             bm25_score = bm25_scores.get(provision_id, 0)
-            combined_score = 0 * bm25_score + 1 * semantic_score
+            combined_score = 0.3 * bm25_score + 0.7 * semantic_score
 
             results.append({
                 "provision_id": provision_id,

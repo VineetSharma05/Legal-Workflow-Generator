@@ -7,27 +7,17 @@ import legal_workflow_generator.config.values as config
 
 
 BATCH_SIZE = 100
-
 EMBEDDING_MODEL = "sentence-transformers/all-mpnet-base-v2"
 EMBEDDING_DIM = 768
 
 
-def build_embedding_text(title, text, summary, keywords):
-    parts = []
-
-    if title:
-        parts.append(title)
-
-    if text:
-        parts.append(text)
-
-    if summary:
-        parts.append(f"Summary: {summary}")
-
-    if keywords:
-        parts.append("Keywords: " + " ".join(keywords))
-
-    return ". ".join(parts)
+def build_embedding_text(text: str) -> str:
+    """
+    text column already contains combined + preprocessed content from ingestion.py:
+    title + plain_english_summary + keywords + raw_text + chapter_title
+    Just use it directly — no need to re-combine or duplicate fields.
+    """
+    return text if text else ""
 
 
 def run() -> None:
@@ -44,7 +34,7 @@ def run() -> None:
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT provision_id, title, text, plain_english_summary, keywords
+        SELECT provision_id, text
         FROM laws
         WHERE embedding IS NULL
           AND text IS NOT NULL
@@ -68,16 +58,11 @@ def run() -> None:
         texts = []
 
         for row in batch:
-            provision_id, title, text, summary, keywords = row
+            provision_id, text = row
 
-            embedding_text = build_embedding_text(
-                title,
-                text,
-                summary,
-                keywords or []
-            )
+            embedding_text = build_embedding_text(text)
 
-            # Add prefix so document and query embeddings are in the same space
+            # Prefix aligns document embeddings with query embedding space
             prefixed_text = f"Indian law provision: {embedding_text}"
 
             provision_ids.append(provision_id)
@@ -95,8 +80,7 @@ def run() -> None:
         )
 
         conn.commit()
-
-        print(f"  Embedded {min(batch_start+BATCH_SIZE, len(rows))}/{len(rows)}")
+        print(f"  Embedded {min(batch_start + BATCH_SIZE, len(rows))}/{len(rows)}")
 
     cur.close()
     conn.close()
