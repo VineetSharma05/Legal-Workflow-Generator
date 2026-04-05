@@ -32,6 +32,7 @@ class QueryIntent(Enum):
 class NormalizedQuery(TypedDict):
     original: str        
     normalized: str      
+    source: str
 
 
 class LegalContext(TypedDict):
