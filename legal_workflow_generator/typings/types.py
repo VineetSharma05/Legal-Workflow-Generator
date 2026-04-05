@@ -1,5 +1,6 @@
 from typing import TypedDict
 from psycopg2.extras import Json
+from enum import Enum
 
 
 class LawSchema(TypedDict):
@@ -20,3 +21,23 @@ class LawSchema(TypedDict):
     keywords: list[str]
     penalty_linked: bool
     effective_date: str
+
+class QueryIntent(Enum):
+    QA = "qa"                             
+    WORKFLOW = "workflow"                 
+    COMPLIANCE_CHECK = "compliance_check" 
+    UNKNOWN = "unknown"                   
+
+
+class NormalizedQuery(TypedDict):
+    original: str        
+    normalized: str      
+
+
+class LegalContext(TypedDict):
+    original_query: str         
+    normalized_query: str       
+    intent: QueryIntent         
+    legal_domain: str           
+    keywords: list[str]         
+    confidence: float           
