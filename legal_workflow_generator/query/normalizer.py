@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 from spellchecker import SpellChecker
 from legal_workflow_generator.typings.types import NormalizedQuery
+from langdetect import detect, LangDetectException
 
 logger = logging.getLogger(__name__)
 
@@ -215,18 +216,24 @@ class QueryNormalizer:
     def _spell_correct(self, text: str) -> str:
         """
         Correct spelling mistakes while respecting the legal
-        terms whitelist. Words in the whitelist are never changed.
+        terms whitelist. Skips correction for non-English text.
         """
+        try:
+            lang = detect(text)
+            if lang != "en":
+                logger.info(f"Non-English text detected ({lang}), skipping spell correction")
+                return text
+        except LangDetectException:
+            # If detection fails, proceed with correction
+            pass
+
         words = text.split()
         corrected = []
 
         for word in words:
-            # Never correct whitelisted legal terms
             if word in LEGAL_TERMS_WHITELIST:
                 corrected.append(word)
             else:
-                # SpellChecker returns the best correction
-                # If word is already correct it returns the same word
                 correction = self.spell.correction(word)
                 corrected.append(correction if correction else word)
 
