@@ -2,9 +2,7 @@ import re
 import pdfplumber
 import logging
 from pathlib import Path
-from spellchecker import SpellChecker
 from legal_workflow_generator.typings.types import NormalizedQuery
-from langdetect import detect, LangDetectException
 
 logger = logging.getLogger(__name__)
 
@@ -65,11 +63,8 @@ class QueryNormalizer:
     """
 
     def __init__(self):
-        # Initialize spell checker once
-        self.spell = SpellChecker()
         # Add all legal terms to spell checker's
         # known words so they are never corrected
-        self.spell.word_frequency.load_words(LEGAL_TERMS_WHITELIST)
         logger.info("QueryNormalizer initialized")
 
     # ─────────────────────────────────────────
@@ -81,42 +76,37 @@ class QueryNormalizer:
         text: str | None = None,
         pdf_path: str | Path | None = None,
     ) -> NormalizedQuery:
-        """
-        Main entry point for the normalizer.
-
-        Args:
-            text: Plain text query from the user (optional)
-            pdf_path: Path to uploaded PDF file (optional)
-
-        Returns:
-            NormalizedQuery with original and normalized text
-
-        At least one of text or pdf_path must be provided.
-        """
-
+        
         if not text and not pdf_path:
             raise ValueError("At least one of text or pdf_path must be provided")
 
-        # Step 1 — Extract text from PDF if provided
         pdf_text = ""
         if pdf_path:
             pdf_text = self._extract_pdf_text(pdf_path)
-            logger.info(f"Extracted {len(pdf_text)} characters from PDF")
 
-        # Step 2 — Combine PDF and text smartly
-        # Text query = user's intent (what they want to know)
-        # PDF content = background context (what they have)
-        # We put PDF content first so the model sees context
-        # before the question — like giving someone a document
-        # to read before asking them a question about it
         combined = self._combine_inputs(text, pdf_text)
-
-        # Step 3 — Normalize the combined text
         normalized = self._normalize_text(combined)
 
+        # ← ADD THESE CHECKS AFTER NORMALIZATION
+
+        # Check 1 — after cleaning, is there anything left?
+        if not normalized.strip():
+            raise ValueError("Query is empty after normalization")
+
+        # Check 2 — minimum meaningful length (at least 2 words)
+        if len(normalized.strip().split()) < 2:
+            raise ValueError("Query is too short to be meaningful")
+
+        # Check 3 — truncate very long queries to 500 words
+        # Groq has token limits and very long queries lose focus
+        words = normalized.strip().split()
+        if len(words) > 500:
+            normalized = " ".join(words[:500])
+            logger.warning("Query truncated to 500 words")
+
         return NormalizedQuery(
-            original=combined,       # preserve exactly what user gave
-            normalized=normalized,   # cleaned version for downstream use
+            original=combined,
+            normalized=normalized,
             source=self._detect_source(text, pdf_path),
         )
 
@@ -197,8 +187,6 @@ class QueryNormalizer:
         # Replace multiple spaces/newlines with a single space
         text = re.sub(r"\s+", " ", text).strip()
 
-        # Step 5 — Spell correct
-        text = self._spell_correct(text)
 
         return text
 
@@ -213,31 +201,6 @@ class QueryNormalizer:
             text = re.sub(rf"\b{abbr}\b", expansion, text)
         return text
 
-    def _spell_correct(self, text: str) -> str:
-        """
-        Correct spelling mistakes while respecting the legal
-        terms whitelist. Skips correction for non-English text.
-        """
-        try:
-            lang = detect(text)
-            if lang != "en":
-                logger.info(f"Non-English text detected ({lang}), skipping spell correction")
-                return text
-        except LangDetectException:
-            # If detection fails, proceed with correction
-            pass
-
-        words = text.split()
-        corrected = []
-
-        for word in words:
-            if word in LEGAL_TERMS_WHITELIST:
-                corrected.append(word)
-            else:
-                correction = self.spell.correction(word)
-                corrected.append(correction if correction else word)
-
-        return " ".join(corrected)
 
     def _detect_source(
         self,
