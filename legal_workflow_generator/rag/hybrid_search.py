@@ -50,7 +50,7 @@ class HybridSearcher:
 
         placeholders = ','.join(['%s'] * len(candidate_ids))
         cur.execute(f"""
-            SELECT provision_id, title, embedding
+            SELECT provision_id, title, text, plain_english_summary, statute_id, number, embedding
             FROM laws
             WHERE provision_id IN ({placeholders})
               AND embedding IS NOT NULL
@@ -61,7 +61,7 @@ class HybridSearcher:
 
         # Step 4: Compute combined score
         results = []
-        for provision_id, title, embedding in candidates:
+        for provision_id, title, text, plain_english_summary, statute_id, number, embedding in candidates:
             cur.execute("""
                 SELECT 1 - (embedding <=> %s::vector) AS similarity
                 FROM laws
@@ -79,6 +79,10 @@ class HybridSearcher:
             results.append({
                 "provision_id": provision_id,
                 "title": title,
+                "text": text,
+                "plain_english_summary": plain_english_summary,
+                "statute_id": statute_id,
+                "number": number,
                 "bm25_score": bm25_score,
                 "semantic_score": semantic_score,
                 "combined_score": combined_score,
