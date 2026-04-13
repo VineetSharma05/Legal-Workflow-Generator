@@ -13,4 +13,5 @@ dependencies = [
     "fpdf>=1.7.2",
     "python-dotenv>=1.2.2",
     "groq>=1.1.2",
+    "google-genai>=1.30.0",
 ]
