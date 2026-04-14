@@ -3,10 +3,14 @@ name = "legal-workflow-generator"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "psycopg2-binary>=2.9.11",
     "sentence-transformers>=3.0.0",
     "pgvector>=0.3.0",
     "rank-bm25>=0.2.2",
+    "pdfplumber>=0.11.9",
+    "fpdf>=1.7.2",
+    "python-dotenv>=1.2.2",
+    "groq>=1.1.2",
 ]
