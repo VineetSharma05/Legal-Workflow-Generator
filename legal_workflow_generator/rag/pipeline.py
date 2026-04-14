@@ -1,18 +1,23 @@
 from typing import Any
 
 from legal_workflow_generator.rag.generator import GeminiAnswerGenerator
+from legal_workflow_generator.rag.generator import GroqAnswerGenerator
 from legal_workflow_generator.rag.hybrid_search import HybridSearcher
 
 
 class RagPipeline:
     """
     End-to-end RAG pipeline:
-      query -> hybrid retrieval -> Gemini grounded answer
+      query -> hybrid retrieval -> Gemini/Llama grounded answer
     """
 
-    def __init__(self):
+    def __init__(self, llm_provider="gemini"):
         self.searcher = HybridSearcher()
-        self.generator = GeminiAnswerGenerator()
+        # Set up the correct LLM generator based on the flag
+        if llm_provider == "groq":
+            self.generator = GroqAnswerGenerator()
+        else:
+            self.generator = GeminiAnswerGenerator()
         self._index_ready = False
 
     def _ensure_index(self) -> None:
