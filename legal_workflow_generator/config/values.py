@@ -19,3 +19,9 @@ if not GROQ_API_KEY:
     raise ValueError("GROQ_API_KEY is not set in .env file")
 
 GROQ_MODEL = "llama-3.3-70b-versatile" 
+
+# ─────────────────────────────────────────────
+# GEMINI CONFIG (RAG answer generation)
+# ─────────────────────────────────────────────
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
