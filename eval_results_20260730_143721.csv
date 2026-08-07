@@ -1,0 +1,46 @@
+query,expected_domain,classified_domain,domain_correct,citation_recall,retry_count_retrieval,retry_count_generation,abstained,elapsed_seconds
+what is a data fiduciary,data_protection,data_protection,True,0.5,0,0,False,28.83
+user consent requirements for collecting personal data,data_protection,data_protection,True,0.5,0,0,False,23.98
+how to handle personal data breach notification,data_protection,data_protection,True,0.5,0,0,False,30.9
+right to erasure of personal data,data_protection,data_protection,True,1.0,0,0,False,54.66
+children data protection parental consent,data_protection,data_protection,True,1.0,0,0,False,40.99
+cross border data transfer restrictions India,data_protection,data_protection,True,0.5,0,0,False,31.41
+significant data fiduciary obligations,data_protection,data_protection,True,1.0,0,0,False,28.49
+data protection officer appointment requirements,data_protection,data_protection,True,0.5,0,0,False,35.25
+penalty for violating data protection rules,data_protection,data_protection,True,0.5,0,0,False,52.91
+what is a consent manager,data_protection,data_protection,True,0.5,0,0,False,29.36
+minimum number of founders to start a private company,corporate_governance,corporate_governance,True,1.0,0,0,False,35.5
+what documents are needed for company incorporation,corporate_governance,corporate_governance,True,1.0,3,0,False,126.97
+memorandum of association requirements,corporate_governance,corporate_governance,True,1.0,0,0,False,46.62
+how to change company name legally,corporate_governance,corporate_governance,True,1.0,0,0,False,28.08
+registered office requirements for a new company,corporate_governance,corporate_governance,True,1.0,0,0,False,23.83
+can a subsidiary hold shares in its parent company,corporate_governance,corporate_governance,True,0.5,0,0,False,40.56
+how to convert private company to public company,corporate_governance,corporate_governance,True,1.0,0,0,False,31.94
+what is a Section 8 non-profit company,corporate_governance,corporate_governance,True,0.5,0,0,False,35.07
+promoter liability for fraud during registration,corporate_governance,corporate_governance,True,1.0,1,0,False,58.37
+founder personal liability for company debts,corporate_governance,corporate_governance,True,0.5,0,0,False,32.27
+is software code protected by copyright,ip_licensing,ip_licensing,True,0.5,0,0,False,22.92
+who owns copyright of code written by an employee,ip_licensing,ip_licensing,True,0.5,0,0,False,56.25
+how to assign copyright to another person,ip_licensing,ip_licensing,True,1.0,0,0,False,37.11
+copyright protection for computer databases,ip_licensing,ip_licensing,True,1.0,0,0,False,34.72
+what happens if assignee does not use the copyright,ip_licensing,ip_licensing,True,1.0,0,0,False,42.85
+copyright infringement of software,ip_licensing,ip_licensing,True,1.0,0,0,False,43.19
+employer owns copyright of work made during employment,ip_licensing,ip_licensing,True,0.5,0,0,False,32.9
+employee IP ownership when working at a startup,ip_licensing,employment,False,0.5,0,0,False,52.24
+GST on software exports from India,taxation,taxation,True,1.0,0,0,False,24.18
+what is zero rated supply for startups,taxation,taxation,True,0.5,0,0,False,69.13
+input tax credit refund for exporters,taxation,taxation,True,0.5,0,0,False,44.67
+what is OIDAR online information services GST,taxation,taxation,True,1.0,0,0,False,27.81
+GST liability for e-commerce platforms,taxation,taxation,True,1.0,3,0,True,145.65
+foreign company selling digital services to Indian users,taxation,taxation,True,1.0,0,0,False,23.48
+place of supply rules for software services,taxation,taxation,True,1.0,0,0,False,23.55
+SaaS company exporting services GST treatment,taxation,taxation,True,1.0,0,0,False,27.43
+online gaming company GST liability,taxation,taxation,True,1.0,0,0,False,35.87
+Letter of Undertaking for export without paying GST,taxation,taxation,True,0.5,3,0,True,57.78
+how to set up internal complaints committee startup,employment,employment,True,1.0,0,0,False,26.15
+what counts as sexual harassment at workplace,employment,employment,True,1.0,0,0,False,22.68
+complaint filing deadline for harassment case,employment,employment,True,0.5,0,0,False,24.76
+confidentiality rules in harassment proceedings,employment,employment,True,1.0,0,0,False,27.09
+employer duties to prevent sexual harassment,employment,employment,True,0.5,0,0,False,50.31
+equal pay for men and women doing same work,employment,employment,True,1.0,0,0,False,23.68
+legal steps to launch a startup in India from scratch,corporate_governance,unknown,False,0.0,0,0,True,0.61

@@ -11,7 +11,7 @@ conn = psycopg2.connect(
     user="postgres",
     password=os.environ["PGPASSWORD"],
     host="localhost",
-    port=5432,
+    port=5433,
     connect_timeout=5,
 )
 print("connected!")
