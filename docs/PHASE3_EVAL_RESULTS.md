@@ -10,7 +10,7 @@
 ---
 
 ## Eval 1 — Phase 2 Baseline (Static RAG Pipeline)
-**Script:** `eval_phase2.py`
+**Script:** `evals/eval_phase2.py`
 **Date:** 30 July 2026
 **Queries:** 49
 
@@ -25,7 +25,7 @@
 ---
 
 ## Eval 2 — Phase 3 Agentic RAG Pipeline
-**Script:** `eval_agent.py`
+**Script:** `evals/eval_agent.py`
 **Date:** 30 July 2026
 **Queries:** 44 valid (5 errored due to API rate limit)
 
@@ -59,7 +59,7 @@
 ---
 
 ## Eval 3 — Manual Test Set (15 queries)
-**Script:** `agent_query.py` (manual)
+**Script:** `scripts/agent_query.py` (manual)
 **Date:** 30 July 2026
 
 ### Single Domain Queries (5/5 passed)
@@ -108,7 +108,7 @@
 ---
 
 ## Files
-- `eval_results_20260730_143721.json` — Phase 3 full eval results
-- `eval_results_20260730_143721.csv` — Phase 3 summary CSV
-- `eval_phase2_results_20260730_152445.json` — Phase 2 baseline results
-- `eval_phase2_results_20260730_152445.csv` — Phase 2 baseline CSV
+- `evals/results/eval_results_20260730_143721.json` — Phase 3 full eval results
+- `evals/results/eval_results_20260730_143721.csv` — Phase 3 summary CSV
+- `evals/results/eval_phase2_results_20260730_152445.json` — Phase 2 baseline results
+- `evals/results/eval_phase2_results_20260730_152445.csv` — Phase 2 baseline CSV

@@ -1,5 +1,8 @@
 import sys
 import os
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 os.environ.setdefault("PGPASSWORD", "sanj2005")
 
 from legal_workflow_generator.agent.graph import graph
@@ -31,6 +34,6 @@ def run(query: str):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python agent_query.py \"your legal question here\"")
+        print("Usage: python scripts/agent_query.py \"your legal question here\"")
         sys.exit(1)
     run(" ".join(sys.argv[1:]))

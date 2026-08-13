@@ -2,8 +2,14 @@ import os
 import json
 import time
 import csv
+import sys
 from datetime import datetime
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 os.environ.setdefault("PGPASSWORD", "sanj2005")
+
+RESULTS_DIR = Path(__file__).resolve().parent / "results"
 
 from legal_workflow_generator.agent.graph import graph
 
@@ -167,8 +173,9 @@ def evaluate():
     print(f"{'='*60}\n")
 
     # ── save results ──────────────────────────────────────────────────────────
-    json_path = f"eval_results_{timestamp}.json"
-    csv_path  = f"eval_results_{timestamp}.csv"
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    json_path = RESULTS_DIR / f"eval_results_{timestamp}.json"
+    csv_path  = RESULTS_DIR / f"eval_results_{timestamp}.csv"
 
     with open(json_path, "w") as f:
         json.dump({"summary": {

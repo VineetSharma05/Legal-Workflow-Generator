@@ -1,3 +1,17 @@
+## Project Layout
+
+```
+main.py                 CLI entrypoint for database setup / ingestion / embedding
+legal_workflow_generator/   library code (query, rag, agent, workflow units)
+scripts/                runnable helper scripts (agent queries, demos, validation)
+evals/                  evaluation harnesses; evals/results/ holds saved runs
+tests/                  unit and pipeline tests
+datasets/               source legal corpora
+docs/                   architecture diagram and evaluation write-ups
+```
+
+All commands below are meant to be run from the repository root.
+
 ## Installation
 
 - Install uv and other packages
@@ -59,7 +73,7 @@ python -m tests.test_rag_pipeline --llama
 Use this script to run the full flow with your own query:
 
 ```bash
-python demo_query_rag.py \
+python scripts/demo_query_rag.py \
 	--query "What are the steps to comply with DPDP Act as a SaaS startup?" \
 	--provider gemini \
 	--top-k 3
@@ -69,10 +83,18 @@ Useful options:
 
 ```bash
 # Run only query unit (normalization + intent + legal context)
-python demo_query_rag.py --query "Need GST compliance checklist" --query-only
+python scripts/demo_query_rag.py --query "Need GST compliance checklist" --query-only
 
 # Use Groq for answer generation
-python demo_query_rag.py --query "How to register a private limited company in India?" --provider groq
+python scripts/demo_query_rag.py --query "How to register a private limited company in India?" --provider groq
+```
+
+You can also drive the query, RAG and demo units through the wrapper script:
+
+```bash
+./scripts/run_units.sh query
+./scripts/run_units.sh rag --gemini
+./scripts/run_units.sh demo --query "What are DPDP compliance steps for a SaaS startup?"
 ```
 
 
@@ -83,21 +105,23 @@ python demo_query_rag.py --query "How to register a private limited company in I
 
 ```bash
 # Single query
-python agent_query.py "What are my DPDP compliance obligations as a SaaS startup?"
+python scripts/agent_query.py "What are my DPDP compliance obligations as a SaaS startup?"
 
 # Multi-domain query
-python agent_query.py "We have 20 employees including women, export software, and collect user data — what are all our compliance obligations?"
+python scripts/agent_query.py "We have 20 employees including women, export software, and collect user data — what are all our compliance obligations?"
 ```
 
 ### Run Evaluation
 
 ```bash
 # Phase 3 agentic eval (49 queries)
-python eval_agent.py
+python evals/eval_agent.py
 
 # Phase 2 baseline eval for comparison (49 queries)
-python eval_phase2.py
+python evals/eval_phase2.py
 ```
+
+Both scripts write their timestamped JSON/CSV output to `evals/results/`.
 
 ### Architecture
 
@@ -123,4 +147,4 @@ The agentic pipeline consists of 7 LangGraph nodes:
 | Answer rate | 100% (never abstains) | 93.9% |
 | Multi-domain support | No | Yes (up to 5 domains) |
 
-See `PHASE3_EVAL_RESULTS.md` for full evaluation details.
+See `docs/PHASE3_EVAL_RESULTS.md` for full evaluation details.
