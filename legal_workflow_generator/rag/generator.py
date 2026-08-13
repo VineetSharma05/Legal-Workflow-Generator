@@ -95,7 +95,9 @@ class GroqAnswerGenerator:
 
     def __init__(self, model_name: str = GROQ_MODEL):
         if not GROQ_API_KEY:
-            raise ValueError("GROQ_API_KEY is not set in environment")
+            raise ValueError(
+                "GROQ_API_KEY is not set. Add it to your .env file to use the groq provider."
+            )
 
         self.client = Groq(api_key=GROQ_API_KEY)
         self.model_name = model_name

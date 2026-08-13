@@ -1,9 +1,10 @@
 import sys
-import os
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-os.environ.setdefault("PGPASSWORD", "sanj2005")
+
+# Loads .env and fails fast if a required variable is missing.
+import legal_workflow_generator.config.values  # noqa: F401
 
 from legal_workflow_generator.agent.graph import graph
 

@@ -1,4 +1,3 @@
-import os
 import re
 from typing import List
 import psycopg2
@@ -196,7 +195,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
     conn = psycopg2.connect(
         dbname=config.DB_NAME,
         user=config.DB_USER,
-        password=os.environ.get("PGPASSWORD"),
+        password=config.PGPASSWORD,
         host=config.DB_HOST,
         port=config.DB_PORT,
     )

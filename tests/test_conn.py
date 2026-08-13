@@ -1,17 +1,14 @@
-﻿import psycopg2
-import os
+import psycopg2
 
-if "PGPASSWORD" not in os.environ:
-    print("PGPASSWORD env not set. Please set it and then run the script")
-    exit(1)
+import legal_workflow_generator.config.values as config
 
 print("connecting...")
 conn = psycopg2.connect(
     dbname="postgres",
-    user="postgres",
-    password=os.environ["PGPASSWORD"],
-    host="localhost",
-    port=5433,
+    user=config.DB_USER,
+    password=config.PGPASSWORD,
+    host=config.DB_HOST,
+    port=config.DB_PORT,
     connect_timeout=5,
 )
 print("connected!")

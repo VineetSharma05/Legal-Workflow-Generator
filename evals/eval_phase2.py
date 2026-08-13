@@ -1,4 +1,3 @@
-import os
 import json
 import time
 import csv
@@ -8,7 +7,9 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-os.environ.setdefault("PGPASSWORD", "sanj2005")
+
+# Loads .env and fails fast if a required variable is missing.
+import legal_workflow_generator.config.values  # noqa: F401
 
 RESULTS_DIR = Path(__file__).resolve().parent / "results"
 
