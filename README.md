@@ -1,13 +1,13 @@
 ## Project Layout
 
 ```
-main.py                 CLI entrypoint for database setup / ingestion / embedding
+main.py                     CLI entrypoint for database setup / ingestion / embedding
 legal_workflow_generator/   library code (query, rag, agent, workflow units)
-scripts/                runnable helper scripts (agent queries, demos, validation)
-evals/                  evaluation harnesses; evals/results/ holds saved runs
-tests/                  unit and pipeline tests
-datasets/               source legal corpora
-docs/                   architecture diagram and evaluation write-ups
+scripts/                    runnable helper scripts (agent queries, demos, validation)
+evals/                      evaluation harnesses; evals/results/ holds saved runs
+tests/                      unit and pipeline tests
+datasets/                   source legal corpora
+docs/                       architecture diagram and evaluation write-ups
 ```
 
 All commands below are meant to be run from the repository root.
@@ -26,9 +26,24 @@ cp .env.example .env
 # Edit .env file with correct values
 ```
 
+`.env` is loaded from the repository root by `legal_workflow_generator/config/values.py`,
+so it applies identically to `main.py`, `scripts/`, `tests/` and `evals/` regardless of
+the working directory. `PGPASSWORD` and `GEMINI_API_KEY` are **required and never
+defaulted** — if either is missing or empty, the process raises
+`MissingEnvironmentVariable` and exits before doing any work. Variables already exported
+in your shell take precedence over the `.env` file.
+
+Optional overrides (`PGDATABASE`, `PGUSER`, `PGHOST`, `PGPORT`, `GEMINI_MODEL`,
+`GROQ_MODEL`, and `GROQ_API_KEY` for the groq provider) are listed in `.env.example`.
+
 - Start database
 ```
 docker compose up
+```
+
+- Test if database is reachable
+```bash
+python -m tests.test_conn
 ```
 
 - Setup database
@@ -43,11 +58,6 @@ python main.py ingest
 - Generate embeddings
 ```bash
 python main.py embed
-```
-
-- Run end-to-end retrieval + Gemini answer generation test
-```bash
-python tests/test_rag_pipeline.py
 ```
 
 ## Test Query Processing Unit
