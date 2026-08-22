@@ -129,9 +129,48 @@ python evals/eval_agent.py
 
 # Phase 2 baseline eval for comparison (49 queries)
 python evals/eval_phase2.py
+
+# Domain classification eval — isolates LegalContextResolver (51 queries)
+python evals/eval_domain_classification.py
 ```
 
-Both scripts write their timestamped JSON/CSV output to `evals/results/`.
+All three scripts write their timestamped JSON/CSV output to `evals/results/`.
+
+#### Domain classification eval
+
+`evals/eval_domain_classification.py` runs `LegalContextResolver` in isolation
+(no retrieval, no answer generation) against a hand-labeled set of 51 queries —
+8 per domain, 6 boundary queries that plausibly touch two domains, and 5
+off-topic queries expected to resolve to `unknown`. It's the ground-truth check
+for the two correctness signals the resolver produces on every call:
+
+- **`domain_agreement`** — does the LLM's chosen domain match the free,
+  always-computed rule-based (keyword) domain? Disagreement costs nothing to
+  detect and is a hint the query may be misclassified.
+- **`domain_confidence`** — with self-consistency on, the domain prompt is
+  sampled N times at `temperature=0.7` and majority-voted; this is the winning
+  vote share (e.g. `0.67` for a 2-of-3 split). Low confidence means the LLM
+  itself isn't stable on that query.
+
+Neither signal is useful unless it actually predicts wrongness, so the script
+reports, beyond plain accuracy:
+
+| Metric | What it tells you |
+|---|---|
+| `overall_accuracy` | LLM (or self-consistency majority) domain vs. the labeled domain |
+| `rule_based_only_accuracy` | accuracy of the keyword classifier alone, for comparison |
+| `agreement_rate` | how often the LLM and rule-based classifier agree |
+| `accuracy_when_llm_rule_based_agree` / `..._disagree` | does disagreement actually correlate with being wrong? |
+| `accuracy_when_unanimous_vote` / `..._split_vote` | does a split self-consistency vote actually correlate with being wrong? |
+| `per_domain_metrics` | precision/recall/F1 per domain |
+| `confusion_matrix` | expected domain → predicted domain counts |
+
+Self-consistency is on by default here (3 samples/query) since that's what
+produces a non-trivial `domain_confidence` to evaluate — pass
+`--no-self-consistency` for a single Gemini call per query (cheaper, but
+`domain_confidence` degenerates to 1.0/0.0), or `--samples N` to change the
+vote size. This is separate from the `SELF_CONSISTENCY_ENABLED` env var, which
+controls the default for the resolver everywhere else (e.g. inside the agent).
 
 ### Architecture
 

@@ -68,3 +68,12 @@ GROQ_MODEL = optional_env("GROQ_MODEL", "llama-3.3-70b-versatile")
 # ─────────────────────────────────────────────
 GEMINI_API_KEY = require_env("GEMINI_API_KEY")
 GEMINI_MODEL = optional_env("GEMINI_MODEL", "models/gemini-3.1-flash-lite")
+
+# ─────────────────────────────────────────────
+# CONTEXT RESOLVER CONFIG
+# ─────────────────────────────────────────────
+# Self-consistency resamples the domain classification prompt at temperature>0
+# and majority-votes across the samples. It's an uncertainty signal, not free —
+# each sample is an extra Gemini call — so it defaults off and is toggled here.
+SELF_CONSISTENCY_ENABLED = optional_env("SELF_CONSISTENCY_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
+SELF_CONSISTENCY_SAMPLES = int(optional_env("SELF_CONSISTENCY_SAMPLES", "3"))

@@ -36,9 +36,14 @@ class NormalizedQuery(TypedDict):
 
 
 class LegalContext(TypedDict):
-    original_query: str         
-    normalized_query: str       
-    intent: QueryIntent         
-    legal_domain: str           
-    keywords: list[str]         
-    confidence: float           
+    original_query: str
+    normalized_query: str
+    intent: QueryIntent
+    legal_domain: str
+    keywords: list[str]
+    confidence: float
+
+    # Domain classification correctness signals (see LegalContextResolver)
+    rule_based_domain: str      # keyword-matched domain, always computed for comparison
+    domain_agreement: bool      # legal_domain == rule_based_domain
+    domain_confidence: float    # self-consistency vote share; 1.0 when self-consistency is off

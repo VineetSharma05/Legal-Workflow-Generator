@@ -64,7 +64,11 @@ Example: data_protection, taxation, ip_licensing"""
     except Exception:
         state["all_domains"] = [state["domain"]]
 
-    state["trace"] = [f"classify → intent={state['intent']} domain={state['domain']} all_domains={state.get('all_domains')}"]
+    state["trace"] = [
+        f"classify → intent={state['intent']} domain={state['domain']} all_domains={state.get('all_domains')} "
+        f"domain_agreement={context.get('domain_agreement')} domain_confidence={context.get('domain_confidence'):.2f} "
+        f"rule_based_domain={context.get('rule_based_domain')}"
+    ]
     return state
 
 # ── Node 2: retrieve ──────────────────────────────────────────────────────────
