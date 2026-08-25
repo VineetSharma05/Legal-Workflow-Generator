@@ -66,8 +66,8 @@ Example: data_protection, taxation, ip_licensing"""
 
     state["trace"] = [
         f"classify → intent={state['intent']} domain={state['domain']} all_domains={state.get('all_domains')} "
-        f"domain_agreement={context.get('domain_agreement')} domain_confidence={context.get('domain_confidence'):.2f} "
-        f"rule_based_domain={context.get('rule_based_domain')}"
+        f"domain_source={context.get('domain_source')} domain_agreement={context.get('domain_agreement')} "
+        f"domain_confidence={context.get('domain_confidence'):.2f} keyword_domain={context.get('keyword_domain')}"
     ]
     return state
 

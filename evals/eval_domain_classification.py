@@ -4,24 +4,30 @@ Evaluates LegalContextResolver's domain classification in isolation
 
 What this measures — and why it exists
 ---------------------------------------
-The resolver's domain field comes from an LLM call, with a keyword-based
-rule-based classifier used only as a fallback when that call errors out. Two
-correctness signals were added on top of that (see context_resolver.py):
+Domain classification now runs a deterministic KeywordDomainClassifier first
+(TF-IDF terms extracted from the domain-labeled law corpus at ingestion — see
+rag/domain_keywords.py), with Gemini consulted according to `--strategy`:
 
-  - domain_agreement  : does the LLM's domain match the free, always-computed
-                        rule-based domain? Disagreement is a zero-cost hint
-                        that a query might be misclassified.
-  - domain_confidence : when self-consistency is enabled, the LLM is sampled
-                        N times at temperature>0 and majority-voted; the
-                        winning vote share (e.g. 2/3) is returned here. A
-                        split vote means the LLM itself isn't stable on the
-                        query.
+  - "llm_fallback" — Gemini only runs when the keyword classifier finds no
+                     match at all. No LLM call, no cost, fully deterministic
+                     whenever keywords resolve the query on their own.
+  - "combine"       — Gemini always runs too, so its answer can be
+                      cross-checked against the keyword classifier's.
 
-Neither signal is worth anything unless it actually correlates with being
-wrong. This script is what answers that: it runs the resolver against
-queries with a known correct domain and reports, on top of plain accuracy,
-whether disagreement/low-confidence queries are in fact the ones the
-resolver gets wrong.
+Two signals travel with every classification, regardless of strategy:
+
+  - domain_agreement  : True only when both sources actually ran and agreed.
+                        In "llm_fallback" mode this is only informative on
+                        queries the keyword classifier couldn't resolve on
+                        its own (the only case where Gemini also runs).
+  - domain_confidence : when self-consistency is enabled for whichever
+                        Gemini call does happen, this is the majority vote
+                        share across N samples; 1.0 otherwise.
+
+This script's job is to check those signals actually correlate with being
+wrong, and — the main comparison this run is for — to measure how much
+accuracy the deterministic keyword path gets right without any LLM call at
+all, against the prior all-LLM baseline.
 """
 
 import argparse
@@ -154,8 +160,18 @@ def bucket_accuracy(results: list[dict], key: str, predicate) -> tuple[int, floa
     return len(subset), round(correct / len(subset), 2)
 
 
-def evaluate(self_consistency: bool, samples: int):
+def source_breakdown(results: list[dict]) -> dict:
+    breakdown = {}
+    for source in sorted({r["domain_source"] for r in results}):
+        subset = [r for r in results if r["domain_source"] == source]
+        correct = sum(1 for r in subset if r["correct"])
+        breakdown[source] = {"n": len(subset), "accuracy": round(correct / len(subset), 2)}
+    return breakdown
+
+
+def evaluate(strategy: str, self_consistency: bool, samples: int):
     resolver = LegalContextResolver(
+        strategy=strategy,
         self_consistency=self_consistency,
         self_consistency_samples=samples,
     )
@@ -168,7 +184,7 @@ def evaluate(self_consistency: bool, samples: int):
 
     print(f"\n{'='*60}")
     print(f"DOMAIN CLASSIFICATION EVALUATION — {total} queries")
-    print(f"self_consistency={self_consistency} samples={samples if self_consistency else '-'}")
+    print(f"strategy={strategy} self_consistency={self_consistency} samples={samples if self_consistency else '-'}")
     print(f"{'='*60}\n")
 
     for i, test in enumerate(TEST_QUERIES, 1):
@@ -182,25 +198,27 @@ def evaluate(self_consistency: bool, samples: int):
             context = resolver.resolve(normalized, intent, intent_confidence)
 
             classified_domain = context["legal_domain"]
-            rule_based_domain = context["rule_based_domain"]
+            keyword_domain = context["keyword_domain"]
+            domain_source = context["domain_source"]
             domain_agreement = context["domain_agreement"]
             domain_confidence = context["domain_confidence"]
             correct = classified_domain == expected_domain
-            rule_based_correct = rule_based_domain == expected_domain
+            keyword_correct = keyword_domain == expected_domain
 
             print(
                 f"       expected={expected_domain} classified={classified_domain} "
-                f"({'OK' if correct else 'WRONG'}) | agreement={domain_agreement} "
-                f"confidence={domain_confidence:.2f}"
+                f"({'OK' if correct else 'WRONG'}) | source={domain_source} "
+                f"agreement={domain_agreement} confidence={domain_confidence:.2f}"
             )
 
             results.append({
                 "query": query,
                 "expected_domain": expected_domain,
                 "classified_domain": classified_domain,
-                "rule_based_domain": rule_based_domain,
+                "keyword_domain": keyword_domain,
+                "domain_source": domain_source,
                 "correct": correct,
-                "rule_based_correct": rule_based_correct,
+                "keyword_correct": keyword_correct,
                 "domain_agreement": domain_agreement,
                 "domain_confidence": domain_confidence,
             })
@@ -215,9 +233,10 @@ def evaluate(self_consistency: bool, samples: int):
     errored = total - len(scored)
 
     overall_accuracy = round(sum(r["correct"] for r in scored) / len(scored), 2) if scored else 0.0
-    rule_based_accuracy = round(sum(r["rule_based_correct"] for r in scored) / len(scored), 2) if scored else 0.0
+    keyword_accuracy = round(sum(r["keyword_correct"] for r in scored) / len(scored), 2) if scored else 0.0
     agreement_rate = round(sum(r["domain_agreement"] for r in scored) / len(scored), 2) if scored else 0.0
     avg_confidence = round(sum(r["domain_confidence"] for r in scored) / len(scored), 2) if scored else 0.0
+    llm_calls_avoided = sum(1 for r in scored if r["domain_source"] in ("keyword", "skipped"))
 
     n_agree, acc_when_agree = bucket_accuracy(scored, "domain_agreement", lambda v: v is True)
     n_disagree, acc_when_disagree = bucket_accuracy(scored, "domain_agreement", lambda v: v is False)
@@ -227,13 +246,16 @@ def evaluate(self_consistency: bool, samples: int):
     summary = {
         "total": total,
         "errored": errored,
+        "strategy": strategy,
         "self_consistency_enabled": self_consistency,
         "self_consistency_samples": samples if self_consistency else None,
         "overall_accuracy": overall_accuracy,
-        "rule_based_only_accuracy": rule_based_accuracy,
+        "keyword_only_accuracy": keyword_accuracy,
+        "llm_calls_avoided": f"{llm_calls_avoided}/{len(scored)}",
+        "domain_source_breakdown": source_breakdown(scored),
         "agreement_rate": agreement_rate,
-        "accuracy_when_llm_rule_based_agree": {"n": n_agree, "accuracy": acc_when_agree},
-        "accuracy_when_llm_rule_based_disagree": {"n": n_disagree, "accuracy": acc_when_disagree},
+        "accuracy_when_agree": {"n": n_agree, "accuracy": acc_when_agree},
+        "accuracy_when_disagree": {"n": n_disagree, "accuracy": acc_when_disagree},
         "avg_domain_confidence": avg_confidence,
         "accuracy_when_unanimous_vote": {"n": n_unanimous, "accuracy": acc_when_unanimous},
         "accuracy_when_split_vote": {"n": n_split, "accuracy": acc_when_split},
@@ -245,9 +267,13 @@ def evaluate(self_consistency: bool, samples: int):
     print("SUMMARY")
     print(f"{'='*60}")
     print(f"Total queries                        : {total} ({errored} errored)")
-    print(f"Overall accuracy (LLM/majority)       : {overall_accuracy}")
-    print(f"Rule-based-only accuracy               : {rule_based_accuracy}")
-    print(f"LLM/rule-based agreement rate          : {agreement_rate}")
+    print(f"Overall accuracy                      : {overall_accuracy}")
+    print(f"Keyword-classifier-only accuracy       : {keyword_accuracy}")
+    print(f"Queries resolved with no LLM call       : {llm_calls_avoided}/{len(scored)}")
+    print("Accuracy by source:")
+    for source, stats in summary["domain_source_breakdown"].items():
+        print(f"  {source:26s}: {stats['accuracy']} (n={stats['n']})")
+    print(f"Agreement rate (both sources ran)      : {agreement_rate}")
     print(f"  accuracy when they agree             : {acc_when_agree} (n={n_agree})")
     print(f"  accuracy when they disagree          : {acc_when_disagree} (n={n_disagree})")
     if self_consistency:
@@ -257,16 +283,16 @@ def evaluate(self_consistency: bool, samples: int):
     print(f"{'='*60}\n")
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    json_path = RESULTS_DIR / f"eval_domain_classification_{timestamp}.json"
-    csv_path = RESULTS_DIR / f"eval_domain_classification_{timestamp}.csv"
+    json_path = RESULTS_DIR / f"eval_domain_classification_{strategy}_{timestamp}.json"
+    csv_path = RESULTS_DIR / f"eval_domain_classification_{strategy}_{timestamp}.csv"
 
     with open(json_path, "w") as f:
         json.dump({"summary": summary, "results": results}, f, indent=2)
 
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=[
-            "query", "expected_domain", "classified_domain", "rule_based_domain",
-            "correct", "rule_based_correct", "domain_agreement", "domain_confidence",
+            "query", "expected_domain", "classified_domain", "keyword_domain", "domain_source",
+            "correct", "keyword_correct", "domain_agreement", "domain_confidence",
         ])
         writer.writeheader()
         for r in results:
@@ -280,24 +306,32 @@ def evaluate(self_consistency: bool, samples: int):
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Evaluate LegalContextResolver domain classification, "
-                    "domain_agreement, and domain_confidence against a labeled test set."
+        description="Evaluate LegalContextResolver domain classification (keyword + LLM) "
+                    "against a labeled test set."
+    )
+    parser.add_argument(
+        "--strategy",
+        choices=["llm_fallback", "combine"],
+        default="llm_fallback",
+        help="llm_fallback: LLM only runs when the keyword classifier finds no match. "
+             "combine: LLM always runs and is cross-checked against the keyword result. "
+             "(default: llm_fallback)",
     )
     parser.add_argument(
         "--no-self-consistency",
         action="store_true",
-        help="Disable self-consistency sampling (single Gemini call per query, "
-             "domain_confidence will be trivially 1.0 or 0.0).",
+        help="Disable self-consistency sampling on whichever Gemini calls do happen "
+             "(single call each, domain_confidence trivially 1.0 or 0.0).",
     )
     parser.add_argument(
         "--samples",
         type=int,
         default=3,
-        help="Self-consistency samples per query (default: 3). Ignored with --no-self-consistency.",
+        help="Self-consistency samples per Gemini call (default: 3). Ignored with --no-self-consistency.",
     )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    evaluate(self_consistency=not args.no_self_consistency, samples=args.samples)
+    evaluate(strategy=args.strategy, self_consistency=not args.no_self_consistency, samples=args.samples)

@@ -1,0 +1,52 @@
+query,expected_domain,classified_domain,keyword_domain,domain_source,correct,keyword_correct,domain_agreement,domain_confidence
+what is a data fiduciary under DPDP Act,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+user consent requirements for collecting personal data,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+how to handle a personal data breach notification,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+do we need a data protection officer for our startup,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+cross border transfer of user data outside India,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+children's data privacy and parental consent rules,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+penalty for violating DPDP Act provisions,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+what rights does a user have to delete their personal data,data_protection,data_protection,data_protection,keyword+llm,True,True,True,1.0
+how to incorporate a private limited company in India,corporate_governance,corporate_governance,corporate_governance,keyword+llm,True,True,True,1.0
+minimum number of directors required for a private company,corporate_governance,corporate_governance,corporate_governance,keyword+llm,True,True,True,1.0
+what is the difference between MOA and AOA,corporate_governance,corporate_governance,corporate_governance,keyword+llm,True,True,True,1.0
+annual general meeting requirements for a startup,corporate_governance,corporate_governance,employment,llm_override,True,False,False,1.0
+board resolution process for approving a new investment,corporate_governance,corporate_governance,data_protection,llm_override,True,False,False,1.0
+how do I change my company's registered office address,corporate_governance,corporate_governance,corporate_governance,keyword+llm,True,True,True,1.0
+shareholder rights when a new investor joins,corporate_governance,corporate_governance,corporate_governance,keyword+llm,True,True,True,1.0
+can a foreign national be a director of an Indian company,corporate_governance,unknown,unknown,unknown,False,False,True,1.0
+who owns the copyright of software written by an employee,ip_licensing,ip_licensing,ip_licensing,keyword,True,True,False,1.0
+how to license our SaaS product to another company,ip_licensing,ip_licensing,ip_licensing,keyword,True,True,False,1.0
+is using open source code in our product a legal risk,ip_licensing,unknown,unknown,unknown,False,False,True,1.0
+how to register a trademark for our startup name,ip_licensing,unknown,unknown,unknown,False,False,True,1.0
+what happens if a competitor infringes our patent,ip_licensing,ip_licensing,unknown,llm,True,False,True,1.0
+do we need an NDA before pitching to investors,ip_licensing,ip_licensing,corporate_governance,llm_override,True,False,False,1.0
+assigning IP ownership from a freelancer to the company,ip_licensing,ip_licensing,unknown,llm,True,False,True,1.0
+trade secret protection for our proprietary algorithm,ip_licensing,ip_licensing,unknown,llm,True,False,True,1.0
+GST registration requirements for a new startup,taxation,taxation,taxation,keyword+llm,True,True,True,1.0
+is GST applicable on software exported outside India,taxation,taxation,taxation,keyword+llm,True,True,True,1.0
+TDS deduction rules on employee salaries,taxation,taxation,taxation,keyword+llm,True,True,True,1.0
+what is angel tax and does it apply to us,taxation,taxation,taxation,keyword+llm,True,True,True,1.0
+input tax credit eligibility for SaaS subscriptions,taxation,taxation,taxation,keyword,True,True,False,1.0
+income tax filing deadline for a private limited company,taxation,taxation,taxation,keyword,True,True,False,1.0
+GST implications of selling to customers in the US,taxation,taxation,taxation,keyword_strong_override,True,True,False,1.0
+advance tax payment schedule for startups,taxation,taxation,taxation,keyword,True,True,False,1.0
+how to set up an internal complaints committee under POSH Act,employment,employment,employment,keyword+llm,True,True,True,1.0
+provident fund contribution requirements for employees,employment,employment,unknown,llm,True,False,True,1.0
+what should an offer letter legally include,employment,employment,corporate_governance,llm_override,True,False,False,1.0
+equal pay obligations between male and female employees,employment,employment,unknown,llm,True,False,True,1.0
+notice period and termination rules for employees,employment,employment,unknown,llm,True,False,True,1.0
+ESOP vesting schedule legal requirements,employment,employment,unknown,llm,True,False,True,1.0
+employee state insurance eligibility criteria,employment,employment,unknown,llm,True,False,True,1.0
+maternity leave entitlement under Indian labour law,employment,employment,unknown,llm,True,False,True,1.0
+who owns code written by an employee that we later want to license out,ip_licensing,ip_licensing,ip_licensing,keyword,True,True,False,1.0
+GST treatment of royalty income from licensing our patent,taxation,taxation,taxation,keyword_strong_override,True,True,False,1.0
+board approval needed before assigning copyright to a US company,ip_licensing,ip_licensing,ip_licensing,keyword,True,True,False,1.0
+"an employee is leaving and taking source code with them, what are our options",ip_licensing,unknown,unknown,unknown,False,False,True,1.0
+do we need consent before sharing employee health data with insurers,data_protection,data_protection,data_protection,keyword,True,True,False,1.0
+tax implications of ESOP allotted to employees,taxation,taxation,taxation,keyword,True,True,False,1.0
+what is the best pizza place in Bangalore,unknown,unknown,unknown,skipped,True,True,True,1.0
+how do I improve my startup's social media engagement,unknown,unknown,unknown,skipped,True,True,True,1.0
+what's the weather forecast for Mumbai this week,unknown,unknown,unknown,skipped,True,True,True,1.0
+recommend a good CRM tool for our sales team,unknown,unknown,unknown,skipped,True,True,True,1.0
+how to raise a seed round from VCs,unknown,corporate_governance,unknown,llm,False,True,True,1.0

@@ -77,3 +77,22 @@ GEMINI_MODEL = optional_env("GEMINI_MODEL", "models/gemini-3.1-flash-lite")
 # each sample is an extra Gemini call — so it defaults off and is toggled here.
 SELF_CONSISTENCY_ENABLED = optional_env("SELF_CONSISTENCY_ENABLED", "false").strip().lower() in ("1", "true", "yes", "on")
 SELF_CONSISTENCY_SAMPLES = int(optional_env("SELF_CONSISTENCY_SAMPLES", "3"))
+
+# Domain classification: the deterministic KeywordDomainClassifier (TF-IDF
+# terms extracted from the corpus, see rag/domain_keywords.py) always runs
+# first. This controls whether/how Gemini is consulted on top of it:
+#   "llm_fallback" — Gemini only called when the keyword classifier finds no
+#                    match at all (cheapest).
+#   "combine"      — Gemini is always called too, and cross-checked against
+#                    the keyword result (costs an LLM call on every query).
+DOMAIN_CLASSIFICATION_STRATEGY = optional_env("DOMAIN_CLASSIFICATION_STRATEGY", "llm_fallback")
+
+# Minimum summed TF-IDF score for the keyword classifier to count a domain as
+# "matched" at all, vs. reporting no match (score 0 means literally no
+# extracted term appeared in the query).
+DOMAIN_KEYWORD_MATCH_THRESHOLD = float(optional_env("DOMAIN_KEYWORD_MATCH_THRESHOLD", "0.0"))
+
+# In "combine" strategy, a keyword match at or above this score is trusted
+# over a disagreeing LLM answer; below it, the LLM wins the disagreement
+# (a single weak/coincidental keyword hit shouldn't outrank the LLM).
+DOMAIN_KEYWORD_STRONG_MATCH_THRESHOLD = float(optional_env("DOMAIN_KEYWORD_STRONG_MATCH_THRESHOLD", "0.3"))

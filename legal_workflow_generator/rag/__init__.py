@@ -3,3 +3,4 @@ from . import ingestion
 from . import embeddings
 from . import generator
 from . import pipeline
+from . import domain_keywords
