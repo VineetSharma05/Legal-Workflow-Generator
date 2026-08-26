@@ -17,4 +17,6 @@ dependencies = [
     "google-generativeai>=0.8.6",
     "langgraph>=1.2.9",
     "scikit-learn>=1.5.0",
+    "fastapi>=0.141.1",
+    "uvicorn>=0.52.4",
 ]
