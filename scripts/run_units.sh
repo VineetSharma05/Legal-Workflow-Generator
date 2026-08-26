@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 usage() {
   cat <<'EOF'
 Usage:
-  ./run_units.sh query
-  ./run_units.sh rag [--gemini|--llama]
-  ./run_units.sh demo --query "<your query>" [--provider gemini|groq] [--top-k N] [--query-only] [--use-original-query]
+  ./scripts/run_units.sh query
+  ./scripts/run_units.sh rag [--gemini|--llama]
+  ./scripts/run_units.sh demo --query "<your query>" [--provider gemini|groq] [--top-k N] [--query-only] [--use-original-query]
 
 Modes:
   query   Run only the query unit test script.
@@ -17,10 +17,10 @@ Modes:
   demo    Run combined query + RAG demo script with a custom query.
 
 Examples:
-  ./run_units.sh query
-  ./run_units.sh rag --gemini
-  ./run_units.sh rag --llama
-  ./run_units.sh demo --query "What are DPDP compliance steps for a SaaS startup?" --provider gemini --top-k 3
+  ./scripts/run_units.sh query
+  ./scripts/run_units.sh rag --gemini
+  ./scripts/run_units.sh rag --llama
+  ./scripts/run_units.sh demo --query "What are DPDP compliance steps for a SaaS startup?" --provider gemini --top-k 3
 EOF
 }
 
@@ -60,7 +60,7 @@ case "$mode" in
     ;;
 
   demo)
-  "${PYTHON_CMD[@]}" demo_query_rag.py "$@"
+  "${PYTHON_CMD[@]}" scripts/demo_query_rag.py "$@"
     ;;
 
   -h|--help|help)

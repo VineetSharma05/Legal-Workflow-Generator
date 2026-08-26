@@ -1,6 +1,12 @@
 import argparse
 import json
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+# Loads .env and fails fast if a required variable is missing.
+import legal_workflow_generator.config.values  # noqa: F401
 
 
 def parse_args() -> argparse.Namespace:
@@ -46,7 +52,7 @@ def main() -> int:
         from legal_workflow_generator.query import process_query
     except Exception as e:
         print(f"Failed to initialize query unit: {e}")
-        print("Make sure .env is configured (at least GROQ_API_KEY).")
+        print("Make sure .env is configured (PGPASSWORD and GEMINI_API_KEY).")
         return 1
 
     try:
@@ -89,8 +95,8 @@ def main() -> int:
     except Exception as e:
         print(f"RAG pipeline failed: {e}")
         print(
-            "Check setup: docker db running, PGPASSWORD set, and dataset ingested+embedded. "
-            "For Gemini provider, GEMINI_API_KEY is required."
+            "Check setup: docker db running and dataset ingested+embedded. "
+            "For the groq provider, GROQ_API_KEY must also be set in .env."
         )
         return 1
 

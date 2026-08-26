@@ -1,9 +1,12 @@
-import os
-from legal_workflow_generator.rag.hybrid_search import HybridSearcher
+import sys
+from pathlib import Path
 
-if "PGPASSWORD" not in os.environ:
-    print("PGPASSWORD env not set. Please set it and then run the script")
-    exit(1)
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+# Loads .env and fails fast if a required variable is missing.
+import legal_workflow_generator.config.values  # noqa: F401
+
+from legal_workflow_generator.rag.hybrid_search import HybridSearcher
 
 # ============================================================
 # EXPECTED RESULTS — top 3 provision_ids per query

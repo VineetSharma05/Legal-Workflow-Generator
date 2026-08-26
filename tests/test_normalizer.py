@@ -1,6 +1,9 @@
 from legal_workflow_generator.query.normalizer import QueryNormalizer
+from pathlib import Path
 
 normalizer = QueryNormalizer()
+pdf_path = (Path(__file__).parent / "test_legal.pdf").absolute()
+print(pdf_path)
 
 # Test 1 — plain text
 result = normalizer.normalize(text="How do I comply with DPDP Act??")
@@ -15,13 +18,12 @@ result = normalizer.normalize(text="What is the complience process for SEBI?")
 print(result)
 
 # Test 4 — PDF only
-result = normalizer.normalize(pdf_path="test_legal.pdf")
+result = normalizer.normalize(pdf_path=pdf_path)
 print(result)
 
 # Test 5 — PDF + text together
 result = normalizer.normalize(
-    text="What are my compliance obligations?",
-    pdf_path="test_legal.pdf"
+    text="What are my compliance obligations?", pdf_path=pdf_path
 )
 print(result)
 """

@@ -1,0 +1,924 @@
+{
+  "summary": {
+    "total": 49,
+    "domain_accuracy_pct": 95.9,
+    "citation_recall": 0.61,
+    "avg_hallucinated_citations": 1.12,
+    "answer_rate": "100% (no abstain mechanism)"
+  },
+  "results": [
+    {
+      "query": "what is a data fiduciary",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_4",
+        "dpdp_act_2023_sec_2"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_10",
+        "dpdp_act_2023_sec_8"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n*   A Data Fiduciary is any entity that determines the purpose and means of processing personal data.\n*   They bear the primary responsibility for ensuring compliance with data protect"
+    },
+    {
+      "query": "user consent requirements for collecting personal data",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_5"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_7",
+        "dpdp_act_2023_sec_11"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 0,
+      "answer_snippet": "### User Consent Requirements\n\n*   **Explicit and Limited:** Consent must be clear, explicit, and restricted only to data that is strictly necessary for your service.\n*   **Right to Withdraw:** Users "
+    },
+    {
+      "query": "how to handle personal data breach notification",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_33"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_12"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "### Handling Personal Data Breach Notification\n\n*   **Mandatory Reporting:** In the event of a personal data breach, you are legally required to notify the government Board and all affected users.\n*  "
+    },
+    {
+      "query": "right to erasure of personal data",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_12",
+        "dpdp_act_2023_sec_6"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_12",
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_11"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   Users have the right to request the complete deletion of their personal data held by your startup.\n*   You are legally obligated to comply with these requests.\n*   You may refuse t"
+    },
+    {
+      "query": "children data protection parental consent",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_9"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_9",
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_3"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   **Mandatory Consent:** You must obtain verifiable consent from a parent or legal guardian before processing the personal data of any individual under the age of 18.\n*   **Prohibite"
+    },
+    {
+      "query": "cross border data transfer restrictions India",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_16",
+        "dpdp_act_2023_sec_17"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_16",
+        "dpdp_act_2023_sec_3",
+        "dpdp_act_2023_sec_18"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   The government has the authority to restrict data transfers by maintaining a \"blacklist\" of countries where processing is prohibited.\n*   The DPDP Act applies to all digital person"
+    },
+    {
+      "query": "significant data fiduciary obligations",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_10"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_10",
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_2"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "### Significant Data Fiduciary Obligations\n\n*   **Appoint Leadership:** Designate a Data Protection Officer (DPO) who must be based in India.\n*   **Independent Audits:** Hire an independent data audit"
+    },
+    {
+      "query": "data protection officer appointment requirements",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_10"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_10",
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_19"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "### Data Protection Officer (DPO) Appointment Requirements\n\n*   **Requirement Trigger:** You are only required to appoint a DPO if the government classifies your startup as a \"Significant Data Fiducia"
+    },
+    {
+      "query": "penalty for violating data protection rules",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_33",
+        "dpdp_act_2023_sec_34"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_40",
+        "dpdp_act_2023_sec_10"
+      ],
+      "citation_hits": 0,
+      "citation_recall": 0.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n* The provided legal context does not specify the monetary penalties or specific consequences for violating the DPDP Act.\n* The government has the authority to issue future rules to im"
+    },
+    {
+      "query": "what is a consent manager",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_2"
+      ],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_13",
+        "dpdp_act_2023_sec_5"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "### Consent Manager\n*   A consent manager is the mechanism through which a company obtains **explicit, clear, and limited** consent from users for the collection of data necessary for services.\n*   It"
+    },
+    {
+      "query": "minimum number of founders to start a private company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_3",
+        "ca_2013_sec_2"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_3",
+        "ca_2013_sec_3A",
+        "ca_2013_sec_2"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   To start a private company, you need a minimum of 2 people.\n*   If you intend to start the company alone, you may register it as a \"One Person Company.\"\n\n2) Action checklist\n*   Co"
+    },
+    {
+      "query": "what documents are needed for company incorporation",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_4"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_9",
+        "ca_2013_sec_21"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "### Documents for Incorporation\n\n*   **Required Documentation:** You must file the specific documents as mandated by Section 7 of the Companies Act, 2013, to register your startup.\n*   **Legal Warning"
+    },
+    {
+      "query": "memorandum of association requirements",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_4",
+        "ca_2013_sec_13"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_10",
+        "ca_2013_sec_5",
+        "ca_2013_sec_4"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   The MOA functions as a legally binding contract between the company and its shareholders upon registration.\n*   It must specify the startup's name, the state where the registered o"
+    },
+    {
+      "query": "how to change company name legally",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_13",
+        "ca_2013_sec_16"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_16",
+        "ca_2013_sec_13",
+        "ca_2013_sec_12"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n*   Changing your company name requires passing a special resolution (75% shareholder approval).\n*   You must obtain explicit government approval to formalize the name change.\n*   If y"
+    },
+    {
+      "query": "registered office requirements for a new company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_12"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_12",
+        "ca_2013_sec_7",
+        "ca_2013_sec_18"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n* You must establish a physical registered office within 30 days of incorporation.\n* You are required to display the company\u2019s name, address, and Corporate Identity Number (CIN) on a p"
+    },
+    {
+      "query": "can a subsidiary hold shares in its parent company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_18",
+        "ca_2013_sec_19"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_19",
+        "ca_2013_sec_2",
+        "copyright_act_1957_sec_8"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   No, a subsidiary company is generally prohibited from holding or purchasing equity shares in its parent company.\n*   This prohibition exists to prevent circular ownership.\n*   Any "
+    },
+    {
+      "query": "how to convert private company to public company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_18",
+        "ca_2013_sec_14"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_14",
+        "ca_2013_sec_18",
+        "ca_2013_sec_3"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 0,
+      "answer_snippet": "### Conversion of Private Company to Public Company\n\n*   **Passing a Special Resolution:** You must pass a special resolution to alter your Articles of Association (AOA) to facilitate the conversion.\n"
+    },
+    {
+      "query": "what is a Section 8 non-profit company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_8",
+        "ca_2013_sec_3"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_8",
+        "ca_2013_sec_2",
+        "ca_2013_sec_9"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "### Section 8 Non-Profit Company Overview\n\n*   **Charitable Purpose:** These entities are formed specifically to promote objectives such as commerce, art, science, sports, education, research, social "
+    },
+    {
+      "query": "promoter liability for fraud during registration",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_34",
+        "ca_2013_sec_7"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_9",
+        "ca_2013_sec_2"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n* If you provide false information or fake documents during incorporation, you are liable for prosecution under Section 447 for corporate fraud.\n* The company itself faces the risk of "
+    },
+    {
+      "query": "founder personal liability for company debts",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_9",
+        "ca_2013_sec_3A"
+      ],
+      "retrieved_ids": [
+        "ca_2013_sec_3A",
+        "ca_2013_sec_10",
+        "ca_2013_sec_35"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   **Loss of Limited Liability:** If your private startup operates with only one member for more than 6 months, you lose limited liability protection and become personally liable for "
+    },
+    {
+      "query": "is software code protected by copyright",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_2",
+        "copyright_act_1957_sec_13"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_13",
+        "copyright_act_1957_sec_14",
+        "copyright_act_1957_sec_17"
+      ],
+      "citation_hits": 0,
+      "citation_recall": 0.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n* Yes, computer programs (software code) are protected under copyright law.\n* Copyright grants the owner exclusive rights to reproduce, adapt, sell, or commercially rent the code.\n* Fo"
+    },
+    {
+      "query": "who owns copyright of code written by an employee",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_16"
+      ],
+      "retrieved_ids": [
+        "copyright_act_1957_sec_17",
+        "igst_act_2017_sec_13",
+        "copyright_act_1957_sec_19"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   The company is the first owner of the copyright for code created by an employee during the course of their employment.\n*   This automatic ownership applies unless there is a writte"
+    },
+    {
+      "query": "how to assign copyright to another person",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_19",
+        "copyright_act_1957_sec_18"
+      ],
+      "retrieved_ids": [
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_19",
+        "igst_act_2017_sec_13"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "### 1) Short Answer\n*   **Written Agreement:** All copyright assignments must be executed in writing.\n*   **Scope:** You can assign rights either entirely or partially.\n*   **Future Tech:** Assignment"
+    },
+    {
+      "query": "copyright protection for computer databases",
+      "error": "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+    },
+    {
+      "query": "what happens if assignee does not use the copyright",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_19A",
+        "copyright_act_1957_sec_19"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_13",
+        "copyright_act_1957_sec_19A",
+        "copyright_act_1957_sec_18"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 3,
+      "answer_snippet": "1) Short answer\n* If an assignee acquires your copyright but fails to exercise or publish it, the rights may be revoked.\n* You can approach the Appellate Board to seek the cancellation of the assignme"
+    },
+    {
+      "query": "copyright infringement of software",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_14",
+        "copyright_act_1957_sec_13"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_13",
+        "copyright_act_1957_sec_13",
+        "copyright_act_1957_sec_14"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   Software is protected as an \"original literary work\" under Indian copyright law.\n*   As the copyright owner, you hold the exclusive right to reproduce, adapt, sell, or commercially"
+    },
+    {
+      "query": "employer owns copyright of work made during employment",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_16"
+      ],
+      "retrieved_ids": [
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_19"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n* As a startup, you automatically own the copyright to work created by your employees as part of their employment contract.\n* This \"automatic\" ownership applies unless you have a speci"
+    },
+    {
+      "query": "employee IP ownership when working at a startup",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "employment",
+      "domain_correct": false,
+      "expected_sections": [
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_18"
+      ],
+      "retrieved_ids": [
+        "copyright_act_1957_sec_17",
+        "igst_act_2017_sec_13",
+        "copyright_act_1957_sec_19"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   **Automatic Ownership:** If an employee creates work (code, content) as part of their employment contract, the startup automatically owns the copyright.\n*   **Contractual Supremacy"
+    },
+    {
+      "query": "GST on software exports from India",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_16",
+        "igst_act_2017_sec_13"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_21",
+        "igst_act_2017_sec_16",
+        "igst_act_2017_sec_17A"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   Software exports are classified as 'zero-rated' supplies, meaning they are taxed at 0%.\n*   You are entitled to claim a cash refund from the government for the GST paid on business"
+    },
+    {
+      "query": "what is zero rated supply for startups",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_6",
+        "igst_act_2017_sec_16"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_16",
+        "igst_act_2017_sec_21",
+        "gst_comp_act_2017_sec_8"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "### Zero-Rated Supply for Startups\n\n*   **Definition:** Zero-rated supply refers to exports of goods or services and sales made to Special Economic Zones (SEZs).\n*   **Tax Benefit:** These supplies ar"
+    },
+    {
+      "query": "input tax credit refund for exporters",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_18",
+        "igst_act_2017_sec_19"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_18",
+        "gst_comp_act_2017_sec_9",
+        "igst_act_2017_sec_15"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n*   The provided legal context does not contain provisions regarding Input Tax Credit (ITC) refunds specifically for exporters.\n*   The available information only covers internal gover"
+    },
+    {
+      "query": "what is OIDAR online information services GST",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_2",
+        "igst_act_2017_sec_14"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_2",
+        "igst_act_2017_sec_14",
+        "igst_act_2017_sec_13"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 0,
+      "answer_snippet": "### 1) Short Answer\n*   **Definition:** OIDAR covers digital services delivered over the internet, including cloud computing, SaaS, and digital content delivery.\n*   **Scope:** It includes services wh"
+    },
+    {
+      "query": "GST liability for e-commerce platforms",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_20",
+        "igst_act_2017_sec_5"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_5",
+        "igst_act_2017_sec_14",
+        "igst_act_2017_sec_21"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 1,
+      "answer_snippet": "### GST Liability for E-commerce Platforms\n\n*   **Platform Liability:** E-commerce platforms are strictly held liable for paying IGST on services provided through their apps or websites.\n*   **Interst"
+    },
+    {
+      "query": "foreign company selling digital services to Indian users",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_14"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_14",
+        "igst_act_2017_sec_14A",
+        "igst_act_2017_sec_13"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   **Digital Services (OIDAR):** If you provide services like cloud storage or database access to unregistered Indian consumers, you must register in India and pay IGST.\n*   **Online "
+    },
+    {
+      "query": "place of supply rules for software services",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_12",
+        "igst_act_2017_sec_13"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_12",
+        "igst_act_2017_sec_11"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 3,
+      "answer_snippet": "### Place of Supply Rules for Software Services\n\n* **Domestic Sales (B2B):** If your client is a GST-registered business in India, the place of supply is the client\u2019s location.\n* **Domestic Sales (B2C"
+    },
+    {
+      "query": "SaaS company exporting services GST treatment",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_16",
+        "igst_act_2017_sec_13"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_7",
+        "it_act_2000_sec_2",
+        "igst_act_2017_sec_16"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 3,
+      "answer_snippet": "1) Short answer\n* Exporting SaaS services is classified as a \"zero-rated\" supply, meaning your exports are taxed at 0%.\n* You are eligible to claim a cash refund from the government for the GST paid o"
+    },
+    {
+      "query": "online gaming company GST liability",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_14A",
+        "igst_act_2017_sec_5"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_14A",
+        "igst_act_2017_sec_14",
+        "igst_act_2017_sec_21"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   Foreign companies providing online real-money gaming to users in India are required to register and pay IGST.\n*   Failure to comply with these tax obligations grants the Indian gov"
+    },
+    {
+      "query": "Letter of Undertaking for export without paying GST",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_2",
+        "igst_act_2017_sec_16"
+      ],
+      "retrieved_ids": [
+        "igst_act_2017_sec_16",
+        "igst_act_2017_sec_21",
+        "igst_act_2017_sec_17A"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   Exports are classified as \"zero-rated\" supplies, meaning they are taxed at 0%.\n*   You are legally permitted to export without paying GST on your output services.\n*   You are eligi"
+    },
+    {
+      "query": "how to set up internal complaints committee startup",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_6",
+        "posh_act_2013_sec_4"
+      ],
+      "retrieved_ids": [
+        "posh_act_2013_sec_4",
+        "posh_act_2013_sec_6",
+        "posh_act_2013_sec_21"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n*   If your startup has 10 or more employees, you are legally required to constitute an Internal Complaints Committee (ICC).\n*   The committee must be chaired by a senior female employ"
+    },
+    {
+      "query": "what counts as sexual harassment at workplace",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_3",
+        "posh_act_2013_sec_2"
+      ],
+      "retrieved_ids": [
+        "posh_act_2013_sec_1",
+        "posh_act_2013_sec_28",
+        "posh_act_2013_sec_27"
+      ],
+      "citation_hits": 0,
+      "citation_recall": 0.0,
+      "hallucinated_citations": 0,
+      "answer_snippet": "The provided legal context is insufficient to answer your query. \n\nIt contains information regarding the scope (Section 1), the relationship with other laws (Section 28), and court cognizance procedur"
+    },
+    {
+      "query": "complaint filing deadline for harassment case",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_18",
+        "posh_act_2013_sec_9"
+      ],
+      "retrieved_ids": [
+        "posh_act_2013_sec_9",
+        "posh_act_2013_sec_27",
+        "posh_act_2013_sec_1"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 2,
+      "answer_snippet": "1) Short answer\n*   The victim must file a written complaint with the Internal Complaints Committee (ICC) within 3 months of the incident.\n*   The ICC has the authority to extend this deadline by an a"
+    },
+    {
+      "query": "confidentiality rules in harassment proceedings",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_16",
+        "posh_act_2013_sec_17"
+      ],
+      "retrieved_ids": [
+        "posh_act_2013_sec_16",
+        "posh_act_2013_sec_17",
+        "posh_act_2013_sec_28"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 3,
+      "answer_snippet": "### Confidentiality Rules in POSH Proceedings\n\n*   **Strict Confidentiality:** All contents of a complaint and the inquiry proceedings must be kept strictly confidential.\n*   **Prohibited Disclosure:*"
+    },
+    {
+      "query": "employer duties to prevent sexual harassment",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_19",
+        "posh_act_2013_sec_4"
+      ],
+      "retrieved_ids": [
+        "posh_act_2013_sec_28",
+        "posh_act_2013_sec_1",
+        "posh_act_2013_sec_24"
+      ],
+      "citation_hits": 0,
+      "citation_recall": 0.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   The provided legal context does not contain specific employer duties or obligations regarding the prevention of sexual harassment.\n*   The POSH Act functions as an additional layer"
+    },
+    {
+      "query": "equal pay for men and women doing same work",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "era_1976_sec_4",
+        "era_1976_sec_2"
+      ],
+      "retrieved_ids": [
+        "era_1976_sec_4",
+        "era_1976_sec_7",
+        "era_1976_sec_5"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 0,
+      "answer_snippet": "### Equal Pay Compliance\n\n*   **Equal Pay Obligation:** You must pay men and women the same remuneration for the same or similar work.\n*   **Correction Mechanism:** If a pay gap is identified, you can"
+    },
+    {
+      "query": "discrimination in hiring women prohibited",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "era_1976_sec_4",
+        "era_1976_sec_5"
+      ],
+      "retrieved_ids": [
+        "era_1976_sec_5",
+        "era_1976_sec_6",
+        "era_1976_sec_4"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 1,
+      "answer_snippet": "1) Short answer\n*   Startups are strictly prohibited from discriminating against women during hiring, promotions, training, or transfers.\n*   You may only restrict women from specific roles if a law e"
+    },
+    {
+      "query": "startup hiring discrimination and equal pay",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "era_1976_sec_4",
+        "era_1976_sec_5"
+      ],
+      "retrieved_ids": [
+        "era_1976_sec_5",
+        "era_1976_sec_4",
+        "era_1976_sec_10"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "hallucinated_citations": 0,
+      "answer_snippet": "### 1) Short answer\n* **No Discrimination:** You cannot discriminate against women during hiring, promotions, training, or transfers, unless specific laws restrict that work for women.\n* **Equal Pay:*"
+    },
+    {
+      "query": "what is the penalty under section 999 of DPDP Act",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [],
+      "retrieved_ids": [
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_3",
+        "dpdp_act_2023_sec_40"
+      ],
+      "citation_hits": 0,
+      "citation_recall": null,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n* The provided legal context does not contain a \"Section 999.\"\n* The provided text only covers definitions (Section 2), the application of the Act (Section 3), and rule-making powers ("
+    },
+    {
+      "query": "legal steps to launch a startup in India from scratch",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_3"
+      ],
+      "retrieved_ids": [
+        "copyright_act_1957_sec_8",
+        "ca_2013_sec_7",
+        "ca_2013_sec_9"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n*   To start, your entity must be officially incorporated under Indian law to be considered domiciled in the country.\n*   Upon receiving your Certificate of Incorporation, your startup"
+    },
+    {
+      "query": "how are GST proceeds distributed between states",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_17",
+        "igst_act_2017_sec_18"
+      ],
+      "retrieved_ids": [
+        "gst_comp_act_2017_sec_8",
+        "gst_comp_act_2017_sec_7",
+        "igst_act_2017_sec_17"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "hallucinated_citations": 0,
+      "answer_snippet": "1) Short answer\n*   **IGST Settlement:** Integrated GST (IGST) collected by the Central Government is shared with the State Government where the goods or services were actually consumed.\n*   **Compens"
+    }
+  ]
+}

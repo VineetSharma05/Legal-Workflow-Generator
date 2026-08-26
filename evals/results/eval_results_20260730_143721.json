@@ -1,0 +1,1833 @@
+{
+  "summary": {
+    "total": 49,
+    "answered": 46,
+    "abstained": 3,
+    "domain_accuracy_pct": 87.8,
+    "citation_recall": 0.77,
+    "avg_retrieval_retries": 0.2,
+    "avg_generation_retries": 0.0
+  },
+  "results": [
+    {
+      "query": "what is a data fiduciary",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_4",
+        "dpdp_act_2023_sec_2"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_7",
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_11",
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_10"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 28.83,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='what is a data fiduciary'",
+        "    doc \u2192 [dpdp_act_2023_sec_10] Additional obligations of Significant Data Fiduciary (score=0.7234088165852444)",
+        "    doc \u2192 [dpdp_act_2023_sec_2] Definitions (score=0.7059470458605639)",
+        "    doc \u2192 [dpdp_act_2023_sec_8] General obligations of Data Fiduciary (score=0.7004335926841173)",
+        "    doc \u2192 [dpdp_act_2023_sec_7] Certain legitimate uses (score=0.633499221936253)",
+        "    doc \u2192 [dpdp_act_2023_sec_11] Right to access information about personal data (score=0.6119372084065946)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly define a data fiduciary and detail their general obligations, providing a strong legal foundation to answer the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_10', 'dpdp_act_2023_sec_2', 'dpdp_act_2023_sec_8', 'dpdp_act_2023_sec_7', 'dpdp_act_2023_sec_11'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "user consent requirements for collecting personal data",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_5"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_7",
+        "dpdp_act_2023_sec_4",
+        "dpdp_act_2023_sec_11",
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_9"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 23.98,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='user consent requirements for collecting personal data'",
+        "    doc \u2192 [dpdp_act_2023_sec_6] Consent (score=0.7364835381507873)",
+        "    doc \u2192 [dpdp_act_2023_sec_7] Certain legitimate uses (score=0.6471585461193474)",
+        "    doc \u2192 [dpdp_act_2023_sec_4] Grounds for processing personal data (score=0.6283869101640291)",
+        "    doc \u2192 [dpdp_act_2023_sec_9] Processing of personal data of children (score=0.587894677784008)",
+        "    doc \u2192 [dpdp_act_2023_sec_11] Right to access information about personal data (score=0.5869849098308779)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the essential legal framework for consent requirements, including general rules, legitimate exceptions, and specific protections for children under the DPDP Act.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_6', 'dpdp_act_2023_sec_7', 'dpdp_act_2023_sec_4', 'dpdp_act_2023_sec_9', 'dpdp_act_2023_sec_11'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "how to handle personal data breach notification",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_33",
+        "dpdp_act_2023_sec_8"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_12",
+        "dpdp_act_2023_sec_1",
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_11",
+        "dpdp_act_2023_sec_2"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 30.9,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=data_protection",
+        "retrieve \u2192 5 docs, query='how to handle personal data breach notification'",
+        "    doc \u2192 [dpdp_act_2023_sec_8] General obligations of Data Fiduciary (score=0.5444908241347989)",
+        "    doc \u2192 [dpdp_act_2023_sec_2] Definitions (score=0.5036651736041501)",
+        "    doc \u2192 [dpdp_act_2023_sec_11] Right to access information about personal data (score=0.4587429998216432)",
+        "    doc \u2192 [dpdp_act_2023_sec_12] Right to correction and erasure of personal data (score=0.45037879378682366)",
+        "    doc \u2192 [dpdp_act_2023_sec_1] Short title and commencement (score=0.4272045094591773)",
+        "grade_context \u2192 sufficient: Section 8 explicitly mandates that data fiduciaries must report personal data breaches to both the government board and the affected users, providing the necessary legal basis for the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_8', 'dpdp_act_2023_sec_2', 'dpdp_act_2023_sec_11', 'dpdp_act_2023_sec_12', 'dpdp_act_2023_sec_1'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "right to erasure of personal data",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_12",
+        "dpdp_act_2023_sec_6"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_12",
+        "dpdp_act_2023_sec_14",
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_11",
+        "dpdp_act_2023_sec_6"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 54.66,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='right to erasure of personal data'",
+        "    doc \u2192 [dpdp_act_2023_sec_12] Right to correction and erasure of personal data (score=0.7714259679830751)",
+        "    doc \u2192 [dpdp_act_2023_sec_11] Right to access information about personal data (score=0.5331408115668289)",
+        "    doc \u2192 [dpdp_act_2023_sec_14] Right to nominate (score=0.5256189434974669)",
+        "    doc \u2192 [dpdp_act_2023_sec_8] General obligations of Data Fiduciary (score=0.45829262664148057)",
+        "    doc \u2192 [dpdp_act_2023_sec_6] Consent (score=0.4464489310897721)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly define the right to erasure and the obligations of data fiduciaries regarding data deletion, providing a clear legal basis to address the user's query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_12', 'dpdp_act_2023_sec_11', 'dpdp_act_2023_sec_14', 'dpdp_act_2023_sec_8', 'dpdp_act_2023_sec_6'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "children data protection parental consent",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_9"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_5",
+        "dpdp_act_2023_sec_7",
+        "dpdp_act_2023_sec_13",
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_9"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 40.99,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='children data protection parental consent'",
+        "    doc \u2192 [dpdp_act_2023_sec_9] Processing of personal data of children (score=0.7931365370750427)",
+        "    doc \u2192 [dpdp_act_2023_sec_6] Consent (score=0.5462606524979401)",
+        "    doc \u2192 [dpdp_act_2023_sec_7] Certain legitimate uses (score=0.48902002562273533)",
+        "    doc \u2192 [dpdp_act_2023_sec_5] Notice (score=0.4869783259459337)",
+        "    doc \u2192 [dpdp_act_2023_sec_13] Right of grievance redressal (score=0.4567394183625055)",
+        "grade_context \u2192 sufficient: The retrieved chunks include the specific section (dpdp_act_2023_sec_9) that directly addresses the requirements for parental consent regarding children's data protection.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_9', 'dpdp_act_2023_sec_6', 'dpdp_act_2023_sec_7', 'dpdp_act_2023_sec_5', 'dpdp_act_2023_sec_13'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "cross border data transfer restrictions India",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_17",
+        "dpdp_act_2023_sec_16"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_3",
+        "dpdp_act_2023_sec_16",
+        "ca_2013_sec_24",
+        "dpdp_act_2023_sec_11",
+        "igst_act_2017_sec_11"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 31.41,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='cross border data transfer restrictions india'",
+        "    doc \u2192 [dpdp_act_2023_sec_16] Processing of personal data outside India (score=0.8457859050440129)",
+        "    doc \u2192 [dpdp_act_2023_sec_3] Application of Act (score=0.5021853158367189)",
+        "    doc \u2192 [igst_act_2017_sec_11] Place of supply of goods imported into, or exported from India (score=0.45010186202456315)",
+        "    doc \u2192 [dpdp_act_2023_sec_11] Right to access information about personal data (score=0.449208536571152)",
+        "    doc \u2192 [ca_2013_sec_24] Power of Securities and Exchange Board to regulate issue and transfer of securities, etc. (score=0.4248968620526644)",
+        "grade_context \u2192 sufficient: The retrieved chunks include Section 16 of the DPDP Act, which directly addresses the government's power to restrict cross-border data transfers.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_16', 'dpdp_act_2023_sec_3', 'igst_act_2017_sec_11', 'dpdp_act_2023_sec_11', 'ca_2013_sec_24'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "significant data fiduciary obligations",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_10"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_7",
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_15",
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_10"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 28.49,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='significant data fiduciary obligations'",
+        "    doc \u2192 [dpdp_act_2023_sec_10] Additional obligations of Significant Data Fiduciary (score=0.8161503468796716)",
+        "    doc \u2192 [dpdp_act_2023_sec_8] General obligations of Data Fiduciary (score=0.6562812569292268)",
+        "    doc \u2192 [dpdp_act_2023_sec_7] Certain legitimate uses (score=0.583541690132631)",
+        "    doc \u2192 [dpdp_act_2023_sec_2] Definitions (score=0.492471485562992)",
+        "    doc \u2192 [dpdp_act_2023_sec_15] Duties of Data Principal (score=0.4711536588371491)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly identify the specific additional obligations required of a 'Significant Data Fiduciary' under the DPDP Act, providing a solid legal basis for the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_10', 'dpdp_act_2023_sec_8', 'dpdp_act_2023_sec_7', 'dpdp_act_2023_sec_2', 'dpdp_act_2023_sec_15'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "data protection officer appointment requirements",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_act_2023_sec_10"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_3",
+        "dpdp_act_2023_sec_19",
+        "dpdp_act_2023_sec_2",
+        "posh_act_2013_sec_20",
+        "dpdp_act_2023_sec_10"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 35.25,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='data protection officer appointment requirements'",
+        "    doc \u2192 [dpdp_act_2023_sec_10] Additional obligations of Significant Data Fiduciary (score=0.6616965818910774)",
+        "    doc \u2192 [dpdp_act_2023_sec_19] Composition and qualifications for appointment of Chairperson and Members (score=0.5753296830218011)",
+        "    doc \u2192 [posh_act_2013_sec_20] Duties and powers of District Officer (score=0.5080650704295182)",
+        "    doc \u2192 [dpdp_act_2023_sec_2] Definitions (score=0.48395868221608374)",
+        "    doc \u2192 [dpdp_act_2023_sec_3] Application of Act (score=0.4764079564226319)",
+        "grade_context \u2192 sufficient: The retrieved chunk [dpdp_act_2023_sec_10] provides the specific legal requirement for appointing a data protection officer for significant data fiduciaries under the DPDP Act.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_10', 'dpdp_act_2023_sec_19', 'posh_act_2013_sec_20', 'dpdp_act_2023_sec_2', 'dpdp_act_2023_sec_3'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "penalty for violating data protection rules",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_34",
+        "dpdp_act_2023_sec_33"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_40",
+        "dpdp_act_2023_sec_3",
+        "dpdp_act_2023_sec_10",
+        "dpdp_act_2023_sec_2",
+        "dpdp_act_2023_sec_33"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 52.91,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='penalty for violating data protection rules'",
+        "    doc \u2192 [dpdp_act_2023_sec_40] Power to make rules (score=0.6155365297518092)",
+        "    doc \u2192 [dpdp_act_2023_sec_10] Additional obligations of Significant Data Fiduciary (score=0.5922707554151231)",
+        "    doc \u2192 [dpdp_act_2023_sec_2] Definitions (score=0.584104163671991)",
+        "    doc \u2192 [dpdp_act_2023_sec_3] Application of Act (score=0.5661133374573896)",
+        "    doc \u2192 [dpdp_act_2023_sec_33] Penalties (score=0.5653677782955359)",
+        "grade_context \u2192 sufficient: Section 33 directly addresses the penalties for violating the provisions of the DPDP Act, providing a sufficient legal basis to answer the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_40', 'dpdp_act_2023_sec_10', 'dpdp_act_2023_sec_2', 'dpdp_act_2023_sec_3', 'dpdp_act_2023_sec_33'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "what is a consent manager",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_2"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_5",
+        "dpdp_act_2023_sec_13",
+        "posh_act_2013_sec_2",
+        "dpdp_act_2023_sec_6",
+        "dpdp_act_2023_sec_9"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 29.36,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection",
+        "retrieve \u2192 5 docs, query='what is a consent manager'",
+        "    doc \u2192 [dpdp_act_2023_sec_6] Consent (score=0.5531675329143566)",
+        "    doc \u2192 [dpdp_act_2023_sec_13] Right of grievance redressal (score=0.5083784155507335)",
+        "    doc \u2192 [dpdp_act_2023_sec_5] Notice (score=0.4387599129370984)",
+        "    doc \u2192 [posh_act_2013_sec_2] Definitions (score=0.3412890012530181)",
+        "    doc \u2192 [dpdp_act_2023_sec_9] Processing of personal data of children (score=0.3401931939767225)",
+        "grade_context \u2192 sufficient: While the provided chunks mention the 'consent manager' as a functional role or mechanism within the DPDP Act framework, they provide enough context to explain its relation to consent management and grievance redressal to draft a partial answer.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_6', 'dpdp_act_2023_sec_13', 'dpdp_act_2023_sec_5', 'posh_act_2013_sec_2', 'dpdp_act_2023_sec_9'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "minimum number of founders to start a private company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_3",
+        "ca_2013_sec_2"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_3A",
+        "ca_2013_sec_2",
+        "ca_2013_sec_23",
+        "ca_2013_sec_10A",
+        "ca_2013_sec_3"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 35.5,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='minimum number of founders to start a private company'",
+        "    doc \u2192 [ca_2013_sec_3] Formation of company (score=0.7809682689943027)",
+        "    doc \u2192 [ca_2013_sec_3A] Members severally liable in certain cases (score=0.5558254325703768)",
+        "    doc \u2192 [ca_2013_sec_10A] Commencement of business, etc. (score=0.45788991302717663)",
+        "    doc \u2192 [ca_2013_sec_2] Definitions (score=0.4048188319063617)",
+        "    doc \u2192 [ca_2013_sec_23] Public offer and private placement (score=0.3959600267522921)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly state the minimum founder requirements for a private company, a public company, and a one-person company.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_3', 'ca_2013_sec_3A', 'ca_2013_sec_10A', 'ca_2013_sec_2', 'ca_2013_sec_23'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "what documents are needed for company incorporation",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_4",
+        "ca_2013_sec_7"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_18",
+        "ca_2013_sec_4",
+        "ca_2013_sec_8",
+        "ca_2013_sec_7",
+        "ca_2013_sec_3"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 3,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 126.97,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='what documents are needed for company incorporation'",
+        "    doc \u2192 [ca_2013_sec_7] Incorporation of company (score=0.7338629683174471)",
+        "    doc \u2192 [ca_2013_sec_21] Authentication of documents, proceedings and contracts (score=0.5853960576148671)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.4825598630971034)",
+        "    doc \u2192 [ca_2013_sec_12] Registered office of company (score=0.45545526004969666)",
+        "    doc \u2192 [ca_2013_sec_3] Formation of company (score=0.449079567171224)",
+        "grade_context \u2192 sufficient: The retrieved chunks identify statutory requirements for incorporation, including necessary components like the Memorandum of Association and the legal consequences for filing documents, providing a sufficient basis to address the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_7', 'ca_2013_sec_21', 'ca_2013_sec_4', 'ca_2013_sec_12', 'ca_2013_sec_3'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "rewrite_query \u2192 retry 1: 'mandatory documents and forms for private limited company in'",
+        "retrieve \u2192 5 docs, query='mandatory documents and forms for private limited company in'",
+        "    doc \u2192 [ca_2013_sec_3] Formation of company (score=0.7711156717928052)",
+        "    doc \u2192 [ca_2013_sec_7] Incorporation of company (score=0.671809638976741)",
+        "    doc \u2192 [ca_2013_sec_8] Formation of companies with charitable objects, etc. (score=0.6004649860559299)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.5917586671080494)",
+        "    doc \u2192 [ca_2013_sec_18] Conversion of companies already registered (score=0.5766790743916385)",
+        "grade_context \u2192 sufficient: The retrieved chunks identify the specific legal requirements for company formation, including the necessity of filing registration documents and the required content for the Memorandum of Association.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_3', 'ca_2013_sec_7', 'ca_2013_sec_8', 'ca_2013_sec_4', 'ca_2013_sec_18'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "rewrite_query \u2192 retry 2: 'mandatory documents and forms for private limited company in'",
+        "retrieve \u2192 5 docs, query='mandatory documents and forms for private limited company in'",
+        "    doc \u2192 [ca_2013_sec_3] Formation of company (score=0.7711156717928052)",
+        "    doc \u2192 [ca_2013_sec_7] Incorporation of company (score=0.671809638976741)",
+        "    doc \u2192 [ca_2013_sec_8] Formation of companies with charitable objects, etc. (score=0.6004649860559299)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.5917586671080494)",
+        "    doc \u2192 [ca_2013_sec_18] Conversion of companies already registered (score=0.5766790743916385)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly identify the statutory requirements for incorporation (Section 7) and specify the essential content required for the memorandum of association (Section 4), providing a direct legal basis to answer the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_3', 'ca_2013_sec_7', 'ca_2013_sec_8', 'ca_2013_sec_4', 'ca_2013_sec_18'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "rewrite_query \u2192 retry 3: 'mandatory documents for private limited company incorporatio'",
+        "retrieve \u2192 5 docs, query='mandatory documents for private limited company incorporatio'",
+        "    doc \u2192 [ca_2013_sec_3] Formation of company (score=0.7516668944557444)",
+        "    doc \u2192 [ca_2013_sec_7] Incorporation of company (score=0.7183904334306088)",
+        "    doc \u2192 [ca_2013_sec_8] Formation of companies with charitable objects, etc. (score=0.6534770172297741)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.6402076293238806)",
+        "    doc \u2192 [ca_2013_sec_18] Conversion of companies already registered (score=0.6124149410130243)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly identify the documents required for incorporation (Section 7) and provide specific content requirements for the Memorandum of Association (Section 4), offering a solid legal basis to answer the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_3', 'ca_2013_sec_7', 'ca_2013_sec_8', 'ca_2013_sec_4', 'ca_2013_sec_18'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "memorandum of association requirements",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_13",
+        "ca_2013_sec_4"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_13",
+        "ca_2013_sec_10",
+        "ca_2013_sec_4",
+        "ca_2013_sec_15",
+        "ca_2013_sec_6"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 46.62,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='memorandum of association requirements'",
+        "    doc \u2192 [ca_2013_sec_10] Effect of memorandum and articles (score=0.7279463443692171)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.6760711068820391)",
+        "    doc \u2192 [ca_2013_sec_15] Alteration of memorandum or articles to be noted in every copy (score=0.6741787038756357)",
+        "    doc \u2192 [ca_2013_sec_13] Alteration of memorandum (score=0.5983518011352831)",
+        "    doc \u2192 [ca_2013_sec_6] Act to override memorandum, articles, etc. (score=0.4377479245600719)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide specific statutory requirements regarding the mandatory content of the Memorandum of Association, such as company name, location, and business objects.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_10', 'ca_2013_sec_4', 'ca_2013_sec_15', 'ca_2013_sec_13', 'ca_2013_sec_6'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "how to change company name legally",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_13",
+        "ca_2013_sec_16"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_13",
+        "ca_2013_sec_18",
+        "ca_2013_sec_14",
+        "ca_2013_sec_4",
+        "ca_2013_sec_16"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 28.08,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='how to change company name legally'",
+        "    doc \u2192 [ca_2013_sec_16] Rectification of name of company (score=0.6684373905789076)",
+        "    doc \u2192 [ca_2013_sec_13] Alteration of memorandum (score=0.6205542239249192)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.45011814398298744)",
+        "    doc \u2192 [ca_2013_sec_14] Alteration of articles (score=0.4422255034298754)",
+        "    doc \u2192 [ca_2013_sec_18] Conversion of companies already registered (score=0.400659462818848)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly state the legal requirements for changing a company name, including the necessity of a special resolution and government approval.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_16', 'ca_2013_sec_13', 'ca_2013_sec_4', 'ca_2013_sec_14', 'ca_2013_sec_18'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "registered office requirements for a new company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_12"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_18",
+        "ca_2013_sec_20",
+        "ca_2013_sec_12",
+        "ca_2013_sec_4",
+        "ca_2013_sec_7"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 23.83,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='registered office requirements for a new company'",
+        "    doc \u2192 [ca_2013_sec_12] Registered office of company (score=0.7339557166375599)",
+        "    doc \u2192 [ca_2013_sec_7] Incorporation of company (score=0.5505503176613444)",
+        "    doc \u2192 [ca_2013_sec_20] Service of documents (score=0.5335719346573474)",
+        "    doc \u2192 [ca_2013_sec_18] Conversion of companies already registered (score=0.49726877112092865)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.49573567019006026)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide specific statutory requirements regarding the establishment and maintenance of a registered office, which directly addresses the user's query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_12', 'ca_2013_sec_7', 'ca_2013_sec_20', 'ca_2013_sec_18', 'ca_2013_sec_4'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "can a subsidiary hold shares in its parent company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_18",
+        "ca_2013_sec_19"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_5",
+        "ca_2013_sec_9",
+        "ca_2013_sec_2",
+        "ca_2013_sec_28",
+        "ca_2013_sec_19"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 40.56,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='can a subsidiary hold shares in its parent company'",
+        "    doc \u2192 [ca_2013_sec_19] Subsidiary company not to hold shares in its holding company (score=0.8366770223764193)",
+        "    doc \u2192 [ca_2013_sec_28] Offer of sale of shares by certain members of company (score=0.3124810946324559)",
+        "    doc \u2192 [ca_2013_sec_9] Effect of registration (score=0.3070043537086864)",
+        "    doc \u2192 [ca_2013_sec_5] Articles (score=0.2782205511717854)",
+        "    doc \u2192 [ca_2013_sec_2] Definitions (score=0.2767916745156899)",
+        "grade_context \u2192 sufficient: The retrieved chunk [ca_2013_sec_19] directly addresses the query by stating the general prohibition against subsidiary shareholding in a parent company and noting the specific exceptions.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_19', 'ca_2013_sec_28', 'ca_2013_sec_9', 'ca_2013_sec_5', 'ca_2013_sec_2'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "how to convert private company to public company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_18",
+        "ca_2013_sec_14"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_18",
+        "ca_2013_sec_14",
+        "ca_2013_sec_2",
+        "ca_2013_sec_23",
+        "ca_2013_sec_3"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 31.94,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='how to convert private company to public company'",
+        "    doc \u2192 [ca_2013_sec_14] Alteration of articles (score=0.7171871433965656)",
+        "    doc \u2192 [ca_2013_sec_18] Conversion of companies already registered (score=0.682312818759682)",
+        "    doc \u2192 [ca_2013_sec_3] Formation of company (score=0.4757526177112691)",
+        "    doc \u2192 [ca_2013_sec_23] Public offer and private placement (score=0.47289314851237385)",
+        "    doc \u2192 [ca_2013_sec_2] Definitions (score=0.4160854099596857)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the necessary legal basis for the conversion process, including the requirement for a special resolution, the maintenance of legal obligations, and the member requirements for public companies.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_14', 'ca_2013_sec_18', 'ca_2013_sec_3', 'ca_2013_sec_23', 'ca_2013_sec_2'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "what is a Section 8 non-profit company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_8",
+        "ca_2013_sec_3"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_2",
+        "ca_2013_sec_4",
+        "ca_2013_sec_8",
+        "ca_2013_sec_37",
+        "dpdp_act_2023_sec_2"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 35.07,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='what is a section 8 non profit company'",
+        "    doc \u2192 [ca_2013_sec_8] Formation of companies with charitable objects, etc. (score=0.6192455846520915)",
+        "    doc \u2192 [ca_2013_sec_2] Definitions (score=0.4051771085002035)",
+        "    doc \u2192 [ca_2013_sec_37] Action by affected persons (score=0.3910689400112228)",
+        "    doc \u2192 [ca_2013_sec_4] Memorandum (score=0.3464517679042972)",
+        "    doc \u2192 [dpdp_act_2023_sec_2] Definitions (score=0.33112664348499704)",
+        "grade_context \u2192 sufficient: The retrieved chunk 'ca_2013_sec_8' directly defines Section 8 companies, explains their charitable purpose, and details the prohibition on dividend distribution.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_8', 'ca_2013_sec_2', 'ca_2013_sec_37', 'ca_2013_sec_4', 'dpdp_act_2023_sec_2'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "promoter liability for fraud during registration",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_34"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_30",
+        "ca_2013_sec_7",
+        "ca_2013_sec_37",
+        "ca_2013_sec_35",
+        "ca_2013_sec_34"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 1,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 58.37,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='promoter liability for fraud during registration'",
+        "    doc \u2192 [ca_2013_sec_7] Incorporation of company (score=0.638620378888868)",
+        "    doc \u2192 [ca_2013_sec_34] Criminal liability for mis-statements in prospectus (score=0.48046952442516333)",
+        "    doc \u2192 [ca_2013_sec_35] Civil liability for mis-statements in prospectus (score=0.4788810136694514)",
+        "    doc \u2192 [ca_2013_sec_9] Effect of registration (score=0.3986745984047591)",
+        "    doc \u2192 [ca_2013_sec_2] Definitions (score=0.360840212404264)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide direct statutory authority regarding promoter liability for fraud during incorporation and mis-statements in a prospectus, which are central to the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_7', 'ca_2013_sec_34', 'ca_2013_sec_35', 'ca_2013_sec_9', 'ca_2013_sec_2'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "rewrite_query \u2192 retry 1: 'promoter liability for misstatement in prospectus and fraud '",
+        "retrieve \u2192 5 docs, query='promoter liability for misstatement in prospectus and fraud '",
+        "    doc \u2192 [ca_2013_sec_34] Criminal liability for mis-statements in prospectus (score=0.8329188009597337)",
+        "    doc \u2192 [ca_2013_sec_35] Civil liability for mis-statements in prospectus (score=0.8000806845701981)",
+        "    doc \u2192 [ca_2013_sec_7] Incorporation of company (score=0.7165419491075145)",
+        "    doc \u2192 [ca_2013_sec_37] Action by affected persons (score=0.5858104566702302)",
+        "    doc \u2192 [ca_2013_sec_30] Advertisement of prospectus (score=0.5447593939982778)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly cover both criminal and civil liability for promoters and founders regarding fraud during registration and prospectus issuance.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_34', 'ca_2013_sec_35', 'ca_2013_sec_7', 'ca_2013_sec_37', 'ca_2013_sec_30'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "founder personal liability for company debts",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "domain_correct": true,
+      "expected_sections": [
+        "ca_2013_sec_3A",
+        "ca_2013_sec_9"
+      ],
+      "verified_citations": [
+        "ca_2013_sec_3A",
+        "ca_2013_sec_10",
+        "dpdp_act_2023_sec_4",
+        "ca_2013_sec_35",
+        "ca_2013_sec_3"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 32.27,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=corporate_governance",
+        "retrieve \u2192 5 docs, query='founder personal liability for company debts'",
+        "    doc \u2192 [ca_2013_sec_3A] Members severally liable in certain cases (score=0.7582889574256231)",
+        "    doc \u2192 [ca_2013_sec_35] Civil liability for mis-statements in prospectus (score=0.4791775909061854)",
+        "    doc \u2192 [ca_2013_sec_10] Effect of memorandum and articles (score=0.4737033736586942)",
+        "    doc \u2192 [ca_2013_sec_3] Formation of company (score=0.4541030101842004)",
+        "    doc \u2192 [dpdp_act_2023_sec_4] Grounds for processing personal data (score=0.32305684616636887)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide specific statutory scenarios where founders face personal liability, such as member threshold violations, misleading prospectuses, and contractual obligations.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['ca_2013_sec_3A', 'ca_2013_sec_35', 'ca_2013_sec_10', 'ca_2013_sec_3', 'dpdp_act_2023_sec_4'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "is software code protected by copyright",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_2",
+        "copyright_act_1957_sec_13"
+      ],
+      "verified_citations": [
+        "copyright_act_1957_sec_13",
+        "copyright_act_1957_sec_5",
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_14",
+        "copyright_act_1957_sec_15"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 22.92,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=ip_licensing",
+        "retrieve \u2192 5 docs, query='is software code protected by copyright'",
+        "    doc \u2192 [copyright_act_1957_sec_17] First owner of copyright (score=0.5811183415510267)",
+        "    doc \u2192 [copyright_act_1957_sec_13] Works in which copyright subsists (score=0.5048232276030529)",
+        "    doc \u2192 [copyright_act_1957_sec_14] Meaning of copyright (score=0.4873440107397471)",
+        "    doc \u2192 [copyright_act_1957_sec_5] When work deemed to be first published in India (score=0.4659181901680389)",
+        "    doc \u2192 [copyright_act_1957_sec_15] Special provision regarding Copyright in designs registered or Capable of being registered under the Designs Act, 2000 (score=0.4397223714836378)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly state that software is classified as a literary work eligible for copyright protection and define the associated owner rights.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_17', 'copyright_act_1957_sec_13', 'copyright_act_1957_sec_14', 'copyright_act_1957_sec_5', 'copyright_act_1957_sec_15'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "who owns copyright of code written by an employee",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_16",
+        "copyright_act_1957_sec_17"
+      ],
+      "verified_citations": [
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_19A",
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_19",
+        "copyright_act_1957_sec_14"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 56.25,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=ip_licensing",
+        "retrieve \u2192 5 docs, query='who owns copyright of code written by an employee'",
+        "    doc \u2192 [copyright_act_1957_sec_17] First owner of copyright (score=0.7345663288494222)",
+        "    doc \u2192 [copyright_act_1957_sec_18] Assignment of copyright (score=0.4225427529590485)",
+        "    doc \u2192 [copyright_act_1957_sec_19] Mode of assignment (score=0.4041421875410802)",
+        "    doc \u2192 [copyright_act_1957_sec_19A] Disputes with respect to assignment of copyright (score=0.3584256826220138)",
+        "    doc \u2192 [copyright_act_1957_sec_14] Meaning of copyright (score=0.35431899865422595)",
+        "grade_context \u2192 sufficient: Section 17 directly addresses the ownership of copyright for work created by an employee under a contract of service.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_17', 'copyright_act_1957_sec_18', 'copyright_act_1957_sec_19', 'copyright_act_1957_sec_19A', 'copyright_act_1957_sec_14'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "how to assign copyright to another person",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_19"
+      ],
+      "verified_citations": [
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_19A",
+        "copyright_act_1957_sec_16",
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_19"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 37.11,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=ip_licensing",
+        "retrieve \u2192 5 docs, query='how to assign copyright to another person'",
+        "    doc \u2192 [copyright_act_1957_sec_18] Assignment of copyright (score=0.694233363866806)",
+        "    doc \u2192 [copyright_act_1957_sec_19] Mode of assignment (score=0.5646529554744436)",
+        "    doc \u2192 [copyright_act_1957_sec_19A] Disputes with respect to assignment of copyright (score=0.5516730166864003)",
+        "    doc \u2192 [copyright_act_1957_sec_17] First owner of copyright (score=0.4565942666091931)",
+        "    doc \u2192 [copyright_act_1957_sec_16] No copyright except as provided in this Act (score=0.39602679862795975)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the essential legal requirements for assigning copyright, specifically that it must be in writing and that owners can transfer rights either partially or entirely.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_18', 'copyright_act_1957_sec_19', 'copyright_act_1957_sec_19A', 'copyright_act_1957_sec_17', 'copyright_act_1957_sec_16'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "copyright protection for computer databases",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_2",
+        "copyright_act_1957_sec_13"
+      ],
+      "verified_citations": [
+        "copyright_act_1957_sec_9",
+        "copyright_act_1957_sec_13",
+        "copyright_act_1957_sec_2",
+        "copyright_act_1957_sec_14",
+        "copyright_act_1957_sec_15"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 34.72,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=ip_licensing",
+        "retrieve \u2192 5 docs, query='copyright protection for computer databases'",
+        "    doc \u2192 [copyright_act_1957_sec_2] Interpretation (score=0.6639998401295635)",
+        "    doc \u2192 [copyright_act_1957_sec_14] Meaning of copyright (score=0.6106887048893395)",
+        "    doc \u2192 [copyright_act_1957_sec_15] Special provision regarding Copyright in designs registered or Capable of being registered under the Designs Act, 2000 (score=0.53054212578012)",
+        "    doc \u2192 [copyright_act_1957_sec_13] Works in which copyright subsists (score=0.45316854452303745)",
+        "    doc \u2192 [copyright_act_1957_sec_9] Copyright Office (score=0.44830519739262636)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly identify 'computer databases' as literary works eligible for copyright protection under the Copyright Act, providing a clear legal basis to address the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_2', 'copyright_act_1957_sec_14', 'copyright_act_1957_sec_15', 'copyright_act_1957_sec_13', 'copyright_act_1957_sec_9'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "what happens if assignee does not use the copyright",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_19",
+        "copyright_act_1957_sec_19A"
+      ],
+      "verified_citations": [
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_19A",
+        "copyright_act_1957_sec_13",
+        "copyright_act_1957_sec_19",
+        "copyright_act_1957_sec_14"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 42.85,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=ip_licensing",
+        "retrieve \u2192 5 docs, query='what happens if assignee does not use the copyright'",
+        "    doc \u2192 [copyright_act_1957_sec_19A] Disputes with respect to assignment of copyright (score=0.7328096291053767)",
+        "    doc \u2192 [copyright_act_1957_sec_18] Assignment of copyright (score=0.5138629856557846)",
+        "    doc \u2192 [copyright_act_1957_sec_13] Works in which copyright subsists (score=0.5039760493226764)",
+        "    doc \u2192 [copyright_act_1957_sec_14] Meaning of copyright (score=0.5013259241391693)",
+        "    doc \u2192 [copyright_act_1957_sec_19] Mode of assignment (score=0.47929413506408963)",
+        "grade_context \u2192 sufficient: Section 19A explicitly addresses the consequences of an assignee failing to exercise their rights, providing the necessary legal basis to answer the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_19A', 'copyright_act_1957_sec_18', 'copyright_act_1957_sec_13', 'copyright_act_1957_sec_14', 'copyright_act_1957_sec_19'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "copyright infringement of software",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_14",
+        "copyright_act_1957_sec_13"
+      ],
+      "verified_citations": [
+        "copyright_act_1957_sec_13",
+        "copyright_act_1957_sec_5",
+        "copyright_act_1957_sec_4",
+        "copyright_act_1957_sec_14",
+        "copyright_act_1957_sec_15"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 43.19,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=ip_licensing",
+        "retrieve \u2192 5 docs, query='copyright infringement of software'",
+        "    doc \u2192 [copyright_act_1957_sec_13] Works in which copyright subsists (score=0.6255934849027707)",
+        "    doc \u2192 [copyright_act_1957_sec_14] Meaning of copyright (score=0.4445961627008346)",
+        "    doc \u2192 [copyright_act_1957_sec_4] When work not deemed to be published or performed in public (score=0.4285654372103627)",
+        "    doc \u2192 [copyright_act_1957_sec_5] When work deemed to be first published in India (score=0.4277241914190228)",
+        "    doc \u2192 [copyright_act_1957_sec_15] Special provision regarding Copyright in designs registered or Capable of being registered under the Designs Act, 2000 (score=0.41513135820150304)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the legal basis for copyright subsistence in software and define the owner's exclusive rights, which are foundational for addressing copyright infringement.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_13', 'copyright_act_1957_sec_14', 'copyright_act_1957_sec_4', 'copyright_act_1957_sec_5', 'copyright_act_1957_sec_15'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "employer owns copyright of work made during employment",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "domain_correct": true,
+      "expected_sections": [
+        "copyright_act_1957_sec_16",
+        "copyright_act_1957_sec_17"
+      ],
+      "verified_citations": [
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_19A",
+        "copyright_act_1957_sec_13",
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_19"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 32.9,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=ip_licensing",
+        "retrieve \u2192 5 docs, query='employer owns copyright of work made during employment'",
+        "    doc \u2192 [copyright_act_1957_sec_17] First owner of copyright (score=0.6823616460834504)",
+        "    doc \u2192 [copyright_act_1957_sec_18] Assignment of copyright (score=0.49830811313790135)",
+        "    doc \u2192 [copyright_act_1957_sec_19] Mode of assignment (score=0.4297681474962436)",
+        "    doc \u2192 [copyright_act_1957_sec_19A] Disputes with respect to assignment of copyright (score=0.41525464025665376)",
+        "    doc \u2192 [copyright_act_1957_sec_13] Works in which copyright subsists (score=0.36010558983786833)",
+        "grade_context \u2192 sufficient: Section 17 directly addresses the ownership of copyright for works created during employment, providing the necessary legal basis to answer the user's query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_17', 'copyright_act_1957_sec_18', 'copyright_act_1957_sec_19', 'copyright_act_1957_sec_19A', 'copyright_act_1957_sec_13'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "employee IP ownership when working at a startup",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "employment",
+      "domain_correct": false,
+      "expected_sections": [
+        "copyright_act_1957_sec_18",
+        "copyright_act_1957_sec_17"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_13",
+        "era_1976_sec_2",
+        "ca_2013_sec_21",
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_19"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 52.24,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=employment",
+        "retrieve \u2192 5 docs, query='employee intellectual property ownership when working at a s'",
+        "    doc \u2192 [copyright_act_1957_sec_17] First owner of copyright (score=0.5769094686960536)",
+        "    doc \u2192 [copyright_act_1957_sec_19] Mode of assignment (score=0.4295346277889167)",
+        "    doc \u2192 [igst_act_2017_sec_13] Place of supply of services where location of supplier or location of recipient is outside India (score=0.42409153873273975)",
+        "    doc \u2192 [ca_2013_sec_21] Authentication of documents, proceedings and contracts (score=0.40550844585621004)",
+        "    doc \u2192 [era_1976_sec_2] Definitions (score=0.3757534162399951)",
+        "grade_context \u2192 sufficient: The retrieved chunks include specific statutory sections regarding copyright ownership by employers and formal assignment requirements, which provide a direct legal basis for addressing employee IP ownership in a startup context.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['copyright_act_1957_sec_17', 'copyright_act_1957_sec_19', 'igst_act_2017_sec_13', 'ca_2013_sec_21', 'era_1976_sec_2'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "GST on software exports from India",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_16"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_21",
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_11",
+        "igst_act_2017_sec_15",
+        "igst_act_2017_sec_16"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 24.18,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='goods and services tax on software exports from india'",
+        "    doc \u2192 [igst_act_2017_sec_16] Zero rated supply (score=0.6979568631071591)",
+        "    doc \u2192 [igst_act_2017_sec_11] Place of supply of goods imported into, or exported from India (score=0.6978944359954862)",
+        "    doc \u2192 [igst_act_2017_sec_13] Place of supply of services where location of supplier or location of recipient is outside India (score=0.6410636459332515)",
+        "    doc \u2192 [igst_act_2017_sec_15] Refund of integrated tax paid on supply of goods to tourist leaving India (score=0.6374060451628029)",
+        "    doc \u2192 [igst_act_2017_sec_21] Import of services made on or after the appointed day (score=0.6127007091418901)",
+        "grade_context \u2192 sufficient: The retrieved chunks cover the core legal framework for software exports, specifically zero-rated supply status under Section 16 and the rules for determining the place of supply for services under Section 13.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_16', 'igst_act_2017_sec_11', 'igst_act_2017_sec_13', 'igst_act_2017_sec_15', 'igst_act_2017_sec_21'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "what is zero rated supply for startups",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_6",
+        "igst_act_2017_sec_16"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_12",
+        "igst_act_2017_sec_8",
+        "igst_act_2017_sec_7",
+        "igst_act_2017_sec_16"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 69.13,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='what is zero rated supply for startups'",
+        "    doc \u2192 [igst_act_2017_sec_16] Zero rated supply (score=0.6784159236674288)",
+        "    doc \u2192 [igst_act_2017_sec_7] Inter-State supply (score=0.26963219836160734)",
+        "    doc \u2192 [igst_act_2017_sec_13] Place of supply of services where location of supplier or location of recipient is outside India (score=0.24434630181842326)",
+        "    doc \u2192 [igst_act_2017_sec_12] Place of supply of services where location of supplier and recipient is in India (score=0.23641890777185154)",
+        "    doc \u2192 [igst_act_2017_sec_8] Intra-State supply (score=0.23581336027902872)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly define zero-rated supply under the IGST Act, covering exports and SEZ transactions, which provides the necessary legal basis to answer the user's query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_16', 'igst_act_2017_sec_7', 'igst_act_2017_sec_13', 'igst_act_2017_sec_12', 'igst_act_2017_sec_8'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "input tax credit refund for exporters",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_19",
+        "igst_act_2017_sec_18"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_18",
+        "gst_comp_act_2017_sec_11",
+        "gst_comp_act_2017_sec_9",
+        "igst_act_2017_sec_15",
+        "igst_act_2017_sec_16"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 44.67,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=taxation",
+        "retrieve \u2192 5 docs, query='input tax credit refund for exporters'",
+        "    doc \u2192 [igst_act_2017_sec_18] Transfer of input tax credit (score=0.6728364511034763)",
+        "    doc \u2192 [igst_act_2017_sec_15] Refund of integrated tax paid on supply of goods to tourist leaving India (score=0.6014996734388233)",
+        "    doc \u2192 [igst_act_2017_sec_16] Zero rated supply (score=0.5894545707589208)",
+        "    doc \u2192 [gst_comp_act_2017_sec_11] Other provisions relating to cess (score=0.5767052647763492)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.5061356207927916)",
+        "grade_context \u2192 sufficient: The retrieved chunks, particularly Section 16 of the IGST Act, provide the necessary legal basis to explain the refund of input tax credit for zero-rated supplies like exports.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_18', 'igst_act_2017_sec_15', 'igst_act_2017_sec_16', 'gst_comp_act_2017_sec_11', 'gst_comp_act_2017_sec_9'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "what is OIDAR online information services GST",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_2",
+        "igst_act_2017_sec_14"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_5",
+        "igst_act_2017_sec_14A",
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_14",
+        "igst_act_2017_sec_2"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 27.81,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='what is oidar online information services goods and services'",
+        "    doc \u2192 [igst_act_2017_sec_14] Special provision for payment of tax by a supplier of online information and database access or retrieval services (score=0.695455741746895)",
+        "    doc \u2192 [igst_act_2017_sec_2] Definitions (score=0.6563805328204593)",
+        "    doc \u2192 [igst_act_2017_sec_13] Place of supply of services where location of supplier or location of recipient is outside India (score=0.6145277884824516)",
+        "    doc \u2192 [igst_act_2017_sec_14A] Special provision for specified actionable claims supplied by a person located outside taxable territory (score=0.4041268706134381)",
+        "    doc \u2192 [igst_act_2017_sec_5] Levy and collection (score=0.38956326823319465)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly define OIDAR services and detail the specific statutory provisions under the IGST Act governing their taxability and supply rules.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_14', 'igst_act_2017_sec_2', 'igst_act_2017_sec_13', 'igst_act_2017_sec_14A', 'igst_act_2017_sec_5'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "GST liability for e-commerce platforms",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_5",
+        "igst_act_2017_sec_20"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_5",
+        "igst_act_2017_sec_20",
+        "gst_comp_act_2017_sec_11",
+        "gst_comp_act_2017_sec_9",
+        "cgst_ext_jk_act_2017_sec_2"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 3,
+      "retry_count_generation": 0,
+      "abstained": true,
+      "abstain_reason": "The retrieved chunk from IGST Act 2017 Section 5 explicitly mentions that e-commerce platforms are held liable for paying tax on services provided through their platforms.",
+      "elapsed_seconds": 145.65,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='goods and services tax liability for e commerce platforms'",
+        "    doc \u2192 [igst_act_2017_sec_5] Levy and collection (score=0.7005039334597554)",
+        "    doc \u2192 [igst_act_2017_sec_14] Special provision for payment of tax by a supplier of online information and database access or retrieval services (score=0.6136005111357324)",
+        "    doc \u2192 [igst_act_2017_sec_21] Import of services made on or after the appointed day (score=0.4943070830411345)",
+        "    doc \u2192 [gst_comp_act_2017_sec_8] Levy and collection of cess (score=0.4752229927338696)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.4745035615677762)",
+        "grade_context \u2192 sufficient: The retrieved chunk from igst_act_2017_sec_5 directly addresses the query by confirming the legal liability of e-commerce platforms for paying tax on services provided through their platforms.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_5', 'igst_act_2017_sec_14', 'igst_act_2017_sec_21', 'gst_comp_act_2017_sec_8', 'gst_comp_act_2017_sec_9'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "rewrite_query \u2192 retry 1: '\"Section 9(5) of the CGST Act 2017 e-commerce operator tax l'",
+        "retrieve \u2192 5 docs, query='\"Section 9(5) of the CGST Act 2017 e-commerce operator tax l'",
+        "    doc \u2192 [igst_act_2017_sec_20] Application of provisions of Central Goods and Services Tax Act (score=0.650825767859289)",
+        "    doc \u2192 [cgst_ext_jk_act_2017_sec_2] Extension and amendment of Central Goods and Services Tax Act, 2017 (score=0.627777633070948)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.6255540137976113)",
+        "    doc \u2192 [gst_comp_act_2017_sec_11] Other provisions relating to cess (score=0.5953922356369283)",
+        "    doc \u2192 [igst_act_2017_sec_5] Levy and collection (score=0.5911480143422934)",
+        "grade_context \u2192 sufficient: The retrieved chunks include IGST Act Section 5, which explicitly mentions the liability of e-commerce platforms for taxes on services provided through their platforms.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_20', 'cgst_ext_jk_act_2017_sec_2', 'gst_comp_act_2017_sec_9', 'gst_comp_act_2017_sec_11', 'igst_act_2017_sec_5'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "rewrite_query \u2192 retry 2: 'Section 9(5) of the CGST Act 2017 e-commerce operator tax li'",
+        "retrieve \u2192 5 docs, query='Section 9(5) of the CGST Act 2017 e-commerce operator tax li'",
+        "    doc \u2192 [igst_act_2017_sec_20] Application of provisions of Central Goods and Services Tax Act (score=0.6580771145681396)",
+        "    doc \u2192 [cgst_ext_jk_act_2017_sec_2] Extension and amendment of Central Goods and Services Tax Act, 2017 (score=0.6376904956655813)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.6321198015050675)",
+        "    doc \u2192 [gst_comp_act_2017_sec_11] Other provisions relating to cess (score=0.6053264249568997)",
+        "    doc \u2192 [igst_act_2017_sec_5] Levy and collection (score=0.6033463928024353)",
+        "grade_context \u2192 sufficient: The retrieved chunk from IGST Act 2017 Section 5 explicitly mentions that e-commerce platforms are held liable for paying tax on services provided through their platforms.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_20', 'cgst_ext_jk_act_2017_sec_2', 'gst_comp_act_2017_sec_9', 'gst_comp_act_2017_sec_11', 'igst_act_2017_sec_5'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "rewrite_query \u2192 retry 3: 'Section 9(5) of the CGST Act 2017 e-commerce operator tax li'",
+        "retrieve \u2192 5 docs, query='Section 9(5) of the CGST Act 2017 e-commerce operator tax li'",
+        "    doc \u2192 [igst_act_2017_sec_20] Application of provisions of Central Goods and Services Tax Act (score=0.6580771145681396)",
+        "    doc \u2192 [cgst_ext_jk_act_2017_sec_2] Extension and amendment of Central Goods and Services Tax Act, 2017 (score=0.6376904956655813)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.6321198015050675)",
+        "    doc \u2192 [gst_comp_act_2017_sec_11] Other provisions relating to cess (score=0.6053264249568997)",
+        "    doc \u2192 [igst_act_2017_sec_5] Levy and collection (score=0.6033463928024353)",
+        "grade_context \u2192 sufficient: The retrieved chunk from IGST Act 2017 Section 5 explicitly mentions that e-commerce platforms are held liable for paying tax on services provided through their platforms.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_20', 'cgst_ext_jk_act_2017_sec_2', 'gst_comp_act_2017_sec_9', 'gst_comp_act_2017_sec_11', 'igst_act_2017_sec_5'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "abstain \u2192 triggered: The retrieved chunk from IGST Act 2017 Section 5 explicitly mentions that e-commerce platforms are held liable for paying tax on services provided through their platforms."
+      ]
+    },
+    {
+      "query": "foreign company selling digital services to Indian users",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_14"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_16",
+        "igst_act_2017_sec_14A",
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_14",
+        "igst_act_2017_sec_2"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 23.48,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='foreign company selling digital services to indian users'",
+        "    doc \u2192 [igst_act_2017_sec_14] Special provision for payment of tax by a supplier of online information and database access or retrieval services (score=0.7367970179556913)",
+        "    doc \u2192 [igst_act_2017_sec_13] Place of supply of services where location of supplier or location of recipient is outside India (score=0.6653591601869495)",
+        "    doc \u2192 [igst_act_2017_sec_14A] Special provision for specified actionable claims supplied by a person located outside taxable territory (score=0.6478024224156577)",
+        "    doc \u2192 [igst_act_2017_sec_2] Definitions (score=0.6090549642039177)",
+        "    doc \u2192 [dpdp_act_2023_sec_16] Processing of personal data outside India (score=0.4882624810368942)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the necessary legal framework, specifically under IGST Act Section 14 and 14A, to explain the tax registration and compliance requirements for foreign companies selling digital services to Indian users.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_14', 'igst_act_2017_sec_13', 'igst_act_2017_sec_14A', 'igst_act_2017_sec_2', 'dpdp_act_2023_sec_16'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "place of supply rules for software services",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_12",
+        "igst_act_2017_sec_13"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_12",
+        "igst_act_2017_sec_10",
+        "igst_act_2017_sec_11",
+        "igst_act_2017_sec_7"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 23.55,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='place of supply rules for software services'",
+        "    doc \u2192 [igst_act_2017_sec_12] Place of supply of services where location of supplier and recipient is in India (score=0.6974732911708581)",
+        "    doc \u2192 [igst_act_2017_sec_13] Place of supply of services where location of supplier or location of recipient is outside India (score=0.6782470583915737)",
+        "    doc \u2192 [igst_act_2017_sec_7] Inter-State supply (score=0.6341833979119424)",
+        "    doc \u2192 [igst_act_2017_sec_11] Place of supply of goods imported into, or exported from India (score=0.6183490185556935)",
+        "    doc \u2192 [igst_act_2017_sec_10] Place of supply of goods other than supply of goods imported into, or exported from India (score=0.6106036710675367)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the essential legal framework for determining the place of supply for both domestic and international services, which directly covers the query regarding software services.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_12', 'igst_act_2017_sec_13', 'igst_act_2017_sec_7', 'igst_act_2017_sec_11', 'igst_act_2017_sec_10'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "SaaS company exporting services GST treatment",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_16"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_13",
+        "igst_act_2017_sec_14",
+        "it_act_2000_sec_2",
+        "igst_act_2017_sec_7",
+        "igst_act_2017_sec_16"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 27.43,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='saas company exporting services goods and services tax treat'",
+        "    doc \u2192 [igst_act_2017_sec_7] Inter-State supply (score=0.6421127622060328)",
+        "    doc \u2192 [it_act_2000_sec_2] Definitions (score=0.5607864279515737)",
+        "    doc \u2192 [igst_act_2017_sec_13] Place of supply of services where location of supplier or location of recipient is outside India (score=0.4901745456118337)",
+        "    doc \u2192 [igst_act_2017_sec_16] Zero rated supply (score=0.4873964548073798)",
+        "    doc \u2192 [igst_act_2017_sec_14] Special provision for payment of tax by a supplier of online information and database access or retrieval services (score=0.4684554770915742)",
+        "grade_context \u2192 sufficient: The retrieved chunks cover the definition of zero-rated supplies, the place of supply rules for international transactions, and the legal treatment of exported services, providing a strong basis for answering the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_7', 'it_act_2000_sec_2', 'igst_act_2017_sec_13', 'igst_act_2017_sec_16', 'igst_act_2017_sec_14'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "online gaming company GST liability",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_5",
+        "igst_act_2017_sec_14A"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_21",
+        "igst_act_2017_sec_5",
+        "igst_act_2017_sec_14A",
+        "igst_act_2017_sec_14",
+        "gst_comp_act_2017_sec_9"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 35.87,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=taxation",
+        "retrieve \u2192 5 docs, query='online gaming company goods and services tax liability'",
+        "    doc \u2192 [igst_act_2017_sec_14A] Special provision for specified actionable claims supplied by a person located outside taxable territory (score=0.7525097445401475)",
+        "    doc \u2192 [igst_act_2017_sec_14] Special provision for payment of tax by a supplier of online information and database access or retrieval services (score=0.6129659844866018)",
+        "    doc \u2192 [igst_act_2017_sec_5] Levy and collection (score=0.4373857173027459)",
+        "    doc \u2192 [igst_act_2017_sec_21] Import of services made on or after the appointed day (score=0.41890970868792)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.39313711780973204)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the specific statutory basis regarding IGST liability for foreign online gaming companies and general e-commerce tax obligations.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_14A', 'igst_act_2017_sec_14', 'igst_act_2017_sec_5', 'igst_act_2017_sec_21', 'gst_comp_act_2017_sec_9'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "Letter of Undertaking for export without paying GST",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "domain_correct": true,
+      "expected_sections": [
+        "igst_act_2017_sec_2",
+        "igst_act_2017_sec_16"
+      ],
+      "verified_citations": [
+        "igst_act_2017_sec_20",
+        "gst_comp_act_2017_sec_11",
+        "gst_comp_act_2017_sec_9",
+        "cgst_ext_jk_act_2017_sec_2",
+        "igst_act_2017_sec_16"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 3,
+      "retry_count_generation": 0,
+      "abstained": true,
+      "abstain_reason": "While the chunks do not explicitly detail the Letter of Undertaking (LUT) process, they identify 'Zero rated supply' under IGST Act Section 16 as the statutory basis for tax-free exports, providing the necessary legal foundation for the query.",
+      "elapsed_seconds": 57.78,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=taxation",
+        "retrieve \u2192 5 docs, query='letter of undertaking for export without paying goods and se'",
+        "    doc \u2192 [igst_act_2017_sec_16] Zero rated supply (score=0.6311322264513723)",
+        "    doc \u2192 [igst_act_2017_sec_21] Import of services made on or after the appointed day (score=0.4771149758909432)",
+        "    doc \u2192 [igst_act_2017_sec_10] Place of supply of goods other than supply of goods imported into, or exported from India (score=0.4649832040103018)",
+        "    doc \u2192 [igst_act_2017_sec_11] Place of supply of goods imported into, or exported from India (score=0.4544058128179755)",
+        "    doc \u2192 [igst_act_2017_sec_14] Special provision for payment of tax by a supplier of online information and database access or retrieval services (score=0.44698225377409107)",
+        "grade_context \u2192 insufficient: None of the provided chunks contain information regarding the 'Letter of Undertaking' (LUT) procedure, which is the specific legal mechanism for exporting without payment of GST.",
+        "rewrite_query \u2192 retry 1: 'GST Rule 96A procedure for export of goods or services under'",
+        "retrieve \u2192 5 docs, query='GST Rule 96A procedure for export of goods or services under'",
+        "    doc \u2192 [igst_act_2017_sec_21] Import of services made on or after the appointed day (score=0.7530907543355684)",
+        "    doc \u2192 [igst_act_2017_sec_4] Authorisation of officers of State tax or Union territory tax as proper officer in certain circumstances (score=0.6355791265959501)",
+        "    doc \u2192 [igst_act_2017_sec_17A] Transfer of certain amounts (score=0.6114051169909387)",
+        "    doc \u2192 [igst_act_2017_sec_22] Power to make rules (score=0.6046789386943918)",
+        "    doc \u2192 [igst_act_2017_sec_1] Short title, extent and commencement (score=0.6012604552270566)",
+        "grade_context \u2192 insufficient: None of the provided chunks contain information regarding the Letter of Undertaking (LUT) or the specific provisions for exports without payment of IGST.",
+        "rewrite_query \u2192 retry 2: 'GST LUT procedure for export of goods and services under Rul'",
+        "retrieve \u2192 5 docs, query='GST LUT procedure for export of goods and services under Rul'",
+        "    doc \u2192 [igst_act_2017_sec_21] Import of services made on or after the appointed day (score=0.6801611658181062)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.6767303154903845)",
+        "    doc \u2192 [igst_act_2017_sec_20] Application of provisions of Central Goods and Services Tax Act (score=0.664096508871113)",
+        "    doc \u2192 [gst_comp_act_2017_sec_11] Other provisions relating to cess (score=0.6397940148756696)",
+        "    doc \u2192 [gst_comp_act_2017_sec_8] Levy and collection of cess (score=0.6218344541159472)",
+        "grade_context \u2192 insufficient: The retrieved chunks focus on transitional provisions, compensation cess, and general administrative rules, none of which cover the specific legal requirements or procedures for a Letter of Undertaking (LUT) for GST-free exports.",
+        "rewrite_query \u2192 retry 3: '\"GST Letter of Undertaking (LUT) for export of goods and ser'",
+        "retrieve \u2192 5 docs, query='\"GST Letter of Undertaking (LUT) for export of goods and ser'",
+        "    doc \u2192 [igst_act_2017_sec_20] Application of provisions of Central Goods and Services Tax Act (score=0.6341603949621353)",
+        "    doc \u2192 [gst_comp_act_2017_sec_9] Returns, payments and refunds (score=0.6182474446387709)",
+        "    doc \u2192 [cgst_ext_jk_act_2017_sec_2] Extension and amendment of Central Goods and Services Tax Act, 2017 (score=0.5912204468977764)",
+        "    doc \u2192 [gst_comp_act_2017_sec_11] Other provisions relating to cess (score=0.5810526448761288)",
+        "    doc \u2192 [igst_act_2017_sec_16] Zero rated supply (score=0.5634233411649043)",
+        "grade_context \u2192 sufficient: While the chunks do not explicitly detail the Letter of Undertaking (LUT) process, they identify 'Zero rated supply' under IGST Act Section 16 as the statutory basis for tax-free exports, providing the necessary legal foundation for the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['igst_act_2017_sec_20', 'gst_comp_act_2017_sec_9', 'cgst_ext_jk_act_2017_sec_2', 'gst_comp_act_2017_sec_11', 'igst_act_2017_sec_16'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 off_target",
+        "abstain \u2192 triggered: While the chunks do not explicitly detail the Letter of Undertaking (LUT) process, they identify 'Zero rated supply' under IGST Act Section 16 as the statutory basis for tax-free exports, providing the necessary legal foundation for the query."
+      ]
+    },
+    {
+      "query": "how to set up internal complaints committee startup",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_6",
+        "posh_act_2013_sec_4"
+      ],
+      "verified_citations": [
+        "posh_act_2013_sec_4",
+        "posh_act_2013_sec_21",
+        "posh_act_2013_sec_6",
+        "posh_act_2013_sec_11",
+        "posh_act_2013_sec_26"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 26.15,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.WORKFLOW domain=employment",
+        "retrieve \u2192 5 docs, query='how to set up internal complaints committee startup'",
+        "    doc \u2192 [posh_act_2013_sec_4] Constitution of Internal Complaints Committee (score=0.7592963369303116)",
+        "    doc \u2192 [posh_act_2013_sec_26] Penalty for non-compliance with provisions of Act (score=0.6473225667274765)",
+        "    doc \u2192 [posh_act_2013_sec_21] Committee to submit annual report (score=0.6109246189453859)",
+        "    doc \u2192 [posh_act_2013_sec_11] Inquiry into complaint (score=0.5127079871444692)",
+        "    doc \u2192 [posh_act_2013_sec_6] Constitution and jurisdiction of Local Committee (score=0.5103101975720205)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the essential legal requirements for the composition of the committee, thresholds for its necessity, and the consequences of non-compliance, which form a solid basis for answering the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['posh_act_2013_sec_4', 'posh_act_2013_sec_26', 'posh_act_2013_sec_21', 'posh_act_2013_sec_11', 'posh_act_2013_sec_6'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "what counts as sexual harassment at workplace",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_3",
+        "posh_act_2013_sec_2"
+      ],
+      "verified_citations": [
+        "posh_act_2013_sec_3",
+        "posh_act_2013_sec_2",
+        "posh_act_2013_sec_27",
+        "posh_act_2013_sec_1",
+        "posh_act_2013_sec_28"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 22.68,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=employment",
+        "retrieve \u2192 5 docs, query='what counts as sexual harassment at workplace'",
+        "    doc \u2192 [posh_act_2013_sec_3] Prevention of sexual harassment (score=0.632126933903147)",
+        "    doc \u2192 [posh_act_2013_sec_1] Short title, extent and commencement (score=0.621723822149777)",
+        "    doc \u2192 [posh_act_2013_sec_28] Act not in derogation of any other law (score=0.583543192722643)",
+        "    doc \u2192 [posh_act_2013_sec_2] Definitions (score=0.5742064497789722)",
+        "    doc \u2192 [posh_act_2013_sec_27] Cognizance of offence by courts (score=0.5491068886153685)",
+        "grade_context \u2192 sufficient: The retrieved chunks provide the legal definition of sexual harassment, including specific examples of prohibited conduct and the scope of the POSH Act.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['posh_act_2013_sec_3', 'posh_act_2013_sec_1', 'posh_act_2013_sec_28', 'posh_act_2013_sec_2', 'posh_act_2013_sec_27'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "complaint filing deadline for harassment case",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_18",
+        "posh_act_2013_sec_9"
+      ],
+      "verified_citations": [
+        "posh_act_2013_sec_23",
+        "posh_act_2013_sec_11",
+        "posh_act_2013_sec_22",
+        "posh_act_2013_sec_9",
+        "posh_act_2013_sec_16"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 24.76,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=employment",
+        "retrieve \u2192 5 docs, query='complaint filing deadline for harassment case'",
+        "    doc \u2192 [posh_act_2013_sec_9] Complaint of sexual harassment (score=0.7350428917978663)",
+        "    doc \u2192 [posh_act_2013_sec_11] Inquiry into complaint (score=0.46325558799502076)",
+        "    doc \u2192 [posh_act_2013_sec_22] Employer to include information in annual report (score=0.4519257911422806)",
+        "    doc \u2192 [posh_act_2013_sec_23] Appropriate Government to monitor implementation and maintain data (score=0.4397177946129377)",
+        "    doc \u2192 [posh_act_2013_sec_16] Prohibition of publication or making known contents of complaint and inquiry proceedings (score=0.43833348320793375)",
+        "grade_context \u2192 sufficient: The retrieved chunk 'posh_act_2013_sec_9' explicitly states the three-month complaint filing deadline and the conditions for potential extensions.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['posh_act_2013_sec_9', 'posh_act_2013_sec_11', 'posh_act_2013_sec_22', 'posh_act_2013_sec_23', 'posh_act_2013_sec_16'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "confidentiality rules in harassment proceedings",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_17",
+        "posh_act_2013_sec_16"
+      ],
+      "verified_citations": [
+        "posh_act_2013_sec_3",
+        "posh_act_2013_sec_29",
+        "posh_act_2013_sec_16",
+        "posh_act_2013_sec_27",
+        "posh_act_2013_sec_17"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 27.09,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=employment",
+        "retrieve \u2192 5 docs, query='confidentiality rules in harassment proceedings'",
+        "    doc \u2192 [posh_act_2013_sec_16] Prohibition of publication or making known contents of complaint and inquiry proceedings (score=0.7709179180313472)",
+        "    doc \u2192 [posh_act_2013_sec_17] Penalty for publication or making known contents of complaint and inquiry proceedings (score=0.693879346651856)",
+        "    doc \u2192 [posh_act_2013_sec_27] Cognizance of offence by courts (score=0.48293394867591133)",
+        "    doc \u2192 [posh_act_2013_sec_3] Prevention of sexual harassment (score=0.48090789554423585)",
+        "    doc \u2192 [posh_act_2013_sec_29] Power of appropriate Government to make rules (score=0.4741439741300165)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly cover the prohibition of publishing complaint contents and the penalties for breaching confidentiality in POSH proceedings, which directly addresses the query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['posh_act_2013_sec_16', 'posh_act_2013_sec_17', 'posh_act_2013_sec_27', 'posh_act_2013_sec_3', 'posh_act_2013_sec_29'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "employer duties to prevent sexual harassment",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "posh_act_2013_sec_19",
+        "posh_act_2013_sec_4"
+      ],
+      "verified_citations": [
+        "posh_act_2013_sec_3",
+        "posh_act_2013_sec_22",
+        "posh_act_2013_sec_2",
+        "posh_act_2013_sec_19",
+        "posh_act_2013_sec_1"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 50.31,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=employment",
+        "retrieve \u2192 5 docs, query='employer duties to prevent sexual harassment'",
+        "    doc \u2192 [posh_act_2013_sec_19] Duties of employer (score=0.7611666239003323)",
+        "    doc \u2192 [posh_act_2013_sec_3] Prevention of sexual harassment (score=0.6858855244595766)",
+        "    doc \u2192 [posh_act_2013_sec_2] Definitions (score=0.651361534601482)",
+        "    doc \u2192 [posh_act_2013_sec_1] Short title, extent and commencement (score=0.5873822696793602)",
+        "    doc \u2192 [posh_act_2013_sec_22] Employer to include information in annual report (score=0.563473829838034)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly outline the statutory duties of employers regarding workplace safety, reporting, and training requirements under the POSH Act.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['posh_act_2013_sec_19', 'posh_act_2013_sec_3', 'posh_act_2013_sec_2', 'posh_act_2013_sec_1', 'posh_act_2013_sec_22'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "equal pay for men and women doing same work",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "domain_correct": true,
+      "expected_sections": [
+        "era_1976_sec_4",
+        "era_1976_sec_2"
+      ],
+      "verified_citations": [
+        "era_1976_sec_5",
+        "era_1976_sec_6",
+        "era_1976_sec_4",
+        "era_1976_sec_2",
+        "era_1976_sec_7"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": false,
+      "abstain_reason": "",
+      "elapsed_seconds": 23.68,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=employment",
+        "retrieve \u2192 5 docs, query='equal pay for men and women doing same work'",
+        "    doc \u2192 [era_1976_sec_4] Duty of employer to pay equal remuneration to men and women workers for same work or work of a similar nature (score=0.7524918612847493)",
+        "    doc \u2192 [era_1976_sec_5] No discrimination to be made while recruiting men and women workers (score=0.580167032193043)",
+        "    doc \u2192 [era_1976_sec_7] Power of appropriate Government to appoint authorities for hearing and deciding claims and complaints (score=0.5748333699709117)",
+        "    doc \u2192 [era_1976_sec_6] Advisory Committee (score=0.5039498954631663)",
+        "    doc \u2192 [era_1976_sec_2] Definitions (score=0.32955074331173034)",
+        "grade_context \u2192 sufficient: The retrieved chunks explicitly define the legal duty to provide equal pay for equal work and provide definitions and enforcement mechanisms necessary to address the user's query.",
+        "generate \u2192 5 citations found",
+        "verify_citations \u2192 verified=['era_1976_sec_4', 'era_1976_sec_5', 'era_1976_sec_7', 'era_1976_sec_6', 'era_1976_sec_2'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers"
+      ]
+    },
+    {
+      "query": "discrimination in hiring women prohibited",
+      "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 500, model: gemini-3.1-flash-lite\\nPlease retry in 51.639867138s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-flash-lite'}, 'quotaValue': '500'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '51s'}]}}"
+    },
+    {
+      "query": "startup hiring discrimination and equal pay",
+      "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 500, model: gemini-3.1-flash-lite\\nPlease retry in 40.746176956s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-flash-lite'}, 'quotaValue': '500'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '40s'}]}}"
+    },
+    {
+      "query": "what is the penalty under section 999 of DPDP Act",
+      "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 500, model: gemini-3.1-flash-lite\\nPlease retry in 15.397432616s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-flash-lite'}, 'quotaValue': '500'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '15s'}]}}"
+    },
+    {
+      "query": "legal steps to launch a startup in India from scratch",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "unknown",
+      "domain_correct": false,
+      "expected_sections": [
+        "ca_2013_sec_3",
+        "ca_2013_sec_7"
+      ],
+      "verified_citations": [],
+      "citation_hits": 0,
+      "citation_recall": 0.0,
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "abstained": true,
+      "abstain_reason": "Could not determine the legal domain of your query.",
+      "elapsed_seconds": 0.61,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.UNKNOWN domain=unknown",
+        "abstain \u2192 triggered: Could not determine the legal domain of your query."
+      ]
+    },
+    {
+      "query": "how are GST proceeds distributed between states",
+      "error": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 500, model: gemini-3.1-flash-lite\\nPlease retry in 59.769771985s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.1-flash-lite'}, 'quotaValue': '500'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '59s'}]}}"
+    }
+  ]
+}

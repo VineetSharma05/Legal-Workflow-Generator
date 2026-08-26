@@ -1,4 +1,3 @@
-import os
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -10,7 +9,7 @@ def run():
     conn = psycopg2.connect(
         dbname="postgres",
         user=config.DB_USER,
-        password=os.environ.get("PGPASSWORD"),
+        password=config.PGPASSWORD,
         host=config.DB_HOST,
         port=config.DB_PORT,
         connect_timeout=5,
@@ -37,7 +36,7 @@ def run():
     conn = psycopg2.connect(
         dbname=config.DB_NAME,
         user=config.DB_USER,
-        password=os.environ.get("PGPASSWORD"),
+        password=config.PGPASSWORD,
         host=config.DB_HOST,
         port=config.DB_PORT,
         connect_timeout=5,
@@ -70,12 +69,33 @@ def run():
     """)
     print("step 10: Table 'laws' is ready")
 
+    # ADD COLUMN IF NOT EXISTS so this is safe to re-run against a table
+    # created before the `domain` column existed.
+    cur.execute("ALTER TABLE laws ADD COLUMN IF NOT EXISTS domain TEXT;")
+    print("step 10b: Column 'laws.domain' is ready")
+
     cur.execute("""
         CREATE INDEX IF NOT EXISTS laws_embedding_idx
         ON laws
         USING hnsw (embedding vector_cosine_ops);
     """)
     print("step 11: Embedding index is ready")
+
+    cur.execute("CREATE INDEX IF NOT EXISTS laws_domain_idx ON laws (domain);")
+    print("step 11b: Domain index is ready")
+
+    # Per-domain distinctive terms extracted from the corpus via TF-IDF
+    # (see rag/domain_keywords.py) — the deterministic keyword classifier
+    # loads this table instead of scanning `laws` directly.
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS domain_keywords (
+            domain TEXT NOT NULL,
+            term TEXT NOT NULL,
+            score DOUBLE PRECISION NOT NULL,
+            PRIMARY KEY (domain, term)
+        );
+    """)
+    print("step 11c: Table 'domain_keywords' is ready")
 
     conn.commit()
     cur.close()

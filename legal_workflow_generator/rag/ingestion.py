@@ -1,4 +1,3 @@
-import os
 import re
 from typing import List
 import psycopg2
@@ -6,6 +5,23 @@ from psycopg2.extras import execute_batch, Json
 
 import legal_workflow_generator.typings.types as T
 import legal_workflow_generator.config.values as config
+
+# ── Statute → Domain Mapping ─────────────────────────────────────────────────
+# The corpus is already domain-labeled, just implicitly — each source dataset
+# file is a single domain, which is what fixes the statute a provision belongs
+# to. This makes that mapping explicit so it can be stored on each row and used
+# to build the per-domain keyword index (see rag/domain_keywords.py).
+STATUTE_DOMAIN_MAP: dict[str, str] = {
+    "dpdp_act_2023": "data_protection",
+    "companies_act_2013": "corporate_governance",
+    "copyright_act_1957": "ip_licensing",
+    "information_technology_act_2000": "ip_licensing",
+    "igst_act_2017": "taxation",
+    "gst_compensation_to_states_act_2017": "taxation",
+    "cgst_extension_to_jk_act_2017": "taxation",
+    "posh_act_2013": "employment",
+    "equal_remuneration_act_1976": "employment",
+}
 
 # ── Stopwords ────────────────────────────────────────────────────────────────
 STOPWORDS = {
@@ -196,7 +212,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
     conn = psycopg2.connect(
         dbname=config.DB_NAME,
         user=config.DB_USER,
-        password=os.environ.get("PGPASSWORD"),
+        password=config.PGPASSWORD,
         host=config.DB_HOST,
         port=config.DB_PORT,
     )
@@ -216,7 +232,8 @@ def ingest(laws: List[T.LawSchema]) -> None:
             plain_english_summary,
             keywords,
             penalty_linked,
-            effective_date
+            effective_date,
+            domain
         )
         VALUES (
             %(provision_id)s,
@@ -231,7 +248,8 @@ def ingest(laws: List[T.LawSchema]) -> None:
             %(plain_english_summary)s,
             %(keywords)s,
             %(penalty_linked)s,
-            %(effective_date)s
+            %(effective_date)s,
+            %(domain)s
         )
         ON CONFLICT (provision_id)
         DO UPDATE SET
@@ -246,7 +264,8 @@ def ingest(laws: List[T.LawSchema]) -> None:
             plain_english_summary = EXCLUDED.plain_english_summary,
             keywords = EXCLUDED.keywords,
             penalty_linked = EXCLUDED.penalty_linked,
-            effective_date = EXCLUDED.effective_date;
+            effective_date = EXCLUDED.effective_date,
+            domain = EXCLUDED.domain;
     """
 
     prepared_rows = []
@@ -265,6 +284,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
         row["keywords"] = law.get("keywords", [])
         row["plain_english_summary"] = law.get("plain_english_summary", "")
         row["penalty_linked"] = law.get("penalty_linked", False)
+        row["domain"] = STATUTE_DOMAIN_MAP.get(law.get("statute_id", ""), "unknown")
 
         prepared_rows.append(row)
 
@@ -282,3 +302,4 @@ def ingest(laws: List[T.LawSchema]) -> None:
     print("    [4] Normalization      : lowercase, whitespace cleanup")
     print("    [5] Stopword removal   : applied for BM25 index only")
     print("    [6] Stemming           : applied for BM25 index only")
+    print("    [7] Domain tagging     : statute_id mapped to one of 5 domains (or 'unknown')")

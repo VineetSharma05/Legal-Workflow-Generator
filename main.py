@@ -7,7 +7,7 @@ import legal_workflow_generator.rag as rag
 
 def main():
     if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} [setup|ingest|embed]")
+        print(f"Usage: {sys.argv[0]} [setup|ingest|embed|extract-keywords]")
         exit(1)
 
     if sys.argv[1] == "setup":
@@ -30,9 +30,12 @@ def main():
     elif sys.argv[1] == "embed":
         rag.embeddings.run()
 
+    elif sys.argv[1] == "extract-keywords":
+        rag.domain_keywords.run()
+
     else:
         print(f"Unknown command: {sys.argv[1]}")
-        print(f"Usage: {sys.argv[0]} [setup|ingest|embed]")
+        print(f"Usage: {sys.argv[0]} [setup|ingest|embed|extract-keywords]")
         exit(1)
 
 

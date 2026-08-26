@@ -1,0 +1,49 @@
+query,expected_domain,classified_domain,domain_correct,citation_recall,hallucinated_citations
+what is a data fiduciary,data_protection,data_protection,True,0.5,0
+user consent requirements for collecting personal data,data_protection,data_protection,True,0.5,0
+how to handle personal data breach notification,data_protection,data_protection,True,0.5,1
+right to erasure of personal data,data_protection,data_protection,True,0.5,2
+children data protection parental consent,data_protection,data_protection,True,0.5,2
+cross border data transfer restrictions India,data_protection,data_protection,True,0.5,1
+significant data fiduciary obligations,data_protection,data_protection,True,1.0,1
+data protection officer appointment requirements,data_protection,data_protection,True,0.5,2
+penalty for violating data protection rules,data_protection,data_protection,True,0.0,1
+what is a consent manager,data_protection,data_protection,True,0.5,1
+minimum number of founders to start a private company,corporate_governance,corporate_governance,True,1.0,2
+what documents are needed for company incorporation,corporate_governance,corporate_governance,True,0.5,2
+memorandum of association requirements,corporate_governance,corporate_governance,True,0.5,1
+how to change company name legally,corporate_governance,corporate_governance,True,1.0,0
+registered office requirements for a new company,corporate_governance,corporate_governance,True,1.0,2
+can a subsidiary hold shares in its parent company,corporate_governance,corporate_governance,True,0.5,2
+how to convert private company to public company,corporate_governance,corporate_governance,True,1.0,0
+what is a Section 8 non-profit company,corporate_governance,corporate_governance,True,0.5,1
+promoter liability for fraud during registration,corporate_governance,corporate_governance,True,0.5,2
+founder personal liability for company debts,corporate_governance,corporate_governance,True,0.5,1
+is software code protected by copyright,ip_licensing,ip_licensing,True,0.0,1
+who owns copyright of code written by an employee,ip_licensing,ip_licensing,True,0.5,1
+how to assign copyright to another person,ip_licensing,ip_licensing,True,1.0,1
+what happens if assignee does not use the copyright,ip_licensing,ip_licensing,True,0.5,3
+copyright infringement of software,ip_licensing,ip_licensing,True,1.0,1
+employer owns copyright of work made during employment,ip_licensing,ip_licensing,True,0.5,0
+employee IP ownership when working at a startup,ip_licensing,employment,False,0.5,1
+GST on software exports from India,taxation,taxation,True,0.5,2
+what is zero rated supply for startups,taxation,taxation,True,0.5,2
+input tax credit refund for exporters,taxation,taxation,True,0.5,0
+what is OIDAR online information services GST,taxation,taxation,True,1.0,0
+GST liability for e-commerce platforms,taxation,taxation,True,0.5,1
+foreign company selling digital services to Indian users,taxation,taxation,True,1.0,1
+place of supply rules for software services,taxation,taxation,True,1.0,3
+SaaS company exporting services GST treatment,taxation,taxation,True,0.5,3
+online gaming company GST liability,taxation,taxation,True,0.5,2
+Letter of Undertaking for export without paying GST,taxation,taxation,True,0.5,2
+how to set up internal complaints committee startup,employment,employment,True,1.0,0
+what counts as sexual harassment at workplace,employment,employment,True,0.0,0
+complaint filing deadline for harassment case,employment,employment,True,0.5,2
+confidentiality rules in harassment proceedings,employment,employment,True,1.0,3
+employer duties to prevent sexual harassment,employment,employment,True,0.0,1
+equal pay for men and women doing same work,employment,employment,True,0.5,0
+discrimination in hiring women prohibited,employment,employment,True,1.0,1
+startup hiring discrimination and equal pay,employment,employment,True,1.0,0
+what is the penalty under section 999 of DPDP Act,data_protection,data_protection,True,,0
+legal steps to launch a startup in India from scratch,corporate_governance,corporate_governance,True,0.5,0
+how are GST proceeds distributed between states,taxation,taxation,True,0.5,0
