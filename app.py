@@ -8,8 +8,9 @@ from pydantic import BaseModel
 # ── Pipeline imports ─────────────────────────────────────────────────────────
 import legal_workflow_generator.config.values  # noqa: F401 — loads .env
 from legal_workflow_generator.agent.graph import graph
-from legal_workflow_generator.query import process_query
 from legal_workflow_generator.rag.pipeline import RagPipeline
+from legal_workflow_generator.agent.nodes import classify_query as agent_classify_query
+from legal_workflow_generator.agent.state import AgentState
 
 # ── App setup ────────────────────────────────────────────────────────────────
 app = FastAPI(title="Legal Workflow Assistant")
@@ -149,9 +150,19 @@ def chat(req: ChatRequest):
 
 @app.post("/api/test/query")
 def test_query(req: TestRequest):
-    """Query processing unit only (normalize → classify intent → resolve context)."""
+    """Query processing unit — now uses the agent's classify_query node (multi-domain aware)."""
     try:
-        return _serialize_context(process_query(text=req.query))
+        state: AgentState = {"query": req.query, "trace": []}
+        result_state = agent_classify_query(state)
+        return {
+            "intent": result_state.get("intent"),
+            "domain": result_state.get("domain"),
+            "all_domains": result_state.get("all_domains", []),
+            "normalized_query": result_state.get("normalized_query"),
+            "keywords": result_state.get("keywords", []),
+            "confidence": result_state.get("confidence"),
+            "trace": result_state.get("trace", []),
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -163,15 +174,6 @@ def test_rag(req: TestRequest):
         pipeline = _get_rag(req.provider)
         result = pipeline.run(query=req.query, top_k=req.top_k)
         return result
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
-@app.post("/api/test/classify")
-def test_classify(req: TestRequest):
-    """Domain classification only (same as query unit, focused on domain fields)."""
-    try:
-        return _serialize_context(process_query(text=req.query))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
