@@ -291,7 +291,7 @@ function showTypingIndicator() {
 function formatAnswer(text) {
     if (!text) return '';
 
-    // Escape HTML
+    // Escape HTML first so user/LLM content can't inject markup
     let html = escapeHtml(text);
 
     // Lines of special characters (━━━, ===, ---) → <hr>
@@ -303,7 +303,21 @@ function formatAnswer(text) {
     // Warning lines (⚠)
     html = html.replace(/^(⚠.*)$/gm, '<span class="answer-warning">$1</span>');
 
-    // Newlines → <br>
+    // Markdown bold: **text** → <strong>text</strong>
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+    // Markdown italic: *text* → <em>text</em> (after bold, so ** isn't half-matched)
+    html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>');
+
+    // Inline code: `text` → <code>text</code>
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Markdown bullet lines: "- item" or "* item" → <li>item</li>, wrapped per line
+    html = html.replace(/^[-*]\s+(.+)$/gm, '<li>$1</li>');
+
+    // Numbered lines like "Step 1: ..." stay as-is (your existing format), no change needed
+
+    // Newlines → <br> (do this last, after block-level replacements above)
     html = html.replace(/\n/g, '<br>');
 
     return html;

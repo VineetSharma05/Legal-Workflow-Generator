@@ -19,13 +19,19 @@ _gemini_client = _genai.Client(api_key=GEMINI_API_KEY)
 
 VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
 
-def _llm(system: str, user: str, grader: bool = False) -> str:
-    time.sleep(4)
-    response = _gemini_client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=f"{system}\n\n{user}",
-    )
-    return response.text.strip()
+def _llm(system: str, user: str, grader: bool = False, max_retries: int = 3) -> str:
+    for attempt in range(max_retries):
+        try:
+            response = _gemini_client.models.generate_content(
+                model=GEMINI_MODEL,
+                contents=f"{system}\n\n{user}",
+            )
+            return response.text.strip()
+        except Exception as e:
+            if "429" in str(e) and attempt < max_retries - 1:
+                time.sleep(2 ** attempt)
+                continue
+            raise
 
 # ── Node 1: classify ──────────────────────────────────────────────────────────
 def classify_query(state: AgentState) -> AgentState:
