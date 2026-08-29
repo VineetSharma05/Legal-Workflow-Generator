@@ -60,6 +60,13 @@ python main.py ingest
 python main.py embed
 ```
 
+## Run Chatbot UI
+Run the fastapi server and frontend:
+
+```bash
+python app.py
+```
+
 ## Test Query Processing Unit
 
 Run the standalone query processor test:
