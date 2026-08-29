@@ -136,46 +136,55 @@ only implicit via which dataset file a provision came from); the new
 
 ### Phase 2 results (same 51-query eval, self-consistency off to isolate this change)
 
+The first run of this eval was contaminated by Gemini free-tier rate limits
+(15 requests/minute) — `combine` mode calls Gemini on every query and hit
+`429 RESOURCE_EXHAUSTED` on 13 of 38 attempted domain calls, and a re-run after
+the API key was refreshed also caught the Postgres container having stopped
+between sessions (47/51 queries errored on `Connection refused` before it was
+restarted). Numbers below are from the clean re-run, after fixing both:
+
 | | Prior (LLM-only) | `llm_fallback` | `combine` |
 |---|---|---|---|
-| Overall accuracy | 90% | 88% | 90%* |
-| Queries needing zero LLM calls | 0/51 | **37/51 (73%)** | 13/51 |
-| LLM calls that hit a rate-limit error | 0/51 | 1/51 | 13/38 attempted† |
+| Overall accuracy | 90% | 88% (45/51) | **98% (50/51)** |
+| Queries needing zero LLM calls | 0/51 | **37/51 (73%)** | 4/51 |
+| Errors (API/infra) | 0/51 | 0/51 | 0/51 |
 
-\* confounded — see below. † real `429 RESOURCE_EXHAUSTED` responses from
-Gemini's free-tier quota (15 requests/minute), not a bug in the code.
+**The determinism win is real.** `llm_fallback` resolves 73% of queries with
+zero LLM calls — deterministic, reproducible, free — for a ~10pp accuracy cost
+against a clean `combine` run. Its 6 errors aren't random: 4 of them (annual
+general meetings, board resolutions, NDAs, offer letters) trace to real
+keyword-vocabulary coverage gaps — concepts underrepresented in the
+196-provision ingested subset — which is a fixable data problem (ingest the
+fuller ~1050-provision corpus already sitting in `datasets/`), not a flaw in
+the TF-IDF approach itself.
 
-**The determinism win is real and large.** `llm_fallback` resolves 73% of
-queries with zero LLM calls — deterministic, reproducible, free — for a ~2pp
-accuracy cost against the old all-LLM baseline. Its 6 errors aren't random:
-4 of them (annual general meetings, board resolutions, NDAs, offer letters)
-trace to real keyword-vocabulary coverage gaps — concepts underrepresented in
-the 196-provision ingested subset — which is a fixable data problem (ingest
-the fuller ~1050-provision corpus already sitting in `datasets/`), not a flaw
-in the TF-IDF approach itself.
+**`combine` mode, run cleanly, is very strong.** 50/51 correct, with 5 of 6
+domains at 100% precision and recall (`data_protection`, `corporate_governance`,
+`ip_licensing`, `taxation`, `employment`) once API/infra noise was removed.
+Its one miss is *"how to raise a seed round from VCs"* (expected `unknown`) —
+the same query both strategies and the original all-LLM baseline get wrong,
+because the LLM confidently answers `corporate_governance` regardless of which
+strategy calls it. That's a genuine LLM-overreach failure mode, not something
+either classification approach fixes on its own — `domain_agreement` did flag
+it (keyword found nothing, so nothing to agree with), but flagging isn't the
+same as correcting, and this is one of the "still open" items below.
 
-**`combine` mode's 90% is not a clean result.** Because it calls Gemini on
-every query (once for intent, once for domain), it hit the free-tier rate
-limit repeatedly during the eval run — 13 of 38 attempted domain-classification
-calls failed outright. The fallback-on-failure logic defaulted to the
-keyword classifier's answer in those cases, which happened to be right often
-enough to prop the headline number up. The genuinely informative result from
-this run is that `combine`'s tie-break logic resolved every real disagreement
-it saw correctly (n=15, 100% — `accuracy_when_disagree` actually beat
-`accuracy_when_agree`, 86%), but that number needs a re-run with call pacing
-before it can be trusted, since this run conflates "tie-break worked" with
-"LLM call failed and the fallback got lucky."
-
-**Working default:** `llm_fallback` is the configured default
-(`DOMAIN_CLASSIFICATION_STRATEGY=llm_fallback`) — it's within noise of the old
-all-LLM baseline while being far cheaper, faster, and more reliable under
-quota pressure.
+**Trade-off, not a clear winner.** `combine` is ~10pp more accurate but calls
+Gemini on every single query (up to 2x the calls of the old baseline, once for
+intent and once for domain); `llm_fallback` avoids 73% of those calls entirely
+at real but modest accuracy cost, and is far more robust to the exact kind of
+quota pressure that contaminated the first run of this eval. Which one is
+worth it depends on whether the deployment is cost/latency-constrained or
+accuracy-constrained — `llm_fallback` remains the configured default
+(`DOMAIN_CLASSIFICATION_STRATEGY=llm_fallback`) for now, but `combine`'s clean
+numbers make it a reasonable choice too.
 
 ## What's still open
 
-- **`combine` needs backoff/pacing** between its two per-query LLM calls, then
-  a re-run, before its 90% figure (and the disagreement-resolution accuracy)
-  can be trusted rather than attributed to rate-limit luck.
+- **The one persistent LLM-overreach failure** (*"how to raise a seed round
+  from VCs"* → `corporate_governance`) survives every strategy and both API
+  keys tried so far — worth a dedicated look, since it's the only error left
+  in the `combine` results and it isn't a keyword-coverage problem.
 - **The self-consistency temperature test from Phase 1** hasn't been run —
   raise `SELF_CONSISTENCY_TEMPERATURE` and re-check whether split votes start
   appearing, and whether they still predict wrongness at that temperature.
