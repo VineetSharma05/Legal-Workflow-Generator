@@ -26,7 +26,52 @@ def _llm(system: str, user: str, grader: bool = False) -> str:
         contents=f"{system}\n\n{user}",
     )
     return response.text.strip()
+# ── domain → statute prefix mapping ──────────────────────────────────────────
+STATUTE_TO_DOMAIN = {
+    "dpdp_act": "data_protection",
+    "it_act": "data_protection",
+    "ca_2013": "corporate_governance",
+    "companies": "corporate_governance",
+    "copyright_act": "ip_licensing",
+    "patent": "ip_licensing",
+    "trademark": "ip_licensing",
+    "igst_act": "taxation",
+    "gst_comp_act": "taxation",
+    "cgst": "taxation",
+    "posh_act": "employment",
+    "era_1976": "employment",
+}
 
+def _detect_domains_from_retrieval(query: str) -> list[str]:
+    """
+    Detect relevant domains by doing a domain-agnostic retrieval
+    and reading which statutes appear in the top results.
+    Zero LLM calls, zero hallucination risk.
+    """
+    try:
+        _rag_pipeline._ensure_index()
+        docs = _rag_pipeline.searcher.search(query, top_k=7)
+        
+        domain_scores = {}
+        for doc in docs:
+            pid = doc.get("provision_id", "")
+            score = doc.get("combined_score", 0)
+            for prefix, domain in STATUTE_TO_DOMAIN.items():
+                if pid.startswith(prefix):
+                    # accumulate scores per domain
+                    domain_scores[domain] = domain_scores.get(domain, 0) + score
+                    break
+        
+        if not domain_scores:
+            return []
+        
+        # return domains that scored at least 30% of the top domain's score
+        max_score = max(domain_scores.values())
+        threshold = max_score * 0.3
+        detected = [d for d, s in domain_scores.items() if s >= threshold]
+        return detected
+    except Exception:
+        return []
 # ── Node 1: classify ──────────────────────────────────────────────────────────
 def classify_query(state: AgentState) -> AgentState:
     normalized = _normalizer.normalize(text=state["query"])
@@ -44,28 +89,32 @@ def classify_query(state: AgentState) -> AgentState:
     state["abstain_reason"]   = ""
 
     # multi-domain detection
-    multi_prompt = f"""This query mentions specific Indian laws. List ALL legal domains covered.
+        # ── retrieval-grounded domain detection ──────────────────────────────────
+        # ── retrieval-grounded domain detection ──────────────────────────────────
+    retrieval_domains = _detect_domains_from_retrieval(state["normalized_query"])
+    
+    # also get LLM domains for multi-domain queries
+    try:
+        multi_prompt = f"""This query may span multiple legal domains.
 Query: {state['query']}
-
-Available domains:
-- data_protection (DPDP Act, IT Act, privacy)
-- corporate_governance (Companies Act, incorporation, directors)
-- ip_licensing (Copyright Act, patents, trademarks, software IP)
-- taxation (GST, IGST, income tax, zero rated supply)
-- employment (POSH Act, ERA, equal pay, ICC, harassment)
+Domains: data_protection, corporate_governance, ip_licensing, taxation, employment
 
 Reply with ONLY the relevant domain names comma separated. Include ALL that apply.
-Example: data_protection, taxation, ip_licensing"""
-
-    try:
+Example: data_protection, employment"""
         raw = _llm("You are a legal domain classifier.", multi_prompt)
-        domains = [d.strip() for d in raw.split(",") if d.strip() in VALID_DOMAINS]
-        state["all_domains"] = domains if domains else [state["domain"]]
+        llm_domains = [d.strip() for d in raw.split(",") if d.strip() in VALID_DOMAINS]
     except Exception:
-        state["all_domains"] = [state["domain"]]
+        llm_domains = []
 
-    state["trace"] = [f"classify → intent={state['intent']} domain={state['domain']} all_domains={state.get('all_domains')}"]
-    return state
+    # COMBINE: union of retrieval + LLM domains
+    # retrieval grounds it, LLM catches what retrieval misses
+    combined = list(set(retrieval_domains + llm_domains + [state["domain"]]))
+    combined = [d for d in combined if d in VALID_DOMAINS]
+    
+    state["all_domains"] = combined if combined else [state["domain"]]
+    state["domain_detection_method"] = f"retrieval({len(retrieval_domains)})+llm({len(llm_domains)})"
+
+    state["trace"] = [f"classify → intent={state['intent']} domain={state['domain']} all_domains={state.get('all_domains')} method={state.get('domain_detection_method')}"]
 
 # ── Node 2: retrieve ──────────────────────────────────────────────────────────
 def retrieve(state: AgentState) -> AgentState:
@@ -303,4 +352,80 @@ def abstain(state: AgentState) -> AgentState:
     )
     state["abstain_reason"] = reason
     state["trace"].append(f"abstain → triggered: {reason}")
+    return state
+# ── Node 8: stitch ────────────────────────────────────────────────────────────
+def stitch_answer(state: AgentState) -> AgentState:
+    all_domains = state.get("all_domains", [state["domain"]])
+    answer = state.get("answer", "")
+    verified = state.get("verified_citations", [])
+    
+    # domain order for logical presentation
+    DOMAIN_ORDER = [
+        "corporate_governance",
+        "data_protection", 
+        "ip_licensing",
+        "taxation",
+        "employment",
+    ]
+    
+    # domain display names
+    DOMAIN_LABELS = {
+        "corporate_governance": "Corporate Governance",
+        "data_protection": "Data Protection",
+        "ip_licensing": "Intellectual Property",
+        "taxation": "Taxation & GST",
+        "employment": "Employment & Workplace",
+    }
+    
+    # domain prefix to citation mapping
+    DOMAIN_PREFIXES = {
+        "corporate_governance": ["ca_2013", "companies"],
+        "data_protection": ["dpdp", "it_act"],
+        "ip_licensing": ["copyright", "patent", "trademark"],
+        "taxation": ["igst", "gst", "cgst"],
+        "employment": ["posh", "era"],
+    }
+    
+    # figure out which domains actually have citations
+    covered_domains = []
+    gap_domains = []
+    
+    for domain in DOMAIN_ORDER:
+        if domain not in all_domains:
+            continue
+        prefixes = DOMAIN_PREFIXES.get(domain, [])
+        domain_cites = [c for c in verified if any(c.startswith(p) for p in prefixes)]
+        if domain_cites:
+            covered_domains.append(domain)
+        else:
+            gap_domains.append(domain)
+    
+    # build gaps section
+    gaps = []
+    for domain in gap_domains:
+        label = DOMAIN_LABELS.get(domain, domain)
+        gaps.append(f"- {label}: insufficient information found in knowledge base")
+    
+    state["domain_gaps"] = gaps
+    
+    # if no gaps just pass through
+    if not gaps:
+        state["stitched_answer"] = answer
+        state["trace"].append("stitch → no gaps, answer passed through")
+        return state
+    
+    # append gaps section to answer
+    gaps_text = "\n".join(gaps)
+    stitched = f"""{answer}
+
+⚠ KNOWLEDGE GAPS IDENTIFIED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+The following compliance areas could not be fully addressed 
+due to insufficient information in the current knowledge base.
+Please consult a legal professional for these areas:
+
+{gaps_text}"""
+    
+    state["stitched_answer"] = stitched
+    state["trace"].append(f"stitch → {len(gaps)} gap(s) flagged: {gap_domains}")
     return state
