@@ -5,25 +5,17 @@
     "strategy": "combine",
     "self_consistency_enabled": false,
     "self_consistency_samples": null,
-    "overall_accuracy": 0.9,
+    "overall_accuracy": 0.98,
     "keyword_only_accuracy": 0.67,
-    "llm_calls_avoided": "13/51",
+    "llm_calls_avoided": "4/51",
     "domain_source_breakdown": {
-      "keyword": {
-        "n": 9,
-        "accuracy": 1.0
-      },
       "keyword+llm": {
-        "n": 18,
-        "accuracy": 1.0
-      },
-      "keyword_strong_override": {
-        "n": 2,
+        "n": 29,
         "accuracy": 1.0
       },
       "llm": {
-        "n": 10,
-        "accuracy": 0.9
+        "n": 14,
+        "accuracy": 0.93
       },
       "llm_override": {
         "n": 4,
@@ -32,25 +24,21 @@
       "skipped": {
         "n": 4,
         "accuracy": 1.0
-      },
-      "unknown": {
-        "n": 4,
-        "accuracy": 0.0
       }
     },
-    "agreement_rate": 0.71,
+    "agreement_rate": 0.92,
     "accuracy_when_agree": {
-      "n": 36,
-      "accuracy": 0.86
+      "n": 47,
+      "accuracy": 0.98
     },
     "accuracy_when_disagree": {
-      "n": 15,
+      "n": 4,
       "accuracy": 1.0
     },
     "avg_domain_confidence": 1.0,
     "accuracy_when_unanimous_vote": {
       "n": 51,
-      "accuracy": 0.9
+      "accuracy": 0.98
     },
     "accuracy_when_split_vote": {
       "n": 0,
@@ -64,15 +52,15 @@
         "support": 9
       },
       "corporate_governance": {
-        "precision": 0.88,
-        "recall": 0.88,
-        "f1": 0.88,
+        "precision": 0.89,
+        "recall": 1.0,
+        "f1": 0.94,
         "support": 8
       },
       "ip_licensing": {
         "precision": 1.0,
-        "recall": 0.73,
-        "f1": 0.84,
+        "recall": 1.0,
+        "f1": 1.0,
         "support": 11
       },
       "taxation": {
@@ -88,9 +76,9 @@
         "support": 8
       },
       "unknown": {
-        "precision": 0.5,
+        "precision": 1.0,
         "recall": 0.8,
-        "f1": 0.62,
+        "f1": 0.89,
         "support": 5
       }
     },
@@ -99,12 +87,10 @@
         "data_protection": 9
       },
       "corporate_governance": {
-        "corporate_governance": 7,
-        "unknown": 1
+        "corporate_governance": 8
       },
       "ip_licensing": {
-        "ip_licensing": 8,
-        "unknown": 3
+        "ip_licensing": 11
       },
       "taxation": {
         "taxation": 10
@@ -287,10 +273,10 @@
     {
       "query": "can a foreign national be a director of an Indian company",
       "expected_domain": "corporate_governance",
-      "classified_domain": "unknown",
+      "classified_domain": "corporate_governance",
       "keyword_domain": "unknown",
-      "domain_source": "unknown",
-      "correct": false,
+      "domain_source": "llm",
+      "correct": true,
       "keyword_correct": false,
       "domain_agreement": true,
       "domain_confidence": 1.0
@@ -300,10 +286,10 @@
       "expected_domain": "ip_licensing",
       "classified_domain": "ip_licensing",
       "keyword_domain": "ip_licensing",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -311,19 +297,19 @@
       "expected_domain": "ip_licensing",
       "classified_domain": "ip_licensing",
       "keyword_domain": "ip_licensing",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
       "query": "is using open source code in our product a legal risk",
       "expected_domain": "ip_licensing",
-      "classified_domain": "unknown",
+      "classified_domain": "ip_licensing",
       "keyword_domain": "unknown",
-      "domain_source": "unknown",
-      "correct": false,
+      "domain_source": "llm",
+      "correct": true,
       "keyword_correct": false,
       "domain_agreement": true,
       "domain_confidence": 1.0
@@ -331,10 +317,10 @@
     {
       "query": "how to register a trademark for our startup name",
       "expected_domain": "ip_licensing",
-      "classified_domain": "unknown",
+      "classified_domain": "ip_licensing",
       "keyword_domain": "unknown",
-      "domain_source": "unknown",
-      "correct": false,
+      "domain_source": "llm",
+      "correct": true,
       "keyword_correct": false,
       "domain_agreement": true,
       "domain_confidence": 1.0
@@ -432,10 +418,10 @@
       "expected_domain": "taxation",
       "classified_domain": "taxation",
       "keyword_domain": "taxation",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -443,10 +429,10 @@
       "expected_domain": "taxation",
       "classified_domain": "taxation",
       "keyword_domain": "taxation",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -454,10 +440,10 @@
       "expected_domain": "taxation",
       "classified_domain": "taxation",
       "keyword_domain": "taxation",
-      "domain_source": "keyword_strong_override",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -465,10 +451,10 @@
       "expected_domain": "taxation",
       "classified_domain": "taxation",
       "keyword_domain": "taxation",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -564,10 +550,10 @@
       "expected_domain": "ip_licensing",
       "classified_domain": "ip_licensing",
       "keyword_domain": "ip_licensing",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -575,10 +561,10 @@
       "expected_domain": "taxation",
       "classified_domain": "taxation",
       "keyword_domain": "taxation",
-      "domain_source": "keyword_strong_override",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -586,19 +572,19 @@
       "expected_domain": "ip_licensing",
       "classified_domain": "ip_licensing",
       "keyword_domain": "ip_licensing",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
       "query": "an employee is leaving and taking source code with them, what are our options",
       "expected_domain": "ip_licensing",
-      "classified_domain": "unknown",
+      "classified_domain": "ip_licensing",
       "keyword_domain": "unknown",
-      "domain_source": "unknown",
-      "correct": false,
+      "domain_source": "llm",
+      "correct": true,
       "keyword_correct": false,
       "domain_agreement": true,
       "domain_confidence": 1.0
@@ -608,10 +594,10 @@
       "expected_domain": "data_protection",
       "classified_domain": "data_protection",
       "keyword_domain": "data_protection",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
@@ -619,10 +605,10 @@
       "expected_domain": "taxation",
       "classified_domain": "taxation",
       "keyword_domain": "taxation",
-      "domain_source": "keyword",
+      "domain_source": "keyword+llm",
       "correct": true,
       "keyword_correct": true,
-      "domain_agreement": false,
+      "domain_agreement": true,
       "domain_confidence": 1.0
     },
     {
