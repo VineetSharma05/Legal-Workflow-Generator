@@ -43,6 +43,8 @@ docker compose up
 
 - Test if database is reachable
 ```bash
+uv run pytest -m integration tests/test_conn.py
+# quick standalone check without pytest:
 python -m tests.test_conn
 ```
 
@@ -67,23 +69,69 @@ Run the fastapi server and frontend:
 python app.py
 ```
 
-## Test Query Processing Unit
+## Running the tests
 
-Run the standalone query processor test:
-
-```bash
-python -m tests.test_query
-```
-
-## Test RAG Unit
-
-Run the standalone RAG pipeline test:
+The suite lives in `tests/` and runs on [pytest](https://docs.pytest.org).
+`pytest`, `pytest-cov` and the rest of the dev tooling are declared in the
+`dev` dependency group, so `uv sync` installs them:
 
 ```bash
-python -m tests.test_rag_pipeline --gemini
-# or
-python -m tests.test_rag_pipeline --llama
+uv sync                 # includes the dev group by default
 ```
+
+### Run the default (fast, offline) suite
+
+These tests mock every network boundary (Gemini) and never touch Postgres, so
+they need no `.env`, no database and no API keys — `tests/conftest.py` injects
+dummy values for the required env vars at import time.
+
+```bash
+uv run pytest
+```
+
+### Run with coverage
+
+```bash
+uv run pytest --cov --cov-report=term-missing
+# HTML report in htmlcov/
+uv run pytest --cov --cov-report=html
+```
+
+Coverage is configured in `pyproject.toml` (`[tool.coverage.*]`) and is scoped
+to the `legal_workflow_generator` package. The default (offline) suite covers
+the query unit thoroughly — `query/normalizer.py`, `query/intent_classifier.py`
+and `query/context_resolver.py` all sit at ~90–100% — and the pure text
+helpers in `rag/ingestion.py`. The `rag/*` retrieval/generation modules and the
+`agent/*` graph are only exercised by the integration suite (they need the live
+database and Gemini), so whole-package coverage is ~45% without it.
+
+### Integration tests
+
+Tests marked `@pytest.mark.integration` (`test_conn.py`, `test_rag_pipeline.py`,
+`test_agent.py`) exercise the real stack and are **deselected by default**
+(`addopts = -m 'not integration'`). They need a populated Postgres corpus with
+embeddings (`main.py setup && main.py ingest && main.py embed`) and a real
+`GEMINI_API_KEY`; each one `skip`s itself cleanly if those aren't available.
+
+```bash
+uv run pytest -m integration            # run only the integration tests
+uv run pytest -m ''                     # run everything
+```
+
+### What's covered
+
+| Test module | What it checks | Needs DB/API |
+|---|---|---|
+| `test_normalizer.py` | `QueryNormalizer` — cleanup, abbreviation expansion, validation, PDF extraction | no |
+| `test_ingestion_text.py` | `rag.ingestion` text helpers (stemming, stopwords, query expansion) | no |
+| `test_keyword_domain_classifier.py` | `KeywordDomainClassifier.classify` scoring / bigram matching / thresholds | no |
+| `test_intent_classifier.py` | `IntentClassifier` response parsing, low-confidence override, error handling (Gemini mocked) | no |
+| `test_context_resolver.py` | `LegalContextResolver` strategy + keyword/LLM reconciliation, self-consistency voting (both backends faked) | no |
+| `test_query.py` | `process_query` end-to-end wiring (Gemini mocked) | no |
+| `test_rag_retrieval_query.py` | `RagPipeline._build_retrieval_query` hint building | no |
+| `test_conn.py` | Postgres connectivity | yes |
+| `test_rag_pipeline.py` | full hybrid retrieval + grounded answer | yes |
+| `test_agent.py` | LangGraph agentic pipeline, end to end | yes |
 
 ## Demo: Run Query Unit + RAG Unit Together (Custom Query)
 

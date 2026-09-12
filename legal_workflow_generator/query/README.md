@@ -225,16 +225,17 @@ Queries longer than 500 words are automatically truncated with a warning logged.
 
 ## Running Tests
 
+The query-unit tests are part of the pytest suite at the repo root and run
+fully offline (Gemini is mocked):
+
 ```bash
-# Basic tests
-python test.py
-
-# Intent classification tests
-python test_intent.py
-
-# Full pipeline tests
-python test_query.py
+# Normalizer, intent classifier, context resolver, and process_query wiring
+uv run pytest tests/test_normalizer.py tests/test_intent_classifier.py \
+              tests/test_context_resolver.py tests/test_query.py
 ```
+
+See the "Running the tests" section of the top-level `README.md` for coverage
+and the integration suite.
 
 ---
 
