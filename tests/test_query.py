@@ -1,66 +1,53 @@
+"""End-to-end test of the query unit (`process_query`) with Gemini mocked.
+
+Exercises the real wiring of QueryNormalizer -> IntentClassifier ->
+LegalContextResolver; only the two Gemini network calls are faked (intent call
+first, then the domain call).
+"""
+
+import pytest
+
+from legal_workflow_generator import query as query_module
 from legal_workflow_generator.query import process_query
-import json
+from legal_workflow_generator.typings.types import QueryIntent
 
-q = "What are the steps to comply with DPDP Act as a SaaS startup?"
-context = process_query(text=q)
 
-# Print full context object nicely
-print(json.dumps({
-    "original_query": context['original_query'],
-    "normalized_query": context['normalized_query'],
-    "intent": context['intent'].value,
-    "legal_domain": context['legal_domain'],
-    "keywords": context['keywords'],
-    "confidence": context['confidence'],
-}, indent=2))
+@pytest.fixture
+def mock_gemini_pipeline(monkeypatch, fake_gemini_client):
+    """Patch both Gemini clients and stub the keyword classifier's DB load."""
 
-"""queries = [
-    # Extreme 1 — Completely empty string
-    "",
-    
-    # Extreme 2 — Only spaces
-    "     ",
-    
-    # Extreme 3 — Only special characters
-    "!@#$%^&*()",
-    
-    # Extreme 4 — SQL injection attempt
-    "SELECT * FROM laws WHERE 1=1; DROP TABLE laws;",
-    
-    # Extreme 5 — Very long query (500+ words)
-    "I am a founder of a tech startup in India " * 50,
-    
-    # Extreme 6 — All caps
-    "WHAT IS THE DPDP ACT AND HOW DO I COMPLY WITH IT",
-    
-    # Extreme 7 — Mixed languages
-    "What is DPDP Act? मुझे इसके बारे में जानना है",
-    
-    # Extreme 8 — Numbers only
-    "123456789",
-    
-    # Extreme 9 — Repeated words
-    "compliance compliance compliance compliance compliance",
-    
-    # Extreme 10 — Code injection attempt
-    "<script>alert('hack')</script> what is GST",
-    
-    # Extreme 11 — Contradictory query
-    "I want to avoid all taxes legally and illegally",
-    
-    # Extreme 12 — Very specific with fake law
-    "What is section 999 of the fake XYZ Act 2099?",
-]
+    replies = [
+        "INTENT: workflow\nCONFIDENCE: 0.92\nREASON: asks for steps",
+        "DOMAIN: data_protection\nKEYWORDS: dpdp, consent, data",
+    ]
+    shared_client = fake_gemini_client(replies)
 
-for q in queries:
-    try:
-        context = process_query(text=q)
-        print(f"Query     : {q[:60]}...")
-        print(f"Intent    : {context['intent']}")
-        print(f"Domain    : {context['legal_domain']}")
-        print(f"Keywords  : {context['keywords']}")
-        print(f"Confidence: {context['confidence']}")
-    except Exception as e:
-        print(f"Query     : {q[:60]}...")
-        print(f"ERROR     : {type(e).__name__}: {e}")
-    print()"""
+    monkeypatch.setattr(
+        query_module.intent_classifier.genai, "Client", lambda *a, **k: shared_client
+    )
+    monkeypatch.setattr(
+        query_module.context_resolver.genai, "Client", lambda *a, **k: shared_client
+    )
+    # No database in unit tests: pretend the keyword index loaded but matched nothing.
+    monkeypatch.setattr(
+        query_module.keyword_domain_classifier.KeywordDomainClassifier,
+        "ensure_index",
+        lambda self: None,
+    )
+    return shared_client
+
+
+def test_process_query_returns_populated_legal_context(mock_gemini_pipeline):
+    ctx = process_query(text="What are the steps to comply with DPDP Act as a SaaS startup?")
+
+    assert ctx["intent"] == QueryIntent.WORKFLOW
+    assert ctx["confidence"] == pytest.approx(0.92)
+    assert ctx["legal_domain"] == "data_protection"
+    assert "digital personal data protection" in ctx["normalized_query"]
+    assert ctx["original_query"].startswith("What are the steps")
+    assert isinstance(ctx["keywords"], list) and ctx["keywords"]
+
+
+def test_process_query_rejects_too_short_input(mock_gemini_pipeline):
+    with pytest.raises(ValueError):
+        process_query(text="hi")

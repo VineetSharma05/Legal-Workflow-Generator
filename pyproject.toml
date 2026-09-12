@@ -20,3 +20,35 @@ dependencies = [
     "fastapi>=0.141.1",
     "uvicorn>=0.52.4",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+# The project uses a flat layout and is not pip-installed, so put the repo root
+# on sys.path for imports of `legal_workflow_generator`.
+pythonpath = ["."]
+# Skip the slow, external-dependency tests (live Postgres + Gemini) unless the
+# suite is invoked with `-m integration`.
+addopts = "-m 'not integration'"
+markers = [
+    "integration: needs a live Postgres database and/or Gemini API key (deselected by default)",
+]
+
+[tool.coverage.run]
+source = ["legal_workflow_generator"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.:",
+    "raise NotImplementedError",
+]

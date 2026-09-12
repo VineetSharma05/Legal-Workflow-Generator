@@ -1,37 +1,77 @@
+"""Unit tests for :class:`QueryNormalizer` — fully offline (no DB, no API)."""
+
+import pytest
+
 from legal_workflow_generator.query.normalizer import QueryNormalizer
-from pathlib import Path
 
-normalizer = QueryNormalizer()
-pdf_path = (Path(__file__).parent / "test_legal.pdf").absolute()
-print(pdf_path)
 
-# Test 1 — plain text
-result = normalizer.normalize(text="How do I comply with DPDP Act??")
-print(result)
+@pytest.fixture
+def normalizer() -> QueryNormalizer:
+    return QueryNormalizer()
 
-# Test 2 — text with abbreviations
-result = normalizer.normalize(text="What are GST rules for my startup?")
-print(result)
 
-# Test 3 — typo
-result = normalizer.normalize(text="What is the complience process for SEBI?")
-print(result)
+def test_lowercases_and_strips_punctuation(normalizer):
+    result = normalizer.normalize(text="How do I comply with the DPDP Act??")
+    assert result["normalized"] == "how do i comply with the digital personal data protection act"
+    assert result["source"] == "text"
+    assert result["original"] == "How do I comply with the DPDP Act??"
 
-# Test 4 — PDF only
-result = normalizer.normalize(pdf_path=pdf_path)
-print(result)
 
-# Test 5 — PDF + text together
-result = normalizer.normalize(
-    text="What are my compliance obligations?", pdf_path=pdf_path
-)
-print(result)
-"""
+def test_expands_known_abbreviations(normalizer):
+    result = normalizer.normalize(text="What are GST rules for my startup?")
+    assert "goods and services tax" in result["normalized"]
+    assert "gst" not in result["normalized"].split()
 
-from fpdf import FPDF
 
-pdf = FPDF()
-pdf.add_page()
-pdf.set_font("Arial", size=12)
-pdf.cell(200, 10, txt="This company needs to comply with DPDP Act and GST regulations.", ln=True)
-pdf.output("test_legal.pdf")"""
+def test_abbreviation_expansion_respects_word_boundaries(normalizer):
+    # "gstr" must not become "goods and services taxr"
+    result = normalizer.normalize(text="file the gstr return")
+    assert "gstr" in result["normalized"]
+    assert "taxr" not in result["normalized"]
+
+
+def test_requires_at_least_one_input(normalizer):
+    with pytest.raises(ValueError, match="At least one of text or pdf_path"):
+        normalizer.normalize()
+
+
+def test_rejects_empty_query_after_normalization(normalizer):
+    with pytest.raises(ValueError, match="empty after normalization"):
+        normalizer.normalize(text="!@#$%^&*()")
+
+
+def test_rejects_single_word_query(normalizer):
+    with pytest.raises(ValueError, match="too short to be meaningful"):
+        normalizer.normalize(text="taxes")
+
+
+def test_truncates_very_long_queries_to_500_words(normalizer):
+    long_query = "compliance step " * 400  # 800 words
+    result = normalizer.normalize(text=long_query)
+    assert len(result["normalized"].split()) == 500
+
+
+def test_extracts_text_from_pdf(normalizer, sample_pdf_path):
+    result = normalizer.normalize(pdf_path=sample_pdf_path)
+    assert result["source"] == "pdf"
+    assert "digital personal data protection" in result["normalized"]
+
+
+def test_combines_pdf_and_text_as_mixed_source(normalizer, sample_pdf_path):
+    result = normalizer.normalize(
+        text="What are my compliance obligations?", pdf_path=sample_pdf_path
+    )
+    assert result["source"] == "mixed"
+    assert "user question" in result["normalized"]
+
+
+def test_missing_pdf_raises_file_not_found(normalizer, tmp_path):
+    with pytest.raises(FileNotFoundError):
+        normalizer.normalize(pdf_path=tmp_path / "does_not_exist.pdf")
+
+
+def test_non_pdf_path_is_rejected(normalizer, tmp_path):
+    bogus = tmp_path / "note.txt"
+    bogus.write_text("hello world")
+    with pytest.raises(ValueError, match="Expected a .pdf file"):
+        normalizer.normalize(pdf_path=bogus)
