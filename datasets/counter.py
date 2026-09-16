@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-root = Path(".")
+root = Path("datasets/")
 
 groups = {}
 for folder in sorted(p for p in root.iterdir() if p.is_dir()):

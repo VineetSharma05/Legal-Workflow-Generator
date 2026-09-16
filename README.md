@@ -75,6 +75,14 @@ Run the fastapi server and frontend:
 python app.py
 ```
 
+## View Database Statistics
+Run the following command to view database statistics.
+
+```bash
+python datasets/counter.py
+```
+
+
 ## Running the tests
 
 The suite lives in `tests/` and runs on [pytest](https://docs.pytest.org).
