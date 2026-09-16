@@ -53,8 +53,14 @@ python -m tests.test_conn
 python main.py setup
 ```
 - Ingest the dataset
+
+To ingest CONDENSED version of the dataset
 ```bash
 python main.py ingest
+```
+To ingest the COMPLETE version of the dataset
+```bash
+python main.py ingest complete
 ```
 
 - Generate embeddings
@@ -68,6 +74,14 @@ Run the fastapi server and frontend:
 ```bash
 python app.py
 ```
+
+## View Database Statistics
+Run the following command to view database statistics.
+
+```bash
+python datasets/counter.py
+```
+
 
 ## Running the tests
 
