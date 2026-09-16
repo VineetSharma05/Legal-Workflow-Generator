@@ -1,0 +1,9 @@
+Condensed dataset with 40 laws/objects per domain for a total of 206 laws/objects
+
+total: 206 objects
+
+tax: 46 objects
+dpdp: 40 objects
+employees: 40 objects
+softwarelicensing: 40 objects
+corporategovernance: 40 objects
