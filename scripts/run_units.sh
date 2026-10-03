@@ -8,26 +8,27 @@ usage() {
   cat <<'EOF'
 Usage:
   ./scripts/run_units.sh query
-  ./scripts/run_units.sh rag [--gemini|--llama]
+  ./scripts/run_units.sh rag
   ./scripts/run_units.sh demo --query "<your query>" [--provider gemini|groq] [--top-k N] [--query-only] [--use-original-query]
 
 Modes:
-  query   Run only the query unit test script.
-  rag     Run only the RAG unit test script.
+  query   Run the query-unit pytest module (offline, mocked).
+  rag     Run the RAG-pipeline integration pytest module (needs DB + GEMINI_API_KEY).
   demo    Run combined query + RAG demo script with a custom query.
 
 Examples:
   ./scripts/run_units.sh query
-  ./scripts/run_units.sh rag --gemini
-  ./scripts/run_units.sh rag --llama
+  ./scripts/run_units.sh rag
   ./scripts/run_units.sh demo --query "What are DPDP compliance steps for a SaaS startup?" --provider gemini --top-k 3
 EOF
 }
 
 if command -v uv >/dev/null 2>&1; then
   PYTHON_CMD=(uv run python)
+  PYTEST_CMD=(uv run pytest)
 elif command -v python >/dev/null 2>&1; then
   PYTHON_CMD=(python)
+  PYTEST_CMD=(python -m pytest)
 else
   echo "Error: neither 'uv' nor 'python' was found in PATH."
   exit 1
@@ -43,20 +44,11 @@ shift
 
 case "$mode" in
   query)
-    if [[ $# -ne 0 ]]; then
-      echo "Error: query mode does not take extra arguments."
-      echo
-      usage
-      exit 1
-    fi
-  "${PYTHON_CMD[@]}" -m tests.test_query
+  "${PYTEST_CMD[@]}" tests/test_query.py "$@"
     ;;
 
   rag)
-    if [[ $# -eq 0 ]]; then
-      set -- --gemini
-    fi
-  "${PYTHON_CMD[@]}" -m tests.test_rag_pipeline "$@"
+  "${PYTEST_CMD[@]}" -m integration tests/test_rag_pipeline.py "$@"
     ;;
 
   demo)

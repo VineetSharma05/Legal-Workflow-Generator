@@ -43,6 +43,8 @@ docker compose up
 
 - Test if database is reachable
 ```bash
+uv run pytest -m integration tests/test_conn.py
+# quick standalone check without pytest:
 python -m tests.test_conn
 ```
 
@@ -51,8 +53,14 @@ python -m tests.test_conn
 python main.py setup
 ```
 - Ingest the dataset
+
+To ingest CONDENSED version of the dataset
 ```bash
 python main.py ingest
+```
+To ingest the COMPLETE version of the dataset
+```bash
+python main.py ingest complete
 ```
 
 - Generate embeddings
@@ -60,23 +68,84 @@ python main.py ingest
 python main.py embed
 ```
 
-## Test Query Processing Unit
-
-Run the standalone query processor test:
-
-```bash
-python -m tests.test_query
-```
-
-## Test RAG Unit
-
-Run the standalone RAG pipeline test:
+## Run Chatbot UI
+Run the fastapi server and frontend:
 
 ```bash
-python -m tests.test_rag_pipeline --gemini
-# or
-python -m tests.test_rag_pipeline --llama
+python app.py
 ```
+
+## View Database Statistics
+Run the following command to view database statistics.
+
+```bash
+python datasets/counter.py
+```
+
+
+## Running the tests
+
+The suite lives in `tests/` and runs on [pytest](https://docs.pytest.org).
+`pytest`, `pytest-cov` and the rest of the dev tooling are declared in the
+`dev` dependency group, so `uv sync` installs them:
+
+```bash
+uv sync                 # includes the dev group by default
+```
+
+### Run the default (fast, offline) suite
+
+These tests mock every network boundary (Gemini) and never touch Postgres, so
+they need no `.env`, no database and no API keys — `tests/conftest.py` injects
+dummy values for the required env vars at import time.
+
+```bash
+uv run pytest
+```
+
+### Run with coverage
+
+```bash
+uv run pytest --cov --cov-report=term-missing
+# HTML report in htmlcov/
+uv run pytest --cov --cov-report=html
+```
+
+Coverage is configured in `pyproject.toml` (`[tool.coverage.*]`) and is scoped
+to the `legal_workflow_generator` package. The default (offline) suite covers
+the query unit thoroughly — `query/normalizer.py`, `query/intent_classifier.py`
+and `query/context_resolver.py` all sit at ~90–100% — and the pure text
+helpers in `rag/ingestion.py`. The `rag/*` retrieval/generation modules and the
+`agent/*` graph are only exercised by the integration suite (they need the live
+database and Gemini), so whole-package coverage is ~45% without it.
+
+### Integration tests
+
+Tests marked `@pytest.mark.integration` (`test_conn.py`, `test_rag_pipeline.py`,
+`test_agent.py`) exercise the real stack and are **deselected by default**
+(`addopts = -m 'not integration'`). They need a populated Postgres corpus with
+embeddings (`main.py setup && main.py ingest && main.py embed`) and a real
+`GEMINI_API_KEY`; each one `skip`s itself cleanly if those aren't available.
+
+```bash
+uv run pytest -m integration            # run only the integration tests
+uv run pytest -m ''                     # run everything
+```
+
+### What's covered
+
+| Test module | What it checks | Needs DB/API |
+|---|---|---|
+| `test_normalizer.py` | `QueryNormalizer` — cleanup, abbreviation expansion, validation, PDF extraction | no |
+| `test_ingestion_text.py` | `rag.ingestion` text helpers (stemming, stopwords, query expansion) | no |
+| `test_keyword_domain_classifier.py` | `KeywordDomainClassifier.classify` scoring / bigram matching / thresholds | no |
+| `test_intent_classifier.py` | `IntentClassifier` response parsing, low-confidence override, error handling (Gemini mocked) | no |
+| `test_context_resolver.py` | `LegalContextResolver` strategy + keyword/LLM reconciliation, self-consistency voting (both backends faked) | no |
+| `test_query.py` | `process_query` end-to-end wiring (Gemini mocked) | no |
+| `test_rag_retrieval_query.py` | `RagPipeline._build_retrieval_query` hint building | no |
+| `test_conn.py` | Postgres connectivity | yes |
+| `test_rag_pipeline.py` | full hybrid retrieval + grounded answer | yes |
+| `test_agent.py` | LangGraph agentic pipeline, end to end | yes |
 
 ## Demo: Run Query Unit + RAG Unit Together (Custom Query)
 
@@ -129,9 +198,48 @@ python evals/eval_agent.py
 
 # Phase 2 baseline eval for comparison (49 queries)
 python evals/eval_phase2.py
+
+# Domain classification eval — isolates LegalContextResolver (51 queries)
+python evals/eval_domain_classification.py
 ```
 
-Both scripts write their timestamped JSON/CSV output to `evals/results/`.
+All three scripts write their timestamped JSON/CSV output to `evals/results/`.
+
+#### Domain classification eval
+
+`evals/eval_domain_classification.py` runs `LegalContextResolver` in isolation
+(no retrieval, no answer generation) against a hand-labeled set of 51 queries —
+8 per domain, 6 boundary queries that plausibly touch two domains, and 5
+off-topic queries expected to resolve to `unknown`. It's the ground-truth check
+for the two correctness signals the resolver produces on every call:
+
+- **`domain_agreement`** — does the LLM's chosen domain match the free,
+  always-computed rule-based (keyword) domain? Disagreement costs nothing to
+  detect and is a hint the query may be misclassified.
+- **`domain_confidence`** — with self-consistency on, the domain prompt is
+  sampled N times at `temperature=0.7` and majority-voted; this is the winning
+  vote share (e.g. `0.67` for a 2-of-3 split). Low confidence means the LLM
+  itself isn't stable on that query.
+
+Neither signal is useful unless it actually predicts wrongness, so the script
+reports, beyond plain accuracy:
+
+| Metric | What it tells you |
+|---|---|
+| `overall_accuracy` | LLM (or self-consistency majority) domain vs. the labeled domain |
+| `rule_based_only_accuracy` | accuracy of the keyword classifier alone, for comparison |
+| `agreement_rate` | how often the LLM and rule-based classifier agree |
+| `accuracy_when_llm_rule_based_agree` / `..._disagree` | does disagreement actually correlate with being wrong? |
+| `accuracy_when_unanimous_vote` / `..._split_vote` | does a split self-consistency vote actually correlate with being wrong? |
+| `per_domain_metrics` | precision/recall/F1 per domain |
+| `confusion_matrix` | expected domain → predicted domain counts |
+
+Self-consistency is on by default here (3 samples/query) since that's what
+produces a non-trivial `domain_confidence` to evaluate — pass
+`--no-self-consistency` for a single Gemini call per query (cheaper, but
+`domain_confidence` degenerates to 1.0/0.0), or `--samples N` to change the
+vote size. This is separate from the `SELF_CONSISTENCY_ENABLED` env var, which
+controls the default for the resolver everywhere else (e.g. inside the agent).
 
 ### Architecture
 

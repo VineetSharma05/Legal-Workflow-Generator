@@ -1,0 +1,675 @@
+{
+  "summary": {
+    "total": 51,
+    "errored": 0,
+    "strategy": "llm_fallback",
+    "self_consistency_enabled": false,
+    "self_consistency_samples": null,
+    "overall_accuracy": 0.88,
+    "keyword_only_accuracy": 0.67,
+    "llm_calls_avoided": "37/51",
+    "domain_source_breakdown": {
+      "keyword": {
+        "n": 33,
+        "accuracy": 0.88
+      },
+      "llm": {
+        "n": 13,
+        "accuracy": 0.92
+      },
+      "skipped": {
+        "n": 4,
+        "accuracy": 1.0
+      },
+      "unknown": {
+        "n": 1,
+        "accuracy": 0.0
+      }
+    },
+    "agreement_rate": 1.0,
+    "accuracy_when_agree": {
+      "n": 51,
+      "accuracy": 0.88
+    },
+    "accuracy_when_disagree": {
+      "n": 0,
+      "accuracy": 0.0
+    },
+    "avg_domain_confidence": 1.0,
+    "accuracy_when_unanimous_vote": {
+      "n": 51,
+      "accuracy": 0.88
+    },
+    "accuracy_when_split_vote": {
+      "n": 0,
+      "accuracy": 0.0
+    },
+    "per_domain_metrics": {
+      "data_protection": {
+        "precision": 0.9,
+        "recall": 1.0,
+        "f1": 0.95,
+        "support": 9
+      },
+      "corporate_governance": {
+        "precision": 0.67,
+        "recall": 0.75,
+        "f1": 0.71,
+        "support": 8
+      },
+      "ip_licensing": {
+        "precision": 1.0,
+        "recall": 0.91,
+        "f1": 0.95,
+        "support": 11
+      },
+      "taxation": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "support": 10
+      },
+      "employment": {
+        "precision": 0.86,
+        "recall": 0.75,
+        "f1": 0.8,
+        "support": 8
+      },
+      "unknown": {
+        "precision": 0.8,
+        "recall": 0.8,
+        "f1": 0.8,
+        "support": 5
+      }
+    },
+    "confusion_matrix": {
+      "data_protection": {
+        "data_protection": 9
+      },
+      "corporate_governance": {
+        "corporate_governance": 6,
+        "employment": 1,
+        "data_protection": 1
+      },
+      "ip_licensing": {
+        "ip_licensing": 10,
+        "corporate_governance": 1
+      },
+      "taxation": {
+        "taxation": 10
+      },
+      "employment": {
+        "employment": 6,
+        "corporate_governance": 1,
+        "unknown": 1
+      },
+      "unknown": {
+        "unknown": 4,
+        "corporate_governance": 1
+      }
+    }
+  },
+  "results": [
+    {
+      "query": "what is a data fiduciary under DPDP Act",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "user consent requirements for collecting personal data",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how to handle a personal data breach notification",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "do we need a data protection officer for our startup",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "cross border transfer of user data outside India",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "children's data privacy and parental consent rules",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "penalty for violating DPDP Act provisions",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "what rights does a user have to delete their personal data",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how to incorporate a private limited company in India",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "corporate_governance",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "minimum number of directors required for a private company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "corporate_governance",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "what is the difference between MOA and AOA",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "corporate_governance",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "annual general meeting requirements for a startup",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "employment",
+      "keyword_domain": "employment",
+      "domain_source": "keyword",
+      "correct": false,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "board resolution process for approving a new investment",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": false,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how do I change my company's registered office address",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "corporate_governance",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "shareholder rights when a new investor joins",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "corporate_governance",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "can a foreign national be a director of an Indian company",
+      "expected_domain": "corporate_governance",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "who owns the copyright of software written by an employee",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "ip_licensing",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how to license our SaaS product to another company",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "ip_licensing",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "is using open source code in our product a legal risk",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how to register a trademark for our startup name",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "what happens if a competitor infringes our patent",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "do we need an NDA before pitching to investors",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "corporate_governance",
+      "domain_source": "keyword",
+      "correct": false,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "assigning IP ownership from a freelancer to the company",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "trade secret protection for our proprietary algorithm",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "GST registration requirements for a new startup",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "is GST applicable on software exported outside India",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "TDS deduction rules on employee salaries",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "what is angel tax and does it apply to us",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "input tax credit eligibility for SaaS subscriptions",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "income tax filing deadline for a private limited company",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "GST implications of selling to customers in the US",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "advance tax payment schedule for startups",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how to set up an internal complaints committee under POSH Act",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "keyword_domain": "employment",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "provident fund contribution requirements for employees",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "what should an offer letter legally include",
+      "expected_domain": "employment",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "corporate_governance",
+      "domain_source": "keyword",
+      "correct": false,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "equal pay obligations between male and female employees",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "notice period and termination rules for employees",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "ESOP vesting schedule legal requirements",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "employee state insurance eligibility criteria",
+      "expected_domain": "employment",
+      "classified_domain": "employment",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "maternity leave entitlement under Indian labour law",
+      "expected_domain": "employment",
+      "classified_domain": "unknown",
+      "keyword_domain": "unknown",
+      "domain_source": "unknown",
+      "correct": false,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "who owns code written by an employee that we later want to license out",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "ip_licensing",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "GST treatment of royalty income from licensing our patent",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "board approval needed before assigning copyright to a US company",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "ip_licensing",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "an employee is leaving and taking source code with them, what are our options",
+      "expected_domain": "ip_licensing",
+      "classified_domain": "ip_licensing",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": true,
+      "keyword_correct": false,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "do we need consent before sharing employee health data with insurers",
+      "expected_domain": "data_protection",
+      "classified_domain": "data_protection",
+      "keyword_domain": "data_protection",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "tax implications of ESOP allotted to employees",
+      "expected_domain": "taxation",
+      "classified_domain": "taxation",
+      "keyword_domain": "taxation",
+      "domain_source": "keyword",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "what is the best pizza place in Bangalore",
+      "expected_domain": "unknown",
+      "classified_domain": "unknown",
+      "keyword_domain": "unknown",
+      "domain_source": "skipped",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how do I improve my startup's social media engagement",
+      "expected_domain": "unknown",
+      "classified_domain": "unknown",
+      "keyword_domain": "unknown",
+      "domain_source": "skipped",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "what's the weather forecast for Mumbai this week",
+      "expected_domain": "unknown",
+      "classified_domain": "unknown",
+      "keyword_domain": "unknown",
+      "domain_source": "skipped",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "recommend a good CRM tool for our sales team",
+      "expected_domain": "unknown",
+      "classified_domain": "unknown",
+      "keyword_domain": "unknown",
+      "domain_source": "skipped",
+      "correct": true,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    },
+    {
+      "query": "how to raise a seed round from VCs",
+      "expected_domain": "unknown",
+      "classified_domain": "corporate_governance",
+      "keyword_domain": "unknown",
+      "domain_source": "llm",
+      "correct": false,
+      "keyword_correct": true,
+      "domain_agreement": true,
+      "domain_confidence": 1.0
+    }
+  ]
+}

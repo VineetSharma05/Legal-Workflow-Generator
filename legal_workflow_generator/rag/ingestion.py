@@ -6,6 +6,100 @@ from psycopg2.extras import execute_batch, Json
 import legal_workflow_generator.typings.types as T
 import legal_workflow_generator.config.values as config
 
+# ── Statute → Domain Mapping ─────────────────────────────────────────────────
+# The corpus is already domain-labeled, just implicitly — each source dataset
+# file is a single domain, which is what fixes the statute a provision belongs
+# to. This makes that mapping explicit so it can be stored on each row and used
+# to build the per-domain keyword index (see rag/domain_keywords.py).
+STATUTE_DOMAIN_MAP: dict[str, str] = {
+    "dpdp_act_2023": "data_protection",
+    "dpdp_rules_2025": "data_protection",
+    "spdi_rules_2011": "data_protection",
+    "cert_in_directions_2022": "data_protection",
+    "it_intermediary_guidelines_2021": "data_protection",
+    "aadhaar_act_2016": "data_protection",
+    "cicra_2005": "data_protection",
+    "rti_act_2005": "data_protection",
+    "telecommunications_act_2023": "data_protection",
+    "telecom_cyber_security_rules_2024": "data_protection",
+    "rbi_payment_data_storage_2018": "data_protection",
+    "companies_act_2013": "corporate_governance",
+    "consumer_protection_act_2019": "corporate_governance",
+    "indian_contract_act_1872": "corporate_governance",
+    "insolvency_and_bankruptcy_code_2016": "corporate_governance",
+    "llp_act_2008": "corporate_governance",
+    "copyright_act_1957": "ip_licensing",
+    "information_technology_act_2000": "ip_licensing",
+    "designs_act_2000": "ip_licensing",
+    "patents_act_1970": "ip_licensing",
+    "trademarks_act_1999": "ip_licensing",
+    "igst_act_2017": "taxation",
+    "gst_compensation_to_states_act_2017": "taxation",
+    "cgst_extension_to_jk_act_2017": "taxation",
+    "cgst_act_2017": "taxation",
+    "cgst_rules_2017": "taxation",
+    "sez_act_2005": "taxation",
+    "stamp_act_1899": "taxation",
+    "indian_stamp_act_1899": "taxation",
+    "utgst_act_2017": "taxation",
+    "cgst_forms_2017": "taxation",
+    "income_tax_act_1961": "taxation",
+    "income_tax_act_2025": "taxation",
+    "fema_transfer_issue_foreign_security_regulations_2004": "taxation",
+    # The ESI Act reaches the corpus twice under two statute_ids: as
+    # `esi_act_1948` in tax_provisions.json (for the contribution provisions)
+    # and as `employees_state_insurance_act_1948` in complete_employee_laws.json.
+    # Each is mapped to the domain of the file that carries it.
+    "esi_act_1948": "taxation",
+    "posh_act_2013": "employment",
+    "equal_remuneration_act_1976": "employment",
+    "apprentices_act_1961": "employment",
+    "beedi_and_cigar_workers_act_1966": "employment",
+    "building_and_other_construction_workers_act_1996": "employment",
+    "child_and_adolescent_labour_act_1986": "employment",
+    "code_on_social_security_2020": "employment",
+    "contract_labour_act_1970": "employment",
+    "employees_compensation_act_1923": "employment",
+    "employees_state_insurance_act_1948": "employment",
+    "epf_misc_provisions_act_1952": "employment",
+    "factories_act_1948": "employment",
+    "industrial_disputes_act_1947": "employment",
+    "industrial_employment_standing_orders_act_1946": "employment",
+    "industrial_employment_standing_orders_central_rules_1946": "employment",
+    "inter_state_migrant_workmen_act_1979": "employment",
+    "maternity_benefit_act_1961": "employment",
+    "occupational_safety_health_working_conditions_code_2020": "employment",
+    "payment_of_bonus_act_1965": "employment",
+    "payment_of_gratuity_act_1972": "employment",
+    "payment_of_wages_act_1936": "employment",
+    "rights_of_persons_with_disabilities_act_2016": "employment",
+    "trade_unions_act_1926": "employment",
+    "working_journalists_act_1955": "employment",
+}
+
+# `information_technology_act_2000` is the one statute that straddles two
+# domains, so a single entry above cannot place it. Its e-signature and
+# electronic-records sections (1-16) sit in complete_softwarelicensing.json and
+# stay ip_licensing; the privacy, cyber-offence and intermediary-liability
+# sections below sit in complete_dpdp.json and are data_protection.
+DATA_PROTECTION_IT_ACT_SECTIONS: set[str] = {
+    "43", "43A", "45", "66", "66C", "66D", "66E", "67C",
+    "69", "69A", "69B", "70B", "72", "72A", "79", "84A", "85",
+}
+
+
+def resolve_domain(law: dict) -> str:
+    """Domain for a provision: its statute's domain, unless the statute is split."""
+    statute_id = law.get("statute_id", "")
+
+    if (
+        statute_id == "information_technology_act_2000"
+        and law.get("number") in DATA_PROTECTION_IT_ACT_SECTIONS
+    ):
+        return "data_protection"
+
+    return STATUTE_DOMAIN_MAP.get(statute_id, "unknown")
+
 # ── Stopwords ────────────────────────────────────────────────────────────────
 STOPWORDS = {
     "a", "an", "the", "and", "or", "but", "in", "on", "at", "to", "for",
@@ -215,7 +309,8 @@ def ingest(laws: List[T.LawSchema]) -> None:
             plain_english_summary,
             keywords,
             penalty_linked,
-            effective_date
+            effective_date,
+            domain
         )
         VALUES (
             %(provision_id)s,
@@ -230,7 +325,8 @@ def ingest(laws: List[T.LawSchema]) -> None:
             %(plain_english_summary)s,
             %(keywords)s,
             %(penalty_linked)s,
-            %(effective_date)s
+            %(effective_date)s,
+            %(domain)s
         )
         ON CONFLICT (provision_id)
         DO UPDATE SET
@@ -245,7 +341,8 @@ def ingest(laws: List[T.LawSchema]) -> None:
             plain_english_summary = EXCLUDED.plain_english_summary,
             keywords = EXCLUDED.keywords,
             penalty_linked = EXCLUDED.penalty_linked,
-            effective_date = EXCLUDED.effective_date;
+            effective_date = EXCLUDED.effective_date,
+            domain = EXCLUDED.domain;
     """
 
     prepared_rows = []
@@ -264,6 +361,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
         row["keywords"] = law.get("keywords", [])
         row["plain_english_summary"] = law.get("plain_english_summary", "")
         row["penalty_linked"] = law.get("penalty_linked", False)
+        row["domain"] = resolve_domain(law)
 
         prepared_rows.append(row)
 
@@ -281,3 +379,4 @@ def ingest(laws: List[T.LawSchema]) -> None:
     print("    [4] Normalization      : lowercase, whitespace cleanup")
     print("    [5] Stopword removal   : applied for BM25 index only")
     print("    [6] Stemming           : applied for BM25 index only")
+    print("    [7] Domain tagging     : statute_id mapped to one of 5 domains (or 'unknown')")

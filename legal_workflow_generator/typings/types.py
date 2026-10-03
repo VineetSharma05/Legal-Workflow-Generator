@@ -36,9 +36,16 @@ class NormalizedQuery(TypedDict):
 
 
 class LegalContext(TypedDict):
-    original_query: str         
-    normalized_query: str       
-    intent: QueryIntent         
-    legal_domain: str           
-    keywords: list[str]         
-    confidence: float           
+    original_query: str
+    normalized_query: str
+    intent: QueryIntent
+    legal_domain: str
+    keywords: list[str]
+    confidence: float
+
+    # Domain classification correctness signals (see LegalContextResolver)
+    keyword_domain: str         # TF-IDF keyword classifier's domain (rag/domain_keywords.py); "unknown" if no match
+    domain_agreement: bool      # True when keyword and LLM sources were both consulted and agreed
+    domain_confidence: float    # self-consistency vote share; 1.0 when self-consistency is off
+    domain_source: str          # which source decided legal_domain: keyword | llm | keyword+llm |
+                                 # keyword_strong_override | llm_override | unknown | skipped

@@ -1,0 +1,18 @@
+Complete dataset: full provision-level coverage of the statutes in each domain.
+
+total: 3663 objects across 52 distinct statutes
+
+employees: 1482 objects (24 statutes)
+tax: 971 objects (7 statutes)
+corporategovernance: 654 objects (5 statutes)
+softwarelicensing: 399 objects (5 statutes)
+dpdp: 157 objects (12 statutes)
+
+combined_complete_dataset.json: 3663 objects, 3317 unique provision_ids
+
+
+Regenerate with:
+  python datasets/combine_complete.py     # rebuild combined_complete_dataset.json
+  python datasets/counter.py              # re-count every file
+  python datasets/build_dpdp.py           # rebuild complete_dpdp.json from datasets/dpdp_parts/
+
