@@ -1,0 +1,10 @@
+If a customer's personal data is breached, what are our notification obligations to both the user and the government?
+What tax benefits exist for a startup that provides ESOPs to employees, and what are our reporting obligations to tax authorities?
+What are the penalties under both the DPDP Act and IT Act for failing to secure customer data stored on our servers?
+What are our PF and ESI contribution obligations when hiring full-time employees, and are these tax-deductible business expenses?
+As a private limited company handling user data, what compliance obligations do we have under both the Companies Act and the DPDP Act?
+What are our obligations around reasonable accommodation for employees with disabilities, and do we get any incentives for retaining them?
+If we issue refunds to customers, how does this affect our GST input tax credit, and what consumer protection rules apply to the refund process?
+Can we monitor employee emails and internet usage on company devices, and what does the IT Act say about this versus labor law protections?
+What are the rules under the DPDP Act and IT Act for transferring Indian users' personal data to servers outside India?
+If we need to lay off employees due to funding issues, what notice periods and compensation are required under labor law and the Industrial Disputes Act?
