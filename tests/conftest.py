@@ -11,6 +11,9 @@ call — the unit tests mock every network boundary.
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).parents[1] / ".env", override=False)
 os.environ.setdefault("PGPASSWORD", "test-password")
 os.environ.setdefault("GEMINI_API_KEY", "test-gemini-key")
 
