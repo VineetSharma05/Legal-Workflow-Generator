@@ -59,7 +59,8 @@ def main() -> int:
     print(f"{len(sources)} source file(s) in {complete_dir.relative_to(repo_root)}/\n")
 
     for src in sources:
-        provisions = json.load(src.open())
+        with src.open(encoding="utf-8") as source_file:
+            provisions = json.load(source_file)
 
         for p in provisions:
             missing = [k for k in REQUIRED_KEYS if k not in p]
@@ -118,7 +119,7 @@ def main() -> int:
     if args.check:
         print("\n--check: nothing written")
     else:
-        with out_path.open("w") as f:
+        with out_path.open("w", encoding="utf-8") as f:
             json.dump(combined, f, indent=2, ensure_ascii=False)
             f.write("\n")
         print(f"\nwrote {out_path.relative_to(repo_root)}  ({len(combined)} provisions)")

@@ -13,11 +13,17 @@ from google import genai as _genai
 _normalizer = QueryNormalizer()
 _intent_classifier = IntentClassifier()
 _context_resolver = LegalContextResolver()
-_rag_pipeline = RagPipeline(llm_provider="gemini")
-_rag_pipeline._ensure_index()
+_rag_pipeline: RagPipeline | None = None
 _gemini_client = _genai.Client(api_key=GEMINI_API_KEY)
 
 VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
+
+
+def _get_rag_pipeline() -> RagPipeline:
+    global _rag_pipeline
+    if _rag_pipeline is None:
+        _rag_pipeline = RagPipeline(llm_provider="gemini")
+    return _rag_pipeline
 
 def _llm(system: str, user: str, grader: bool = False, max_retries: int = 3) -> str:
     for attempt in range(max_retries):
@@ -79,7 +85,8 @@ Example: data_protection, taxation, ip_licensing"""
 
 # ── Node 2: retrieve ──────────────────────────────────────────────────────────
 def retrieve(state: AgentState) -> AgentState:
-    _rag_pipeline._ensure_index()
+    rag_pipeline = _get_rag_pipeline()
+    rag_pipeline._ensure_index()
     q = state.get("rewritten_query") or state["normalized_query"]
     all_domains = state.get("all_domains", [state["domain"]])
 
@@ -100,7 +107,7 @@ def retrieve(state: AgentState) -> AgentState:
         # augment query with domain-specific terms
         hint = domain_query_hints.get(domain, "")
         domain_q = f"{q} {hint}"
-        domain_docs = _rag_pipeline.searcher.search(domain_q, top_k=3)
+        domain_docs = rag_pipeline.searcher.search(domain_q, top_k=3)
         for d in domain_docs:
             pid = d.get("provision_id", "")
             if pid not in seen_ids:

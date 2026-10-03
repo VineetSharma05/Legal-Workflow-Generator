@@ -40,7 +40,12 @@ STATUTE_DOMAIN_MAP: dict[str, str] = {
     "cgst_rules_2017": "taxation",
     "sez_act_2005": "taxation",
     "stamp_act_1899": "taxation",
+    "indian_stamp_act_1899": "taxation",
     "utgst_act_2017": "taxation",
+    "cgst_forms_2017": "taxation",
+    "income_tax_act_1961": "taxation",
+    "income_tax_act_2025": "taxation",
+    "fema_transfer_issue_foreign_security_regulations_2004": "taxation",
     # The ESI Act reaches the corpus twice under two statute_ids: as
     # `esi_act_1948` in tax_provisions.json (for the contribution provisions)
     # and as `employees_state_insurance_act_1948` in complete_employee_laws.json.

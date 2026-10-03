@@ -31,7 +31,7 @@ def main():
             )
             exit(1)
 
-        with open(DATASET_FILE, "r") as f:
+        with open(DATASET_FILE, "r", encoding="utf-8") as f:
             dataset = json.load(f)
 
         rag.ingestion.ingest(dataset)
