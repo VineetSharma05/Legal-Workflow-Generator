@@ -1,5 +1,7 @@
 """Offline API contract tests with external pipelines mocked."""
 
+from pathlib import Path
+
 from fastapi import HTTPException
 
 import app
@@ -8,7 +10,7 @@ import app
 def test_index_serves_frontend():
     response = app.index()
 
-    assert response.path.endswith("presentation\\static\\index.html")
+    assert Path(response.path).parts[-3:] == ("presentation", "static", "index.html")
 
 
 def test_chat_returns_pipeline_sections(monkeypatch):
