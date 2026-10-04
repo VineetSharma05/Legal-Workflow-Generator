@@ -28,20 +28,15 @@ def sample_pdf_path() -> Path:
     return TESTS_DIR / "test_legal.pdf"
 
 
-class FakeGeminiResponse:
-    """Mimics the object returned by ``client.models.generate_content``."""
-
-    def __init__(self, text: str):
-        self.text = text
-
-
-class FakeGeminiModels:
+class FakeStructuredLLM:
     """
-    Stand-in for ``genai.Client().models``.
+    Stand-in for a ``structured_llm(...)`` runnable (``with_structured_output``
+    with ``include_raw=True``).
 
-    Pass a single string for a fixed reply, or a list to return a different
-    reply per call (used by the self-consistency tests). Every call is recorded
-    on ``.calls`` for assertions.
+    Pass a single reply or a list to return a different reply per call (used by
+    the self-consistency tests). A reply is a parsed Pydantic object, ``None``
+    to simulate a schema-validation failure, or an Exception to raise (API
+    error). Every call's messages are recorded on ``.calls``.
     """
 
     def __init__(self, replies):
@@ -49,32 +44,21 @@ class FakeGeminiModels:
         self._i = 0
         self.calls = []
 
-    def generate_content(self, *args, **kwargs):
-        self.calls.append({"args": args, "kwargs": kwargs})
+    def invoke(self, messages, *args, **kwargs):
+        self.calls.append(messages)
         reply = self._replies[min(self._i, len(self._replies) - 1)]
         self._i += 1
         if isinstance(reply, Exception):
             raise reply
-        return FakeGeminiResponse(reply)
-
-
-class FakeGeminiClient:
-    """Stand-in for ``genai.Client`` — only ``.models`` is ever touched."""
-
-    def __init__(self, replies):
-        self.models = FakeGeminiModels(replies)
+        if reply is None:
+            return {"raw": None, "parsed": None, "parsing_error": ValueError("schema mismatch")}
+        return {"raw": None, "parsed": reply, "parsing_error": None}
 
 
 @pytest.fixture
-def fake_gemini():
-    """Factory: build a :class:`FakeGeminiModels` from a reply or list of replies."""
-    return FakeGeminiModels
-
-
-@pytest.fixture
-def fake_gemini_client():
-    """Factory: build a :class:`FakeGeminiClient` to assign onto ``obj.client``."""
-    return FakeGeminiClient
+def fake_llm():
+    """Factory: build a :class:`FakeStructuredLLM` to assign onto ``obj.llm``."""
+    return FakeStructuredLLM
 
 
 @pytest.fixture
