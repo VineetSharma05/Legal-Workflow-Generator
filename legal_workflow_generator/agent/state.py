@@ -4,7 +4,8 @@ class AgentState(TypedDict):
     # Input
     query: str
     all_domains: List[str]
-    
+
+    domain_detection_method: str  # "retrieval", "llm_fallback", or "primary_only"
 
     # Node 1: classify
     intent: str
@@ -47,3 +48,4 @@ class AgentState(TypedDict):
 
     # Eval logging
     trace: List[str]
+    

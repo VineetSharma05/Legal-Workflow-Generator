@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+from unittest import result
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -12,7 +13,13 @@ def run(query: str):
     print(f"\n🔍 Query: {query}\n")
     result = graph.invoke({"query": query})
 
-    print(result["answer"])
+    print(result.get("stitched_answer") or result["answer"])
+
+    # and add after the citations print:
+    if result.get("domain_gaps"):
+        print("\n⚠ KNOWLEDGE GAPS:")
+        for gap in result["domain_gaps"]:
+            print(f"  {gap}")
 
     print("\n📋 FULL TRACE:")
     for step in result.get("trace", []):
