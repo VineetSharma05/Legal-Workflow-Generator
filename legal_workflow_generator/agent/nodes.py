@@ -598,6 +598,7 @@ def domain_pipeline(state: AgentState) -> AgentState:
         outputs = [f.result() for f in futures]      # keeps domain order
 
     results = [r for r, _ in outputs]
+    state["domain_results"] = results
     for _, trace in outputs:
         state["trace"].extend(trace)
 
