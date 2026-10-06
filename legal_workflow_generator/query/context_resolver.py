@@ -1,16 +1,14 @@
 import logging
 from collections import Counter
-from google import genai
-from google.genai import types as genai_types
 from legal_workflow_generator.config.values import (
-    GEMINI_API_KEY,
-    GEMINI_MODEL,
     SELF_CONSISTENCY_ENABLED,
     SELF_CONSISTENCY_SAMPLES,
     DOMAIN_CLASSIFICATION_STRATEGY,
     DOMAIN_KEYWORD_MATCH_THRESHOLD,
     DOMAIN_KEYWORD_STRONG_MATCH_THRESHOLD,
 )
+from legal_workflow_generator.llm import invoke_structured, structured_llm
+from legal_workflow_generator.llm.schemas import DomainClassification
 from legal_workflow_generator.query.keyword_domain_classifier import KeywordDomainClassifier
 from legal_workflow_generator.typings.types import (
     NormalizedQuery,
@@ -24,12 +22,6 @@ logger = logging.getLogger(__name__)
 # call keeps the API default (near-deterministic) so behavior is unchanged
 # when self-consistency is off.
 SELF_CONSISTENCY_TEMPERATURE = 0.7
-
-VALID_DOMAINS = [
-    "data_protection", "corporate_governance", "ip_licensing",
-    "taxation", "employment",
-]
-
 
 class LegalContextResolver:
     """
@@ -56,7 +48,8 @@ class LegalContextResolver:
         keyword_match_threshold: float | None = None,
         keyword_strong_match_threshold: float | None = None,
     ):
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+        self.llm = structured_llm(DomainClassification)
+        self.sampling_llm = structured_llm(DomainClassification, temperature=SELF_CONSISTENCY_TEMPERATURE)
         self._keyword_classifier = KeywordDomainClassifier()
 
         # Config defaults can be overridden per-instance (e.g. for eval
@@ -183,7 +176,7 @@ class LegalContextResolver:
         keywords_by_domain: dict[str, list[str]] = {}
 
         for _ in range(self.self_consistency_samples):
-            domain, keywords = self._resolve_with_gemini(query, temperature=SELF_CONSISTENCY_TEMPERATURE)
+            domain, keywords = self._resolve_with_gemini(query, sample=True)
             if not domain:
                 continue
             domains.append(domain)
@@ -204,41 +197,14 @@ class LegalContextResolver:
 
         return majority_domain, keywords_by_domain.get(majority_domain, []), agreement_ratio
 
-    def _resolve_with_gemini(self, query: str, temperature: float | None = None) -> tuple[str, list[str]]:
+    def _resolve_with_gemini(self, query: str, sample: bool = False) -> tuple[str, list[str]]:
+        system = (
+            "You are a legal domain classifier for Indian startup compliance. Given a query, identify "
+            "the single legal domain it belongs to (or unknown) and up to 5 important legal keywords from it."
+        )
         try:
-            kwargs = {}
-            if temperature is not None:
-                kwargs["config"] = genai_types.GenerateContentConfig(temperature=temperature)
-
-            response = self.client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=f"""You are a legal domain classifier for Indian startup compliance. Given a query, identify:
-1. The legal domain (exactly one of: data_protection, corporate_governance, ip_licensing, taxation, employment, unknown)
-2. Up to 5 important legal keywords from the query
-
-Respond in this exact format and nothing else:
-DOMAIN: <domain>
-KEYWORDS: <keyword1>, <keyword2>, <keyword3>
-
-Query: {query}""",
-                **kwargs,
-            )
-            return self._parse_response(response.text)
+            result = invoke_structured(self.sampling_llm if sample else self.llm, system, f"Query: {query}")
         except Exception as e:
-            logger.error(f"Gemini resolution error: {e}")
+            logger.error(f"Domain classification failed: {e}")
             return "", []
-
-    def _parse_response(self, response_text: str) -> tuple[str, list[str]]:
-        try:
-            lines = response_text.strip().split("\n")
-            domain_line = next(l for l in lines if l.startswith("DOMAIN:"))
-            domain = domain_line.split(":")[1].strip().lower()
-            keywords_line = next(l for l in lines if l.startswith("KEYWORDS:"))
-            keywords = [k.strip() for k in keywords_line.split(":")[1].split(",")]
-            if domain not in VALID_DOMAINS and domain != "unknown":
-                logger.warning(f"Invalid domain: {domain}, defaulting to unknown")
-                domain = "unknown"
-            return domain, keywords
-        except Exception as e:
-            logger.error(f"Failed to parse Gemini response: {e}")
-            return "", []
+        return result.domain, [k.strip() for k in result.keywords if k.strip()]

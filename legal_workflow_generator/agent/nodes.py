@@ -1,26 +1,33 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
+from typing import TypeVar
 import time
-import json
-import re
 
 import psycopg2
-
-from google import genai as _genai
+from pydantic import BaseModel
 
 from legal_workflow_generator.agent.state import AgentState
 from legal_workflow_generator.rag.pipeline import RagPipeline
 from legal_workflow_generator.query.normalizer import QueryNormalizer
 from legal_workflow_generator.query.intent_classifier import IntentClassifier
 from legal_workflow_generator.query.context_resolver import LegalContextResolver
-from legal_workflow_generator.config.values import GEMINI_API_KEY, GEMINI_MODEL
+from legal_workflow_generator.llm import StructuredOutputError, invoke_structured, structured_llm
+from legal_workflow_generator.llm.schemas import (
+    AnswerabilityGrade,
+    DomainList,
+    GroundednessGrade,
+    RelevanceGrade,
+    SearchQuery,
+    domain_workflow_model,
+)
 import legal_workflow_generator.config.values as config
+
+T = TypeVar("T", bound=BaseModel)
 
 # ── shared clients (init once) ────────────────────────────────────────────────
 _normalizer = QueryNormalizer()
 _intent_classifier = IntentClassifier()
 _context_resolver = LegalContextResolver()
 _rag_pipeline: RagPipeline | None = None
-_gemini_client = _genai.Client(api_key=GEMINI_API_KEY)
 
 VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
 
@@ -91,20 +98,9 @@ def _get_rag_pipeline() -> RagPipeline:
     return _rag_pipeline
 
 
-def _llm(system: str, user: str, grader: bool = False, max_retries: int = 5) -> str:
-    retryable = ("429", "500", "503", "UNAVAILABLE", "RESOURCE_EXHAUSTED", "overloaded")
-    for attempt in range(max_retries):
-        try:
-            response = _gemini_client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=f"{system}\n\n{user}",
-            )
-            return response.text.strip()
-        except Exception as e:
-            if any(r in str(e) for r in retryable) and attempt < max_retries - 1:
-                time.sleep(2 ** attempt)
-                continue
-            raise
+def _llm(schema: type[T], system: str, user: str) -> T:
+    """Structured Gemini call. Raises on API failure or StructuredOutputError on a schema mismatch."""
+    return invoke_structured(structured_llm(schema), system, user)
 
 
 def _detect_domains_from_retrieval(query: str) -> list[str]:
@@ -140,12 +136,9 @@ def _llm_domains(query: str) -> list[str]:
     try:
         prompt = f"""This query may span multiple legal domains.
 Query: {query}
-Domains: data_protection, corporate_governance, ip_licensing, taxation, employment
 
-Reply with ONLY the relevant domain names comma separated. Include ALL that apply.
-Example: data_protection, employment"""
-        raw = _llm("You are a legal domain classifier.", prompt)
-        return [d.strip() for d in raw.split(",") if d.strip() in VALID_DOMAINS]
+List every legal domain the query touches. Include ALL that apply."""
+        return list(dict.fromkeys(_llm(DomainList, "You are a legal domain classifier.", prompt).domains))
     except Exception:
         return []
 
@@ -187,170 +180,6 @@ def classify_query(state: AgentState) -> AgentState:
     return state
 
 
-# ── Node 2: retrieve (PARALLELIZED) ──────────────────────────────────────────
-def retrieve(state: AgentState) -> AgentState:
-    rag_pipeline = _get_rag_pipeline()
-    rag_pipeline._ensure_index()  # build index once, BEFORE spawning threads
-    q = state.get("rewritten_query") or state["normalized_query"]
-    all_domains = state.get("all_domains") or [state["domain"]]
-
-    def retrieve_for_domain(domain: str):
-        hint = DOMAIN_QUERY_HINTS.get(domain, "")
-        domain_q = f"{q} {hint}".strip()
-        try:
-            return domain, rag_pipeline.searcher.search(domain_q, top_k=3)
-        except Exception:
-            return domain, []
-
-    per_domain: dict[str, list] = {}
-    with ThreadPoolExecutor(max_workers=max(1, min(5, len(all_domains)))) as executor:
-        futures = [executor.submit(retrieve_for_domain, d) for d in all_domains]
-        for future in as_completed(futures):
-            domain, docs = future.result()
-            per_domain[domain] = docs
-
-    score = lambda x: x.get("combined_score", 0) or 0
-    selected, seen_ids = [], set()
-
-    # 1) guarantee the best doc from every domain
-    for domain in all_domains:
-        for d in sorted(per_domain.get(domain, []), key=score, reverse=True):
-            pid = d.get("provision_id", "")
-            if pid not in seen_ids:
-                seen_ids.add(pid)
-                selected.append(d)
-                break
-
-    # 2) fill remaining slots by score
-    rest = [d for docs in per_domain.values() for d in docs]
-    for d in sorted(rest, key=score, reverse=True):
-        if len(selected) >= 7:
-            break
-        pid = d.get("provision_id", "")
-        if pid not in seen_ids:
-            seen_ids.add(pid)
-            selected.append(d)
-
-    all_docs = sorted(selected, key=score, reverse=True)
-
-    state["retrieved_docs"] = all_docs
-    state["trace"].append(f"retrieve → {len(all_docs)} docs across {all_domains} (parallel)")
-    for d in all_docs:
-        state["trace"].append(
-            f"    doc → [{d.get('provision_id')}] {d.get('title')} (score={d.get('combined_score')})"
-        )
-    return state
-
-
-# ── Node 3: grade context ─────────────────────────────────────────────────────
-def grade_context(state: AgentState) -> AgentState:
-    docs = state["retrieved_docs"]
-    if not docs:
-        state["context_grade"] = "insufficient"
-        state["context_grade_reason"] = "No documents retrieved"
-        state["trace"].append("grade_context → insufficient (no docs)")
-        return state
-
-    chunks = "\n\n".join(
-        f"[{d.get('provision_id','')}] {d.get('title','')}: {str(d.get('text',''))[:400]}"
-        for d in docs
-    )
-    all_domains = state.get("all_domains", [state["domain"]])
-    system = "You are a legal relevance grader. Reply in JSON only."
-    user = f"""Query: {state['query']}
-Domains being searched: {all_domains}
-
-Retrieved chunks:
-{chunks}
-
-These are individual statutory provisions. For multi-domain queries, grade 
-"sufficient" if chunks collectively cover the main compliance areas asked about,
-even if not exhaustive. Grade "insufficient" only if chunks are largely irrelevant.
-Reply ONLY with:
-{{"grade": "sufficient" or "insufficient", "reason": "one sentence"}}"""
-
-    raw = _llm(system, user, grader=True)
-    try:
-        parsed = json.loads(re.search(r'\{.*\}', raw, re.DOTALL).group())
-        state["context_grade"] = parsed.get("grade", "insufficient")
-        state["context_grade_reason"] = parsed.get("reason", "")
-    except Exception:
-        state["context_grade"] = "insufficient"
-        state["context_grade_reason"] = "Could not parse grader response"
-
-    state["trace"].append(f"grade_context → {state['context_grade']}: {state['context_grade_reason']}")
-    return state
-
-
-# ── Node: rewrite query ───────────────────────────────────────────────────────
-def rewrite_query(state: AgentState) -> AgentState:
-    state["retry_count_retrieval"] += 1
-    system = "You are a legal search query optimizer."
-    user = f"""Original query: {state['query']}
-Reason retrieval failed: {state['context_grade_reason']}
-Domains: {state.get('all_domains', [state['domain']])}
-
-Write a better search query targeting Indian statutory compliance.
-Reply with ONLY the improved query, nothing else."""
-
-    new_q = _llm(system, user)
-    state["rewritten_query"] = new_q.strip()
-    state["trace"].append(f"rewrite_query → retry {state['retry_count_retrieval']}: '{new_q[:60]}'")
-    return state
-
-
-# ── Node 4: generate ──────────────────────────────────────────────────────────
-def generate(state: AgentState) -> AgentState:
-    docs = state["retrieved_docs"]
-    chunks = "\n\n".join(
-        f"[{d.get('provision_id','')}] {d.get('title','')}: "
-        f"{str(d.get('text','') or d.get('plain_english_summary',''))[:800]}"
-        for d in docs
-    )
-    all_domains = state.get("all_domains", [state["domain"]])
-    is_multi = len(all_domains) > 1
-
-    system = "You are a legal workflow assistant for Indian tech startups."
-    user = f"""You are a legal compliance assistant for Indian tech startups.
-Answer using ONLY the retrieved context below. Do not invent sections or obligations.
-Address ALL specific details mentioned in the query (company size, user type, employee demographics etc.)
-{"This is a multi-domain compliance query — address each relevant area separately." if is_multi else ""}
-
-
-Format your response EXACTLY like this:
-
-LEGAL COMPLIANCE WORKFLOW
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Query: {state['query']}
-
-SUMMARY
-- [2-4 bullet points covering each compliance area]
-
-ACTION CHECKLIST
-Step 1: [action] — [Act/Section]
-Step 2: [action] — [Act/Section]
-Step 3: [action] — [Act/Section]
-(add more steps if needed, group by domain if multi-domain)
-
-SOURCES
-- [provision_id] | [section title]
-- [provision_id] | [section title]
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠ This is informational guidance, not legal advice.
-Consult a qualified legal professional for your specific situation.
-
-Retrieved context:
-{chunks}"""
-
-    answer = _llm(system, user)
-    provision_ids = [d.get("provision_id", "") for d in docs if d.get("provision_id")]
-    state["answer"] = answer
-    state["citations"] = provision_ids
-    state["trace"].append(f"generate → {len(provision_ids)} citations found")
-    return state
-
-
 # ── Node 5: verify citations ──────────────────────────────────────────────────
 def verify_citations(state: AgentState) -> AgentState:
     doc_ids = {d.get("provision_id", "") for d in state["retrieved_docs"]}
@@ -372,7 +201,7 @@ def grade_groundedness(state: AgentState) -> AgentState:
     all_domains = state.get("all_domains", [state["domain"]])
     is_multi = len(all_domains) > 1
 
-    system = """You are a legal grounding verifier. Reply in JSON only.
+    system = """You are a legal grounding verifier.
 Be lenient: grade as 'grounded' if the main claims are supported by context.
 Only grade 'not_grounded' if the answer makes specific legal claims that
 directly contradict or are completely absent from the retrieved context.
@@ -385,20 +214,22 @@ Retrieved context:
 
 {"Note: This is a multi-domain query. The answer may draw on multiple legal areas — grade as grounded if each domain's claims are supported by at least some of the retrieved chunks." if is_multi else ""}
 
-Is every claim in the answer supported by the retrieved context?
-Reply ONLY with:
-{{"grade": "grounded" or "not_grounded", "reason": "one sentence"}}"""
+Is every claim in the answer supported by the retrieved context?"""
 
-    raw = _llm(system, user, grader=True)
     try:
-        parsed = json.loads(re.search(r'\{.*\}', raw, re.DOTALL).group())
-        state["groundedness_grade"] = parsed.get("grade", "not_grounded")
-        state["groundedness_reason"] = parsed.get("reason", "")
-    except Exception:
+        g = _llm(GroundednessGrade, system, user)
+        state["groundedness_grade"] = g.grade
+        state["groundedness_reason"] = g.reason
+        unsupported = g.unsupported_claims
+    except StructuredOutputError:
         state["groundedness_grade"] = "not_grounded"
         state["groundedness_reason"] = "Could not parse grader response"
+        unsupported = []
 
-    state["trace"].append(f"grade_groundedness → {state['groundedness_grade']}")
+    state["trace"].append(
+        f"grade_groundedness → {state['groundedness_grade']}"
+        + (f" (unsupported: {unsupported})" if unsupported else "")
+    )
     return state
 
 
@@ -406,22 +237,19 @@ Reply ONLY with:
 def grade_answerability(state: AgentState) -> AgentState:
     all_domains = state.get("all_domains", [state["domain"]])
     is_multi = len(all_domains) > 1
-    system = "You are a legal answer quality checker. Reply in JSON only."
+    system = "You are a legal answer quality checker."
     user = f"""Query: {state['query']}
 Answer: {state['answer'][:3000]}
 
 Does this answer address the main compliance areas asked about?
 {"For multi-domain queries, grade 'answers' if the answer covers the key compliance areas even if it doesn't address every specific detail like company size." if is_multi else ""}
-Grade 'off_target' only if the answer is completely unrelated to what was asked.
-Reply ONLY with:
-{{"grade": "answers" or "off_target", "reason": "one sentence"}}"""
+Grade 'off_target' only if the answer is completely unrelated to what was asked."""
 
-    raw = _llm(system, user, grader=True)
     try:
-        parsed = json.loads(re.search(r'\{.*\}', raw, re.DOTALL).group())
-        state["answerability_grade"] = parsed.get("grade", "off_target")
-        state["answerability_reason"] = parsed.get("reason", "")
-    except Exception:
+        g = _llm(AnswerabilityGrade, system, user)
+        state["answerability_grade"] = g.grade
+        state["answerability_reason"] = g.reason
+    except StructuredOutputError:
         state["answerability_grade"] = "off_target"
         state["answerability_reason"] = "Could not parse grader response"
 
@@ -553,10 +381,6 @@ def _el(t0: float) -> str:
     return f"+{time.perf_counter() - t0:4.1f}s"
 
 
-def _parse_json(raw: str) -> dict:
-    return json.loads(re.search(r"\{.*\}", raw, re.DOTALL).group())
-
-
 def _search_domain(rag, query: str, domain: str) -> list:
     """Search, then keep only provisions that belong to this domain."""
     hint = DOMAIN_QUERY_HINTS.get(domain, "")
@@ -578,7 +402,7 @@ def _grade_domain(domain: str, user_q: str, docs: list) -> tuple[str, str]:
         f"[{d.get('provision_id','')}] {d.get('title','')}: {str(d.get('text',''))[:400]}"
         for d in docs
     )
-    system = "You are a legal relevance grader. Reply in JSON only."
+    system = "You are a legal relevance grader."
     user = f"""Query: {user_q}
 Legal area being checked: {_DOMAIN_LABELS[domain]}
 
@@ -587,14 +411,14 @@ Retrieved provisions:
 
 Grade ONLY the part of the query that concerns this legal area.
 "sufficient": at least one provision directly addresses that part of the query.
-"insufficient": the provisions are unrelated to it.
-Reply ONLY with:
-{{"grade": "sufficient" or "insufficient", "reason": "one sentence"}}"""
+"insufficient": the provisions are unrelated to it."""
     try:
-        p = _parse_json(_llm(system, user, grader=True))
-        return p.get("grade", "insufficient"), p.get("reason", "")
-    except Exception:
+        g = _llm(RelevanceGrade, system, user)
+        return g.grade, g.reason
+    except StructuredOutputError:
         return "insufficient", "Could not parse grader response"
+    except Exception as e:
+        return "insufficient", f"Grader call failed: {e}"
 
 
 def _rewrite_for_domain(domain: str, user_q: str, reason: str) -> str:
@@ -604,10 +428,9 @@ Legal area: {_DOMAIN_LABELS[domain]}
 Why retrieval failed: {reason}
 
 Write a better search query for Indian statutes in this legal area only.
-Use plain topic words. Do NOT cite section numbers you are not certain exist.
-Reply with ONLY the query."""
+Use plain topic words. Do NOT cite section numbers you are not certain exist."""
     try:
-        return _llm(system, user).strip() or user_q
+        return _llm(SearchQuery, system, user).query.strip() or user_q
     except Exception:
         return user_q
 
@@ -619,16 +442,18 @@ def _focus_query(domain: str, user_q: str, fallback: str) -> str:
 
 Rewrite this question as a short standalone search query covering ONLY the {_DOMAIN_LABELS[domain]} aspects.
 Keep the concrete nouns from the question (for example: wheelchair ramps, accessible software, disabled employees).
-Drop everything that belongs to other legal areas.
-Reply with ONLY the query."""
+Drop everything that belongs to other legal areas."""
     try:
-        return _llm(system, user).strip() or fallback
+        return _llm(SearchQuery, system, user).query.strip() or fallback
     except Exception:
         return fallback
 
 
 def _generate_domain(domain: str, user_q: str, docs: list) -> dict:
-    ids = {d.get("provision_id", "") for d in docs}
+    ids = list(dict.fromkeys(d.get("provision_id", "") for d in docs if d.get("provision_id")))
+    out = {"summary": [], "steps": [], "not_covered": "", "cited": []}
+    if not ids:
+        return out
     chunks = "\n\n".join(
         f"[{d.get('provision_id','')}] {d.get('title','')}: "
         f"{str(d.get('text','') or d.get('plain_english_summary',''))[:800]}"
@@ -640,7 +465,7 @@ Legal area: {_DOMAIN_LABELS[domain]}
 
 Using ONLY the provisions below, list the compliance actions relevant to this legal area for the query.
 Do not invent sections or obligations. Address specifics in the query (company size, employee type, etc.).
-For each step, say who the provision applies to ("private", "government", "both" or "unspecified"), based only on the text.
+For each step, cite the exact provision_id it comes from and say who the provision applies to, based only on the text.
 
 Rules:
 - Discuss ONLY {_DOMAIN_LABELS[domain]}. Do not mention other legal areas (tax, data protection, etc.) in the summary.
@@ -649,33 +474,23 @@ Rules:
 - If nothing in the provisions answers part of the query, say so in "not_covered" instead of padding the steps.
 
 Provisions:
-{chunks}
+{chunks}"""
 
-Reply ONLY with JSON:
-{{"summary": ["1-2 short bullets"],
- "steps": [{{"action": "...", "provision_id": "<exact id from above>", "applies_to": "private|government|both|unspecified"}}],
- "not_covered": "part of the query these provisions do not address, or empty string"}}"""
-
-    out = {"summary": [], "steps": [], "not_covered": "", "cited": []}
     try:
-        p = _parse_json(_llm(system, user))
+        p = _llm(domain_workflow_model(ids), system, user)
     except Exception:
         return out
 
-    steps = []
-    for s in p.get("steps", []):
-        pid = str(s.get("provision_id", "")).strip()
-        action = str(s.get("action", "")).strip()
-        if pid in ids and action:          # drops invented / unknown provision ids
-            steps.append({
-                "action": action,
-                "provision_id": pid,
-                "applies_to": str(s.get("applies_to", "unspecified")).lower(),
-            })
+    # the schema already restricts provision_id to `ids`; this only drops empty actions
+    steps = [
+        {"action": s.action.strip(), "provision_id": s.provision_id, "applies_to": s.applies_to}
+        for s in p.steps
+        if s.action.strip()
+    ]
 
-    out["summary"] = [str(x) for x in p.get("summary", [])][:3]
+    out["summary"] = [b.strip() for b in p.summary if b.strip()]
     out["steps"] = steps
-    out["not_covered"] = str(p.get("not_covered", "") or "").strip()
+    out["not_covered"] = p.not_covered.strip()
     out["cited"] = list(dict.fromkeys(s["provision_id"] for s in steps))
     return out
 

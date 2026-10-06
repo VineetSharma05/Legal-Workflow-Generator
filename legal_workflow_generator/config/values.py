@@ -61,7 +61,7 @@ DB_PORT = int(optional_env("PGPORT", "5432"))
 # GROQ CONFIG (optional — only needed for the groq provider)
 # ─────────────────────────────────────────────
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GROQ_MODEL = optional_env("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = optional_env("GROQ_MODEL", "openai/gpt-oss-120b")
 
 # ─────────────────────────────────────────────
 # GEMINI CONFIG

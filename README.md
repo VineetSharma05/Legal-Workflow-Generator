@@ -2,7 +2,7 @@
 
 ```
 main.py                     CLI entrypoint for database setup / ingestion / embedding
-legal_workflow_generator/   library code (query, rag, agent, workflow units)
+legal_workflow_generator/   library code (query, rag, agent, llm, workflow units)
 scripts/                    runnable helper scripts (agent queries, demos, validation)
 evals/                      evaluation harnesses; evals/results/ holds saved runs
 tests/                      unit and pipeline tests
@@ -35,6 +35,8 @@ in your shell take precedence over the `.env` file.
 
 Optional overrides (`PGDATABASE`, `PGUSER`, `PGHOST`, `PGPORT`, `GEMINI_MODEL`,
 `GROQ_MODEL`, and `GROQ_API_KEY` for the groq provider) are listed in `.env.example`.
+`GEMINI_MODEL` defaults to `models/gemini-3.1-flash-lite` and `GROQ_MODEL` to
+`openai/gpt-oss-120b`.
 
 - Start database
 ```
@@ -68,6 +70,54 @@ python main.py ingest complete
 python main.py embed
 ```
 
+## LLM Layer (LangChain)
+
+Every LLM call in the project goes through LangChain chat models built in
+`legal_workflow_generator/llm/`; no module imports the `google-genai` or `groq`
+SDKs directly (they are only pulled in transitively by `langchain-google-genai`
+and `langchain-groq`).
+
+| Helper | Purpose |
+|---|---|
+| `chat_model(temperature=None)` | shared, cached `ChatGoogleGenerativeAI` (Gemini) |
+| `groq_chat_model(temperature=0.0)` | shared, cached `ChatGroq`; only used by the groq RAG provider |
+| `structured_llm(schema, temperature=None)` | Gemini model wrapped with `with_structured_output(schema, method="json_schema", include_raw=True)` |
+| `invoke_structured(llm, system, user)` | sends a system + user message, returns the parsed Pydantic object, raises `StructuredOutputError` if the reply doesn't validate |
+
+Transient API errors (429/5xx) are retried by the provider client (`MAX_RETRIES = 5`).
+
+### Structured outputs
+
+Agent and query-unit calls never parse free text — each returns a Pydantic
+model from `legal_workflow_generator/llm/schemas.py`:
+
+| Schema | Used by | Fields |
+|---|---|---|
+| `IntentClassification` | `IntentClassifier.classify` | `reason`, `intent` (`qa`/`workflow`/`compliance_check`/`unknown`), `confidence` (0–1) |
+| `DomainClassification` | `LegalContextResolver` (incl. self-consistency samples) | `domain` (5 domains or `unknown`), `keywords` (≤5) |
+| `DomainList` | `classify_query` → `_llm_domains` | `domains` (all domains the query touches) |
+| `SearchQuery` | `_focus_query`, `_rewrite_for_domain` | `query` |
+| `RelevanceGrade` | `_grade_domain` | `reason`, `grade` (`sufficient`/`insufficient`) |
+| `domain_workflow_model(ids)` | `_generate_domain` | `summary` (≤3), `steps[]` (`action`, `provision_id`, `applies_to`), `not_covered` |
+| `GroundednessGrade` | `grade_groundedness` | `reason`, `unsupported_claims`, `grade` (`grounded`/`not_grounded`) |
+| `AnswerabilityGrade` | `grade_answerability` | `reason`, `grade` (`answers`/`off_target`) |
+
+Design notes:
+
+- `reason` is declared before `grade` so the model justifies a verdict before committing to it.
+- `domain_workflow_model(ids)` is built per call: `provision_id` is an enum of
+  the provision ids actually retrieved for that domain, so the model cannot cite
+  a provision it wasn't shown.
+- Schemas stick to what Gemini's response schema handles reliably — `Literal`
+  enums, lists, numeric/length bounds, required fields (no defaults or unions).
+- A reply that fails validation raises `StructuredOutputError`. Graders map it to
+  their negative grade with the reason `Could not parse grader response`, so a
+  malformed reply is distinguishable in traces from a genuine verdict.
+
+The Phase 2 answer generators in `rag/generator.py` (`GeminiAnswerGenerator`,
+`GroqAnswerGenerator`, used by `RagPipeline.query` and the demo script) still
+return free-form markdown, but also go through the LangChain chat models above.
+
 ## Run Chatbot UI
 Run the fastapi server and frontend:
 
@@ -95,7 +145,7 @@ uv sync                 # includes the dev group by default
 
 ### Run the default (fast, offline) suite
 
-These tests mock every network boundary (Gemini) and never touch Postgres, so
+These tests fake every network boundary (the LangChain chat models) and never touch Postgres, so
 they need no `.env`, no database and no API keys — `tests/conftest.py` injects
 dummy values for the required env vars at import time.
 
@@ -114,10 +164,11 @@ uv run pytest --cov --cov-report=html
 Coverage is configured in `pyproject.toml` (`[tool.coverage.*]`) and is scoped
 to the `legal_workflow_generator` package. The default (offline) suite covers
 the query unit thoroughly — `query/normalizer.py`, `query/intent_classifier.py`
-and `query/context_resolver.py` all sit at ~90–100% — and the pure text
-helpers in `rag/ingestion.py`. The `rag/*` retrieval/generation modules and the
-`agent/*` graph are only exercised by the integration suite (they need the live
-database and Gemini), so whole-package coverage is ~45% without it.
+and `query/context_resolver.py` all sit at ~90–100% — plus the `llm/` layer,
+`rag/generator.py` and the pure text helpers in `rag/ingestion.py`. In `agent/*`
+only the structured-output LLM steps are unit-tested; retrieval and the full
+graph are only exercised by the integration suite (they need the live database
+and Gemini), so whole-package coverage is ~53% without it.
 
 ### Integration tests
 
@@ -139,9 +190,11 @@ uv run pytest -m ''                     # run everything
 | `test_normalizer.py` | `QueryNormalizer` — cleanup, abbreviation expansion, validation, PDF extraction | no |
 | `test_ingestion_text.py` | `rag.ingestion` text helpers (stemming, stopwords, query expansion) | no |
 | `test_keyword_domain_classifier.py` | `KeywordDomainClassifier.classify` scoring / bigram matching / thresholds | no |
-| `test_intent_classifier.py` | `IntentClassifier` response parsing, low-confidence override, error handling (Gemini mocked) | no |
+| `test_intent_classifier.py` | `IntentClassifier` structured-output mapping, low-confidence override, schema-mismatch / API error handling (LLM faked) | no |
 | `test_context_resolver.py` | `LegalContextResolver` strategy + keyword/LLM reconciliation, self-consistency voting (both backends faked) | no |
-| `test_query.py` | `process_query` end-to-end wiring (Gemini mocked) | no |
+| `test_query.py` | `process_query` end-to-end wiring (LLM faked) | no |
+| `test_structured_output.py` | `llm/` schemas (provision-id enum, domain enum), `invoke_structured` error handling, and the agent's structured LLM steps (`_grade_domain`, `_rewrite_for_domain`, `_focus_query`, `_generate_domain`, graders, `_llm_domains`) | no |
+| `test_generator.py` | `rag/generator.py` answer generators — message construction, empty-context and empty-response fallbacks (fake LangChain chat model) | no |
 | `test_rag_retrieval_query.py` | `RagPipeline._build_retrieval_query` hint building | no |
 | `test_conn.py` | Postgres connectivity | yes |
 | `test_rag_pipeline.py` | full hybrid retrieval + grounded answer | yes |
@@ -243,17 +296,43 @@ controls the default for the resolver everywhere else (e.g. inside the agent).
 
 ### Architecture
 
-The agentic pipeline consists of 7 LangGraph nodes:
+The agent is a LangGraph `StateGraph` (`agent/graph.py`, nodes in `agent/nodes.py`):
 
-1. **classify_query** — intent + domain detection (multi-domain supported)
-2. **retrieve** — hybrid BM25 + semantic search across detected domains
-3. **grade_context** — LLM grader: is retrieved context sufficient?
-4. **rewrite_query** — query rewriting on failure (max 3 retries)
-5. **generate** — structured workflow generation with Act/Section citations
-6. **verify_citations** — string-match verification of all cited sections
-7. **grade_groundedness** — LLM grader: are claims grounded in retrieved docs?
-8. **grade_answerability** — LLM grader: does answer resolve the query?
-9. **abstain** — honest refusal when confidence is too low
+```
+classify_query ──(unknown / confidence < 0.5)──────────────► abstain
+     │
+     ▼
+domain_pipeline ──(no domain produced cited steps)─────────► abstain
+     │
+     ▼
+verify_citations
+     │
+     ▼
+grade_parallel ──(failed grade, retries left)──► regenerate ──► domain_pipeline
+     │        └─(failed grade, retries exhausted)─────────► abstain
+     ▼
+stitch_answer ──► END
+```
+
+1. **classify_query** — normalizer + `IntentClassifier` + `LegalContextResolver`,
+   then multi-domain detection: the union of retrieval-based detection (which
+   statutes appear in the top hits), an LLM call (`DomainList`) and the
+   resolver's domain.
+2. **domain_pipeline** — one worker per detected domain, run in parallel:
+   - *focus* (multi-domain queries only): rewrite the query to cover just this domain (`SearchQuery`)
+   - *retrieve*: hybrid BM25 + semantic search, filtered to this domain's provisions (Act sections first, then rules)
+   - *grade*: is this context sufficient for this domain's part of the query? (`RelevanceGrade`)
+   - *rewrite → retrieve → grade* on failure (`MAX_DOMAIN_RETRIES = 1`, `SearchQuery`)
+   - *generate*: summary, compliance steps each tied to one retrieved `provision_id`, and what isn't covered (`domain_workflow_model`)
+
+   The per-domain results are stitched into a single workflow document
+   (SUMMARY / ACTION CHECKLIST / SOURCES).
+3. **verify_citations** — string-match check that every cited provision was retrieved.
+4. **grade_parallel** — runs **grade_groundedness** (`GroundednessGrade`) and
+   **grade_answerability** (`AnswerabilityGrade`) concurrently.
+5. **regenerate** — re-runs `domain_pipeline` once after a failed grade (`MAX_GENERATION_RETRIES = 1`).
+6. **stitch_answer** — flags any detected domain that ended up with no verified citations as a knowledge gap.
+7. **abstain** — honest refusal with the reason (low confidence, insufficient context, or a failed grade).
 
 ### Key Results
 
