@@ -254,9 +254,48 @@ python evals/eval_phase2.py
 
 # Domain classification eval — isolates LegalContextResolver (51 queries)
 python evals/eval_domain_classification.py
+
+# Complete-dataset multi-domain agentic eval (100 queries)
+python evals/eval_complete_multidomain.py
 ```
 
-All three scripts write their timestamped JSON/CSV output to `evals/results/`.
+All four scripts write their timestamped JSON/CSV output to `evals/results/`.
+
+#### Complete-dataset multi-domain eval
+
+`evals/eval_complete_multidomain.py` runs the full LangGraph agent against the
+**complete** corpus (`python main.py ingest complete`, ~4.9k provisions across
+52 statutes). The older `eval_agent.py` set only covers the condensed corpus,
+with one domain per query. Every expected citation in this set is a real
+provision id from `datasets/complete/`, and most come from statutes that exist
+only in the complete corpus (Income-tax, CGST, SEZ, Stamp, FEMA, LLP, Contract,
+Consumer Protection, IBC, Patents, Trademarks, Designs, CERT-In, SPDI, Aadhaar,
+the labour codes, and others).
+
+| Category | Queries | What it tests |
+|---|---|---|
+| `single` | 50 | 10 per domain |
+| `multi_2` | 20 | two-domain queries (e.g. data protection + employment) |
+| `multi_3` | 12 | three-domain queries |
+| `multi_4` | 5 | four-domain queries |
+| `multi_5` | 3 | queries touching all five domains |
+| `edge` | 10 | non-existent sections, out-of-jurisdiction, speculative and off-topic queries; the agent should abstain |
+
+Metrics, reported overall, per category and per domain:
+
+| Metric | What it tells you |
+|---|---|
+| `domain_recall` / `domain_precision` / `domain_exact_match` | detected `all_domains` vs. the labeled domain set |
+| `primary_domain_accuracy` | the resolver's single domain is one of the labeled domains |
+| `citation_recall` | verified citations ∩ expected provisions |
+| `citation_domain_coverage` | share of labeled domains with at least one verified citation from that domain's statutes |
+| `false_abstain_rate` / `abstain_accuracy` | wrongful abstention on answerable queries / correct abstention on edge cases |
+
+```bash
+python evals/eval_complete_multidomain.py --validate          # offline: check expected ids exist in datasets/complete/
+python evals/eval_complete_multidomain.py --category multi    # only the 40 multi-domain queries
+python evals/eval_complete_multidomain.py --limit 10 --sleep 2
+```
 
 #### Domain classification eval
 

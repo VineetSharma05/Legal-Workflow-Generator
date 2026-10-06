@@ -1,0 +1,271 @@
+{
+  "summary": {
+    "total": 5,
+    "errored": 0,
+    "overall": {
+      "n": 5,
+      "domain_recall": 1.0,
+      "domain_precision": 1.0,
+      "domain_exact_match": 1.0,
+      "primary_domain_accuracy": 1.0,
+      "citation_recall": 0.4,
+      "citation_domain_coverage": 0.6,
+      "answered_pct": 60.0,
+      "false_abstain_rate": 0.4,
+      "abstain_accuracy": null,
+      "avg_elapsed_seconds": 20.064
+    },
+    "by_category": {
+      "single": {
+        "n": 5,
+        "domain_recall": 1.0,
+        "domain_precision": 1.0,
+        "domain_exact_match": 1.0,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.4,
+        "citation_domain_coverage": 0.6,
+        "answered_pct": 60.0,
+        "false_abstain_rate": 0.4,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 20.064
+      }
+    },
+    "per_domain": {
+      "data_protection": {
+        "n": 5,
+        "detection_recall": 1.0,
+        "cited_recall": 0.6,
+        "false_positive_detections": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "query": "what notice must a data fiduciary give before collecting personal data",
+      "category": "single",
+      "should_abstain": false,
+      "expected_domains": [
+        "data_protection"
+      ],
+      "predicted_domains": [
+        "data_protection"
+      ],
+      "primary_domain": "data_protection",
+      "domain_recall": 1.0,
+      "domain_precision": 1.0,
+      "domain_exact_match": true,
+      "primary_domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_5",
+        "dpdp_rules_2025_sec_3"
+      ],
+      "verified_citations": [
+        "dpdp_rules_2025_sec_3"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "cited_domains": [
+        "data_protection"
+      ],
+      "citation_domain_coverage": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "abstain_reason": "",
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "domain_detection_method": "retrieval(1)+llm(1)",
+      "elapsed_seconds": 21.55,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection all_domains=['data_protection'] method=retrieval(1)+llm(1)",
+        "+ 0.2s [data_protection] retrieve (try 1) \u2192 6 docs",
+        "+ 2.4s [data_protection] grade \u2192 sufficient: The retrieved provision dpdp_rules_2025_sec_3 explicitly sets the minimum content requirements for a notice given by a data fiduciary to a data principal, including the necessity of a standalone document itemizing data collected and purposes.",
+        "+ 4.7s [data_protection] generate \u2192 1 steps, 1 citations",
+        "domain_pipeline \u2192 1/1 domains answered (data_protection) in 4.7s wall-clock (parallel)",
+        "verify_citations \u2192 verified=['dpdp_rules_2025_sec_3'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers",
+        "stitch \u2192 no gaps, answer passed through"
+      ]
+    },
+    {
+      "query": "how quickly must we report a personal data breach to the Data Protection Board and affected users",
+      "category": "single",
+      "should_abstain": false,
+      "expected_domains": [
+        "data_protection"
+      ],
+      "predicted_domains": [
+        "data_protection"
+      ],
+      "primary_domain": "data_protection",
+      "domain_recall": 1.0,
+      "domain_precision": 1.0,
+      "domain_exact_match": true,
+      "primary_domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_rules_2025_sec_7"
+      ],
+      "verified_citations": [
+        "dpdp_rules_2025_sec_7"
+      ],
+      "citation_hits": 1,
+      "citation_recall": 0.5,
+      "cited_domains": [
+        "data_protection"
+      ],
+      "citation_domain_coverage": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "abstain_reason": "",
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "domain_detection_method": "retrieval(1)+llm(1)",
+      "elapsed_seconds": 17.36,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection all_domains=['data_protection'] method=retrieval(1)+llm(1)",
+        "+ 0.2s [data_protection] retrieve (try 1) \u2192 6 docs",
+        "+ 3.6s [data_protection] grade \u2192 sufficient: The DPDP Rules 2025 explicitly state that notification to the board and affected users must occur without delay, with a 72-hour deadline for a forensic follow-up report to the board.",
+        "+ 8.7s [data_protection] generate \u2192 3 steps, 1 citations",
+        "domain_pipeline \u2192 1/1 domains answered (data_protection) in 8.7s wall-clock (parallel)",
+        "verify_citations \u2192 verified=['dpdp_rules_2025_sec_7'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers",
+        "stitch \u2192 no gaps, answer passed through"
+      ]
+    },
+    {
+      "query": "verifiable parental consent requirements for processing children's personal data",
+      "category": "single",
+      "should_abstain": false,
+      "expected_domains": [
+        "data_protection"
+      ],
+      "predicted_domains": [
+        "data_protection"
+      ],
+      "primary_domain": "data_protection",
+      "domain_recall": 1.0,
+      "domain_precision": 1.0,
+      "domain_exact_match": true,
+      "primary_domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_9",
+        "dpdp_rules_2025_sec_10"
+      ],
+      "verified_citations": [
+        "dpdp_act_2023_sec_9",
+        "dpdp_rules_2025_sec_10"
+      ],
+      "citation_hits": 2,
+      "citation_recall": 1.0,
+      "cited_domains": [
+        "data_protection"
+      ],
+      "citation_domain_coverage": 1.0,
+      "abstained": false,
+      "abstain_correct": true,
+      "abstain_reason": "",
+      "retry_count_retrieval": 0,
+      "retry_count_generation": 0,
+      "domain_detection_method": "retrieval(1)+llm(1)",
+      "elapsed_seconds": 16.6,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection all_domains=['data_protection'] method=retrieval(1)+llm(1)",
+        "+ 0.3s [data_protection] retrieve (try 1) \u2192 6 docs",
+        "+ 2.3s [data_protection] grade \u2192 sufficient: The retrieved provisions provide specific legislative and regulatory requirements, including operational details for verifying parental consent under the DPDP Act and Rules.",
+        "+ 4.9s [data_protection] generate \u2192 2 steps, 2 citations",
+        "domain_pipeline \u2192 1/1 domains answered (data_protection) in 4.9s wall-clock (parallel)",
+        "verify_citations \u2192 verified=['dpdp_act_2023_sec_9', 'dpdp_rules_2025_sec_10'] failed=[]",
+        "grade_groundedness \u2192 grounded",
+        "grade_answerability \u2192 answers",
+        "stitch \u2192 no gaps, answer passed through"
+      ]
+    },
+    {
+      "query": "registration conditions and obligations of a consent manager",
+      "category": "single",
+      "should_abstain": false,
+      "expected_domains": [
+        "data_protection"
+      ],
+      "predicted_domains": [
+        "data_protection"
+      ],
+      "primary_domain": "data_protection",
+      "domain_recall": 1.0,
+      "domain_precision": 1.0,
+      "domain_exact_match": true,
+      "primary_domain_correct": true,
+      "expected_sections": [
+        "dpdp_rules_2025_sch_1",
+        "dpdp_rules_2025_sec_4"
+      ],
+      "verified_citations": [],
+      "citation_hits": 0,
+      "citation_recall": 0.0,
+      "cited_domains": [],
+      "citation_domain_coverage": 0.0,
+      "abstained": true,
+      "abstain_correct": false,
+      "abstain_reason": "data_protection: None of the provided provisions mention consent managers or the specific legal framework regarding their registration conditions and obligations.",
+      "retry_count_retrieval": 1,
+      "retry_count_generation": 0,
+      "domain_detection_method": "retrieval(1)+llm(1)",
+      "elapsed_seconds": 21.8,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection all_domains=['data_protection'] method=retrieval(1)+llm(1)",
+        "+ 0.3s [data_protection] retrieve (try 1) \u2192 6 docs",
+        "+ 5.1s [data_protection] grade \u2192 insufficient: None of the provided provisions discuss the registration, conditions, or specific obligations applicable to a consent manager.",
+        "+ 8.7s [data_protection] rewrite \u2192 'consent manager registration obligations Digital Personal Da'",
+        "+ 9.3s [data_protection] retrieve (try 2) \u2192 6 docs",
+        "+11.2s [data_protection] grade \u2192 insufficient: None of the provided provisions mention consent managers or the specific legal framework regarding their registration conditions and obligations.",
+        "domain_pipeline \u2192 0/1 domains answered (none) in 11.2s wall-clock (parallel)",
+        "abstain \u2192 triggered: data_protection: None of the provided provisions mention consent managers or the specific legal framework regarding their registration conditions and obligations."
+      ]
+    },
+    {
+      "query": "what reasonable security safeguards are mandatory under the DPDP rules",
+      "category": "single",
+      "should_abstain": false,
+      "expected_domains": [
+        "data_protection"
+      ],
+      "predicted_domains": [
+        "data_protection"
+      ],
+      "primary_domain": "data_protection",
+      "domain_recall": 1.0,
+      "domain_precision": 1.0,
+      "domain_exact_match": true,
+      "primary_domain_correct": true,
+      "expected_sections": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_rules_2025_sec_6"
+      ],
+      "verified_citations": [],
+      "citation_hits": 0,
+      "citation_recall": 0.0,
+      "cited_domains": [],
+      "citation_domain_coverage": 0.0,
+      "abstained": true,
+      "abstain_correct": false,
+      "abstain_reason": "data_protection: The retrieved provisions mention the penalty for failing to take reasonable security safeguards under section 8 of the DPDP Act but do not specify what those safeguards are.",
+      "retry_count_retrieval": 1,
+      "retry_count_generation": 0,
+      "domain_detection_method": "retrieval(1)+llm(1)",
+      "elapsed_seconds": 23.01,
+      "trace": [
+        "classify \u2192 intent=QueryIntent.QA domain=data_protection all_domains=['data_protection'] method=retrieval(1)+llm(1)",
+        "+ 0.3s [data_protection] retrieve (try 1) \u2192 6 docs",
+        "+ 5.9s [data_protection] grade \u2192 insufficient: The retrieved provisions mention that section 8 of the DPDP Act relates to reasonable security safeguards, but they do not contain the actual text or specific requirements detailing what those safeguards are.",
+        "+ 9.6s [data_protection] rewrite \u2192 'Digital Personal Data Protection Act reasonable security saf'",
+        "+10.0s [data_protection] retrieve (try 2) \u2192 6 docs",
+        "+16.8s [data_protection] grade \u2192 insufficient: The retrieved provisions mention the penalty for failing to take reasonable security safeguards under section 8 of the DPDP Act but do not specify what those safeguards are.",
+        "domain_pipeline \u2192 0/1 domains answered (none) in 16.8s wall-clock (parallel)",
+        "abstain \u2192 triggered: data_protection: The retrieved provisions mention the penalty for failing to take reasonable security safeguards under section 8 of the DPDP Act but do not specify what those safeguards are."
+      ]
+    }
+  ],
+  "errors": []
+}
