@@ -404,7 +404,24 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 3. Context Grading
+    // 3. Structured workflow
+    if (p.workflow) {
+        const domains = p.workflow.domains || [];
+        const steps = domains.flatMap(d => d.steps || []);
+        const gaps = p.workflow.gaps || [];
+        stages.push({
+            name: 'Structured Workflow',
+            summary: `${steps.length} step${steps.length !== 1 ? 's' : ''} across ${domains.length} domain${domains.length !== 1 ? 's' : ''}`,
+            status: gaps.length > 0 ? 'warning' : 'success',
+            details: [
+                { label: 'Domains', value: domains.map(d => d.domain).join(', ') || '—' },
+                { label: 'Steps', value: steps.map((step, i) => `${i + 1}. ${step.action} [${step.provision_id}]`).join(' | ') || '—' },
+                { label: 'Knowledge gaps', value: gaps.join(' | ') || 'None' },
+            ],
+        });
+    }
+
+    // 4. Context Grading
     if (p.context_grading && p.context_grading.grade) {
         const g = p.context_grading;
         stages.push({
@@ -418,7 +435,7 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 4. Generation
+    // 5. Generation
     if (p.generation) {
         const g = p.generation;
         const citCount = (g.citations || []).length;
@@ -433,7 +450,7 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 5. Citation Verification
+    // 6. Citation Verification
     if (p.citation_verification) {
         const cv = p.citation_verification;
         const vCount = (cv.verified || []).length;
@@ -449,7 +466,7 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 6. Groundedness
+    // 7. Groundedness
     if (p.groundedness && p.groundedness.grade) {
         const g = p.groundedness;
         stages.push({
@@ -463,7 +480,7 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 7. Answerability
+    // 8. Answerability
     if (p.answerability && p.answerability.grade) {
         const a = p.answerability;
         stages.push({
@@ -477,7 +494,7 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 8. Abstain (if triggered)
+    // 9. Abstain (if triggered)
     if (p.abstain_info && p.abstain_info.triggered) {
         stages.push({
             name: 'Abstained',
@@ -489,7 +506,7 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 9. Trace log (always)
+    // 10. Trace log (always)
     if (trace && trace.length > 0) {
         stages.push({
             name: 'Full Trace',

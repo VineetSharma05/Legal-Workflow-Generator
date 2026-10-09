@@ -92,9 +92,27 @@ def chat(req: ChatRequest):
 
     docs = state.get("retrieved_docs") or []
 
+    workflow = [
+        {
+            "domain": result.get("domain"),
+            "grade": result.get("grade"),
+            "reason": result.get("reason"),
+            "retries": result.get("retries", 0),
+            "summary": result.get("summary", []),
+            "steps": result.get("steps", []),
+            "not_covered": result.get("not_covered", ""),
+            "cited": result.get("cited", []),
+        }
+        for result in state.get("domain_results", [])
+    ]
+
     return {
-        "answer": state.get("answer", ""),
+        "answer": state.get("stitched_answer") or state.get("answer", ""),
         "abstained": bool(state.get("abstain")),
+        "workflow": {
+            "domains": workflow,
+            "gaps": state.get("domain_gaps", []),
+        },
         "pipeline": {
             "classification": {
                 "intent": state.get("intent"),

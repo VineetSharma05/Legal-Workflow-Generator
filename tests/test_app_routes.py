@@ -16,6 +16,7 @@ def test_index_serves_frontend():
 def test_chat_returns_pipeline_sections(monkeypatch):
     state = {
         "answer": "Use a consent notice.",
+        "stitched_answer": "LEGAL COMPLIANCE WORKFLOW\nUse a consent notice.",
         "intent": "workflow",
         "domain": "data_protection",
         "all_domains": ["data_protection"],
@@ -29,6 +30,21 @@ def test_chat_returns_pipeline_sections(monkeypatch):
         }],
         "citations": ["dpdp_act_2023_sec_5"],
         "verified_citations": ["dpdp_act_2023_sec_5"],
+        "domain_results": [{
+            "domain": "data_protection",
+            "grade": "sufficient",
+            "reason": "directly relevant",
+            "retries": 0,
+            "summary": ["Give a notice"],
+            "steps": [{
+                "action": "Give a notice",
+                "provision_id": "dpdp_act_2023_sec_5",
+                "applies_to": "private",
+            }],
+            "not_covered": "",
+            "cited": ["dpdp_act_2023_sec_5"],
+        }],
+        "domain_gaps": [],
         "trace": ["done"],
     }
 
@@ -41,7 +57,10 @@ def test_chat_returns_pipeline_sections(monkeypatch):
 
     result = app.chat(app.ChatRequest(query="How do I comply?"))
 
-    assert result["answer"] == state["answer"]
+    assert result["answer"] == state["stitched_answer"]
+    assert result["workflow"]["domains"][0]["steps"][0]["provision_id"] == (
+        "dpdp_act_2023_sec_5"
+    )
     assert result["pipeline"]["classification"]["domain"] == "data_protection"
     assert result["pipeline"]["retrieval"]["docs"][0]["provision_id"] == (
         "dpdp_act_2023_sec_5"

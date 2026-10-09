@@ -24,7 +24,10 @@ class AgentState(TypedDict):
 
     # Node 4: generate
     answer: str
+    stitched_answer: str
     citations: List[str]        # ["dpdp_act_2023_sec_6", ...]
+    domain_results: List[dict]
+    domain_gaps: List[str]
 
     # Node 5: verify citations
     verified_citations: List[str]
