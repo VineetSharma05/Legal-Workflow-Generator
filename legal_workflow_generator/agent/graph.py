@@ -32,8 +32,10 @@ def route_after_domain_pipeline(state: AgentState) -> str:
 
 def route_after_grades(state: AgentState) -> str:
     grounded = state.get("groundedness_grade") == "grounded"
-    answers = state.get("answerability_grade") == "answers"
-    if grounded and answers:
+    # FIX: "partial" (some domains are knowledge gaps) is a valid final answer.
+    # Re-running the pipeline will not add statutes to the corpus, so don't retry.
+    answerable = state.get("answerability_grade") in ("answers", "partial")
+    if grounded and answerable:
         return "stitch_answer"
     if state.get("retry_count_generation", 0) >= MAX_GENERATION_RETRIES:
         return "abstain"
@@ -45,23 +47,6 @@ def increment_generation_retry(state: AgentState) -> AgentState:
     state["trace"].append(f"regenerate → retry {state['retry_count_generation']}")
     return state
 
-
-# ── build graph ───────────────────────────────────────────────────────────────
-#
-#   classify_query
-#        │
-#        ▼
-#   domain_pipeline  ── one worker per domain, run in parallel:
-#        │               retrieve → grade → (rewrite → retrieve → grade)* → generate
-#        │               then stitched into a single answer
-#        ▼
-#   verify_citations
-#        │
-#        ▼
-#   grade_parallel   ── groundedness + answerability, run concurrently
-#        │
-#        ▼
-#   stitch_answer    ── flags domains with no cited provisions as knowledge gaps
 
 def build_graph():
     g = StateGraph(AgentState)
@@ -76,39 +61,25 @@ def build_graph():
 
     g.set_entry_point("classify_query")
 
-    # linear edges
     g.add_edge("verify_citations", "grade_parallel")
     g.add_edge("regenerate",       "domain_pipeline")
     g.add_edge("stitch_answer",    END)
     g.add_edge("abstain",          END)
 
-    # conditional edges
     g.add_conditional_edges(
         "classify_query",
         route_after_classify,
-        {
-            "domain_pipeline": "domain_pipeline",
-            "abstain":         "abstain",
-        },
+        {"domain_pipeline": "domain_pipeline", "abstain": "abstain"},
     )
-
     g.add_conditional_edges(
         "domain_pipeline",
         route_after_domain_pipeline,
-        {
-            "verify_citations": "verify_citations",
-            "abstain":          "abstain",
-        },
+        {"verify_citations": "verify_citations", "abstain": "abstain"},
     )
-
     g.add_conditional_edges(
         "grade_parallel",
         route_after_grades,
-        {
-            "stitch_answer": "stitch_answer",
-            "regenerate":    "regenerate",
-            "abstain":       "abstain",
-        },
+        {"stitch_answer": "stitch_answer", "regenerate": "regenerate", "abstain": "abstain"},
     )
 
     return g.compile()
