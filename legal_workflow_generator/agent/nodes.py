@@ -27,6 +27,9 @@ _gemini_client = _genai.Client(api_key=GEMINI_API_KEY)
 
 VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
 
+# Generator rates each step 1-5; steps below this are dropped (noise filter).
+MIN_STEP_RELEVANCE = 3
+
 # ── provision_id → domain (read from the `domain` column set at ingestion) ───
 _DOMAIN_MAP: dict[str, str] | None = None
 
@@ -84,9 +87,9 @@ def _domain_of(pid: str) -> str | None:
 
 # FIX: taxation hint no longer forces GST; employment hint added.
 DOMAIN_QUERY_HINTS = {
-    "data_protection": "personal data privacy DPDP consent breach notification",
-    "corporate_governance": "company incorporation directors shareholders compliance",
-    "ip_licensing": "copyright patent trademark software license",
+    "data_protection": "",
+    "corporate_governance": "",
+    "ip_licensing": "",
     # taxation / employment: no fixed bias; the focused sub-query + anchors steer retrieval
     "taxation": "",
     "employment": "",
@@ -99,8 +102,8 @@ DOMAIN_QUERY_HINTS = {
 # to that domain's retrieved docs. ids are lower-case provision_ids.
 DOMAIN_ANCHORS = [
     {"domain": "taxation",
-     "trigger": r"non[- ]?resident|abroad|overseas|foreign (contractor|freelanc|vendor|consultant|developer|company|supplier)"
-                r"|germany|usa|united states|\buk\b|singapore|europe|japan|canada|australia|dubai|\buae\b",
+     "trigger": r"non[- ]?resident|abroad|overseas|foreign (contractor|freelanc|vendor|consultant|developer|company|supplier|agency|agent|firm|studio|designer)"
+                r"|germany|\busa\b|\bu\.s\.|(in|from|to|with) (the )?us\b|united states|\buk\b|singapore|europe|japan|canada|australia|dubai|\buae\b",
      "also": r"pay|fee|invoice|deduct|tds|withhold|remit",
      "ids": ["income_tax_act_1961_sec_195", "income_tax_act_1961_sec_9"]},
     {"domain": "employment",
@@ -184,13 +187,14 @@ def _hydrate(docs: list) -> list:
 def _with_anchors(domain: str, question: str, docs: list) -> list:
     """Prepend anchor provisions whose trigger matches the question."""
     wanted: list[str] = []
+    q_low = question.lower()
     for a in DOMAIN_ANCHORS:
-        q_low = question.lower()
         if (a["domain"] == domain and re.search(a["trigger"], q_low)
                 and re.search(a.get("also", "."), q_low)):
             wanted.extend(a["ids"])
+    wanted = list(dict.fromkeys(w.lower() for w in wanted))      # dedupe
     have = {d.get("provision_id", "").lower() for d in docs}
-    extra = [d for d in _fetch_by_ids([w for w in wanted if w not in have])]
+    extra = _fetch_by_ids([w for w in wanted if w not in have])
     return extra + docs
 
 
@@ -492,10 +496,15 @@ def verify_citations(state: AgentState) -> AgentState:
 
 
 # ── Node 6: grade groundedness ────────────────────────────────────────────────
+# FIX: the grader now sees the real statute wording (full_text from sub_structure),
+# not the short `text` header, and only the provisions the answer actually cites.
 def grade_groundedness(state: AgentState) -> AgentState:
+    cited = set(state.get("citations") or [])
+    docs = [d for d in state["retrieved_docs"] if d.get("provision_id") in cited] or state["retrieved_docs"]
     chunks = "\n\n".join(
-        f"[{d.get('provision_id','')}]: {str(d.get('text',''))[:400]}"
-        for d in state["retrieved_docs"]
+        f"[{d.get('provision_id','')}]: "
+        f"{_snippet(d.get('full_text') or d.get('text',''), state['query'], 1200)}"
+        for d in docs
     )
     all_domains = state.get("all_domains", [state["domain"]])
     is_multi = len(all_domains) > 1
@@ -657,12 +666,12 @@ _DOMAIN_LABELS = {
     "corporate_governance": "Corporate Governance",
     "data_protection": "Data Protection",
     "ip_licensing": "Intellectual Property",
-    "taxation": "Taxation & GST",
+    "taxation": "Taxation",          # was "Taxation & GST" (nudged the LLM toward GST)
     "employment": "Employment & Workplace",
 }
 
 MAX_DOMAIN_RETRIES = 1   # rewrite attempts per domain (up to 2 retrievals)
-DOCS_PER_DOMAIN = 6
+DOCS_PER_DOMAIN = 8
 
 
 def _el(t0: float) -> str:
@@ -677,7 +686,8 @@ def _parse_json(raw: str) -> dict:
 def _search_domain(rag, query: str, domain: str) -> list:
     """Search, then keep only provisions that belong to this domain."""
     hint = DOMAIN_QUERY_HINTS.get(domain, "")
-    docs = rag.searcher.search(f"{query} {hint}".strip(), top_k=100)
+    docs = rag.searcher.search(f"{query} {hint}".strip(), top_k=100,
+                               bm25_candidates=300, vector_candidates=100)
     keep = [
         d for d in docs
         if "_forms_" not in d.get("provision_id", "")
@@ -687,7 +697,7 @@ def _search_domain(rag, query: str, domain: str) -> list:
     # take Act sections first, then fill the remaining slots with rules.
     acts = [d for d in keep if "_rules_" not in d.get("provision_id", "")]
     rules = [d for d in keep if "_rules_" in d.get("provision_id", "")]
-    return (acts[:4] + rules)[:DOCS_PER_DOMAIN]
+    return (acts[:6] + rules)[:DOCS_PER_DOMAIN]
 
 
 def _grade_domain(domain: str, sub_q: str, docs: list) -> tuple[str, str]:
@@ -744,6 +754,7 @@ Rules:
 - Use only words and concepts that appear in the question. Do NOT add new legal concepts
   (for example, do not add GST, TDS or any statute unless the question mentions it).
 - Drop everything that belongs to other legal areas.
+- If the question uses an abbreviation, write the full words statutes use (PF = provident fund, ESI = employees state insurance, TDS = tax deducted at source, GST = goods and services tax, DPDP = digital personal data protection, LLP = limited liability partnership).
 Reply with ONLY the query."""
     try:
         return _llm(system, user).strip() or fallback
@@ -775,6 +786,9 @@ Rules:
 - A provision must answer the actual question asked. Do NOT include one merely because it shares a word with the
   query (for example "abroad" or "contractor") if it regulates a different subject (such as accident compensation
   or migrant-worker conditions). Leave it out.
+- For each step add "relevance" (1-5): 5 = the provision directly answers the question for this business;
+  3 = applies, but only partly or conditionally; 1-2 = shares a keyword or concerns a different situation
+  than the one described (e.g. a different kind of worker, workplace or product).
 - If nothing in the provisions answers part of the query, say so in "not_covered" instead of padding the steps.
 
 Provisions:
@@ -782,10 +796,10 @@ Provisions:
 
 Reply ONLY with JSON:
 {{"summary": ["1-2 short bullets"],
- "steps": [{{"action": "...", "provision_id": "<exact id from above>", "applies_to": "private|government|both|unspecified"}}],
+ "steps": [{{"action": "...", "provision_id": "<exact id from above>", "applies_to": "private|government|both|unspecified", "relevance": 1-5}}],
  "not_covered": "part of the query these provisions do not address, or empty string"}}"""
 
-    out = {"summary": [], "steps": [], "not_covered": "", "cited": []}
+    out = {"summary": [], "steps": [], "not_covered": "", "cited": [], "dropped": []}
     raw = ""
     try:
         raw = _llm(system, user)
@@ -794,19 +808,29 @@ Reply ONLY with JSON:
         logger.warning("generate[%s] JSON parse failed: %s | raw=%r", domain, e, raw[:500])
         return out
 
-    steps = []
+    steps, dropped = [], []
     for s in p.get("steps", []):
         pid = str(s.get("provision_id", "")).strip()
         action = str(s.get("action", "")).strip()
-        if pid in ids and action:          # drops invented / unknown provision ids
-            steps.append({
-                "action": action,
-                "provision_id": pid,
-                "applies_to": str(s.get("applies_to", "unspecified")).lower(),
-            })
+        if pid not in ids or not action:          # drops invented / unknown provision ids
+            continue
+        try:
+            rel = int(s.get("relevance", MIN_STEP_RELEVANCE))
+        except (TypeError, ValueError):
+            rel = MIN_STEP_RELEVANCE
+        if rel < MIN_STEP_RELEVANCE:              # low-relevance (noise) step
+            dropped.append(f"{pid}({rel})")
+            continue
+        steps.append({
+            "action": action,
+            "provision_id": pid,
+            "applies_to": str(s.get("applies_to", "unspecified")).lower(),
+            "relevance": rel,
+        })
 
     out["summary"] = [str(x) for x in p.get("summary", [])][:3]
     out["steps"] = steps
+    out["dropped"] = dropped
     out["not_covered"] = str(p.get("not_covered", "") or "").strip()
     out["cited"] = list(dict.fromkeys(s["provision_id"] for s in steps))
     return out
@@ -850,11 +874,14 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
 
     result = {
         "domain": domain, "docs": docs, "grade": grade, "reason": reason,
-        "retries": retries, "summary": [], "steps": [], "not_covered": "", "cited": [],
+        "retries": retries, "summary": [], "steps": [], "not_covered": "", "cited": [], "dropped": [],
     }
     if grade == "sufficient":
         result.update(_generate_domain(domain, sub_q, docs))
-        trace.append(f"{_el(t0)} [{domain}] generate → {len(result['steps'])} steps, {len(result['cited'])} citations")
+        trace.append(
+            f"{_el(t0)} [{domain}] generate → {len(result['steps'])} steps, "
+            f"{len(result['cited'])} citations, dropped={result.get('dropped', [])}"
+        )
     return result, trace
 
 
