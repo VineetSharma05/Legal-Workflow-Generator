@@ -1,0 +1,37 @@
+name: tests
+
+on:
+  push:
+    branches: [phase3-agentic, main, dev]
+  pull_request:
+
+jobs:
+  offline:
+    # Unit and contract tests. No database, no Gemini/Groq key, no browser.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install dependencies (Python from .python-version)
+        run: uv sync
+      - name: Run offline suite
+        run: uv run pytest -q
+
+  browser:
+    # Drives the chat UI and workflow inspector in headless Chromium. /api/chat is mocked.
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Install dependencies
+        run: uv sync
+      - name: Install Playwright and Chromium
+        run: uv run --with playwright python -m playwright install --with-deps chromium
+      - name: Run browser tests
+        run: uv run --with playwright pytest -m browser tests/browser -q
