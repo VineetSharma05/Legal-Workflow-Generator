@@ -1,0 +1,18 @@
+{
+  "started": "2026-10-13T13:36:01",
+  "commit": "50f4f72",
+  "settings": {
+    "provider": "gemini",
+    "top_k": 8,
+    "as_of": null,
+    "verify_claims": null
+  },
+  "corpus": {
+    "file": "datasets/complete/combined_complete_dataset.json",
+    "provisions_in_file": 4888,
+    "sha256": "55ced47e99232079436b42d371140937b73d813c35fc1aea72b3f9400d563e87",
+    "provisions_in_db": 4888
+  },
+  "cases": 50,
+  "rpm": 12
+}

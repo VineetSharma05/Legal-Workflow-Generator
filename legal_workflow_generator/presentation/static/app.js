@@ -433,6 +433,47 @@ function buildPipelineStages(p, trace) {
         });
     }
 
+    // 4b. Settings echo (what the run actually used)
+    if (p.settings) {
+        const st = p.settings;
+        stages.push({
+            name: 'Run Settings',
+            summary: `${st.provider} • top_k=${st.top_k} • as of ${st.as_of}`,
+            status: 'info',
+            details: [
+                { label: 'Provider', value: st.provider },
+                { label: 'Top-k per domain', value: String(st.top_k) },
+                { label: 'Valid as of', value: st.as_of },
+                { label: 'Claim checks', value: st.verify_claims ? 'on' : 'off' },
+            ],
+        });
+    }
+
+    // 4c. Per-domain results with claim-level verdicts (typed DomainResult from the API)
+    if (Array.isArray(p.domains) && p.domains.length) {
+        const cv = p.claim_verification || {};
+        const details = p.domains.map(d => {
+            const steps = (d.steps || []).map(st =>
+                `[${st.verdict || 'unchecked'}] ${st.action} — ${st.provision_id}` +
+                (st.verdict_reason ? ` (${st.verdict_reason})` : '') + (st.note ? ` [NOTE: ${st.note}]` : ''));
+            const dropped = (d.dropped_steps || []).map(st => `DROPPED: ${st.action} — ${st.provision_id}`);
+            const body = [...steps, ...dropped];
+            return {
+                label: `${d.domain} (${d.grade})`,
+                value: body.length ? body.join('\n') : (d.reason || 'no steps'),
+            };
+        });
+        if (p.domain_gaps && p.domain_gaps.length) {
+            details.push({ label: 'Knowledge gaps', value: p.domain_gaps.join('\n') });
+        }
+        stages.push({
+            name: 'Domains & Claim Checks',
+            summary: `entailed ${cv.entailed || 0} • partial ${cv.partial || 0} • dropped ${cv.dropped || 0}`,
+            status: (cv.dropped || 0) === 0 && (cv.unchecked || 0) === 0 ? 'success' : 'warning',
+            details,
+        });
+    }
+
     // 5. Citation Verification
     if (p.citation_verification) {
         const cv = p.citation_verification;

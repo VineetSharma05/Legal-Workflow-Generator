@@ -7,7 +7,8 @@ from pydantic import BaseModel
 
 # ── Pipeline imports ─────────────────────────────────────────────────────────
 import legal_workflow_generator.config.values  # noqa: F401 — loads .env
-from legal_workflow_generator.agent.graph import graph
+from legal_workflow_generator.agent.graph import run_workflow
+from legal_workflow_generator.agent.settings import RunSettings, build_config
 from legal_workflow_generator.rag.pipeline import RagPipeline
 from legal_workflow_generator.agent.nodes import classify_query as agent_classify_query
 from legal_workflow_generator.agent.state import AgentState
@@ -37,14 +38,17 @@ def _get_rag(provider: str) -> RagPipeline:
 # ── Request / response models ───────────────────────────────────────────────
 class ChatRequest(BaseModel):
     query: str
-    provider: str = "gemini"
-    top_k: int = 3
+    provider: str = "gemini"             # "gemini" | "groq"  (validated by RunSettings)
+    top_k: int = 3                       # provisions per domain, 1..20
+    as_of: str | None = None             # ISO date the answer must be valid on; default today
+    verify_claims: bool | None = None    # per-step entailment check; default from settings (on)
 
 
 class TestRequest(BaseModel):
     query: str
     provider: str = "gemini"
     top_k: int = 3
+    as_of: str | None = None
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
@@ -82,20 +86,35 @@ def chat(req: ChatRequest):
     """
     Full agent pipeline.
 
-    Invokes the compiled LangGraph and returns the final answer together
-    with every intermediate pipeline stage for frontend inspection.
+    The request's provider / top_k / as_of / verify_claims are passed INTO the LangGraph run
+    (as its config), so every worker and grader uses them. Invalid values are rejected with 400.
+    The response carries the final answer, the effective settings and every intermediate stage.
     """
     try:
-        state = graph.invoke({"query": req.query})
+        cfg = RunSettings.from_config(build_config(provider=req.provider, top_k=req.top_k,
+                                                   as_of=req.as_of, verify_claims=req.verify_claims))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    try:
+        state = run_workflow(req.query, provider=req.provider, top_k=req.top_k,
+                             as_of=req.as_of, verify_claims=req.verify_claims)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Pipeline error: {e}")
 
     docs = state.get("retrieved_docs") or []
-
+    domain_results = state.get("domain_results") or []
+    settings = {
+        "provider": cfg.provider, "top_k": cfg.top_k, "as_of": cfg.as_of_date.isoformat(),
+        "verify_claims": cfg.verify_claims,
+    }
     return {
-        "answer": state.get("answer", ""),
+        "answer": state.get("stitched_answer") or state.get("answer", ""),
         "abstained": bool(state.get("abstain")),
+        "settings": settings,
         "pipeline": {
+            "settings": settings,
             "classification": {
                 "intent": state.get("intent"),
                 "domain": state.get("domain"),
@@ -110,6 +129,7 @@ def chat(req: ChatRequest):
                         "provision_id": d.get("provision_id"),
                         "title": d.get("title"),
                         "text": _safe_str(d.get("text")),
+                        "effective_date": str(d["effective_date"]) if d.get("effective_date") else None,
                         "combined_score": d.get("combined_score"),
                         "bm25_score": d.get("bm25_score"),
                         "semantic_score": d.get("semantic_score"),
@@ -119,6 +139,8 @@ def chat(req: ChatRequest):
                 "rewritten_query": state.get("rewritten_query"),
                 "retry_count": state.get("retry_count_retrieval", 0),
             },
+            "domains": domain_results,                       # typed DomainResult dicts, one per domain
+            "domain_gaps": state.get("domain_gaps", []),
             "context_grading": {
                 "grade": state.get("context_grade"),
                 "reason": state.get("context_grade_reason"),
@@ -131,6 +153,7 @@ def chat(req: ChatRequest):
                 "verified": state.get("verified_citations", []),
                 "failed": state.get("failed_citations", []),
             },
+            "claim_verification": _claim_summary(domain_results),
             "groundedness": {
                 "grade": state.get("groundedness_grade"),
                 "reason": state.get("groundedness_reason"),
@@ -148,12 +171,24 @@ def chat(req: ChatRequest):
     }
 
 
+def _claim_summary(domain_results: list) -> dict:
+    """Counts of claim-verdicts across all domains (entailed / partial / unchecked / dropped)."""
+    counts = {"entailed": 0, "partial": 0, "unchecked": 0, "dropped": 0}
+    for r in domain_results:
+        for st in r.get("steps", []):
+            v = st.get("verdict", "unchecked")
+            counts[v if v in counts else "unchecked"] += 1
+        counts["dropped"] += len(r.get("dropped_steps", []))
+    return counts
+
+
 @app.post("/api/test/query")
 def test_query(req: TestRequest):
     """Query processing unit — now uses the agent's classify_query node (multi-domain aware)."""
     try:
         state: AgentState = {"query": req.query, "trace": []}
-        result_state = agent_classify_query(state)
+        cfg = build_config(provider=req.provider, top_k=req.top_k, as_of=req.as_of)
+        result_state = agent_classify_query(state, config={"configurable": cfg["configurable"]})
         return {
             "intent": result_state.get("intent"),
             "domain": result_state.get("domain"),

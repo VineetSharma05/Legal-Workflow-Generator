@@ -2,6 +2,8 @@ import logging
 from collections import Counter
 from google import genai
 from google.genai import types as genai_types
+
+from legal_workflow_generator.agent.llm_limits import LIMITERS
 from legal_workflow_generator.config.values import (
     GEMINI_API_KEY,
     GEMINI_MODEL,
@@ -210,9 +212,10 @@ class LegalContextResolver:
             if temperature is not None:
                 kwargs["config"] = genai_types.GenerateContentConfig(temperature=temperature)
 
-            response = self.client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=f"""You are a legal domain classifier for Indian startup compliance. Given a query, identify:
+            with LIMITERS["gemini"].slot():
+                response = self.client.models.generate_content(
+                    model=GEMINI_MODEL,
+                    contents=f"""You are a legal domain classifier for Indian startup compliance. Given a query, identify:
 1. The legal domain (exactly one of: data_protection, corporate_governance, ip_licensing, taxation, employment, unknown)
 2. Up to 5 important legal keywords from the query
 
@@ -221,8 +224,8 @@ DOMAIN: <domain>
 KEYWORDS: <keyword1>, <keyword2>, <keyword3>
 
 Query: {query}""",
-                **kwargs,
-            )
+                    **kwargs,
+                )
             return self._parse_response(response.text)
         except Exception as e:
             logger.error(f"Gemini resolution error: {e}")

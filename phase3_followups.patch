@@ -1,0 +1,971 @@
+diff --git a/app.py b/app.py
+index 12d9113..e77f746 100644
+--- a/app.py
++++ b/app.py
+@@ -1,4 +1,6 @@
++from dataclasses import asdict
+ from pathlib import Path
++from typing import Optional
+ 
+ from fastapi import FastAPI, HTTPException
+ from fastapi.staticfiles import StaticFiles
+@@ -7,7 +9,8 @@ from pydantic import BaseModel
+ 
+ # ── Pipeline imports ─────────────────────────────────────────────────────────
+ import legal_workflow_generator.config.values  # noqa: F401 — loads .env
+-from legal_workflow_generator.agent.graph import graph
++from legal_workflow_generator.agent.graph import graph, run_workflow  # noqa: F401
++from legal_workflow_generator.agent.settings import RunSettings, build_config
+ from legal_workflow_generator.rag.pipeline import RagPipeline
+ from legal_workflow_generator.agent.nodes import classify_query as agent_classify_query
+ from legal_workflow_generator.agent.state import AgentState
+@@ -38,7 +41,12 @@ def _get_rag(provider: str) -> RagPipeline:
+ class ChatRequest(BaseModel):
+     query: str
+     provider: str = "gemini"
+-    top_k: int = 3
++    # None -> RunSettings default (8 provisions per domain). Valid range 1..20.
++    top_k: Optional[int] = None
++    # ISO date (YYYY-MM-DD) the answer must be valid on; None -> today.
++    as_of: Optional[str] = None
++    # None -> RunSettings default (True).
++    verify_claims: Optional[bool] = None
+ 
+ 
+ class TestRequest(BaseModel):
+@@ -71,6 +79,21 @@ def _safe_str(val, max_len: int = 600) -> str:
+     return s[:max_len] if len(s) > max_len else s
+ 
+ 
++def _claim_verification(domain_results: list) -> dict:
++    """Per-step entailment verdicts, grouped by domain, plus totals for the inspector."""
++    steps, dropped = [], []
++    for r in domain_results:
++        for st in r.get("steps", []) or []:
++            steps.append({"domain": r.get("domain"), **{k: st.get(k) for k in
++                          ("action", "provision_id", "verdict", "verdict_reason", "note")}})
++        for st in r.get("dropped_steps", []) or []:
++            dropped.append({"domain": r.get("domain"), **{k: st.get(k) for k in
++                            ("action", "provision_id", "verdict_reason")}})
++    count = lambda v: sum(1 for s_ in steps if s_["verdict"] == v)
++    return {"entailed": count("entailed"), "partial": count("partial"), "unchecked": count("unchecked"),
++            "dropped": len(dropped), "steps": steps, "dropped_steps": dropped}
++
++
+ # ── Routes ───────────────────────────────────────────────────────────────────
+ @app.get("/")
+ def index():
+@@ -85,16 +108,27 @@ def chat(req: ChatRequest):
+     Invokes the compiled LangGraph and returns the final answer together
+     with every intermediate pipeline stage for frontend inspection.
+     """
++    options = dict(provider=req.provider, top_k=req.top_k, as_of=req.as_of,
++                   verify_claims=req.verify_claims)
+     try:
+-        state = graph.invoke({"query": req.query})
++        settings = RunSettings.from_config(build_config(**options))   # validate before spending LLM calls
++    except (ValueError, TypeError) as e:
++        raise HTTPException(status_code=422, detail=f"Invalid option: {e}")
++
++    try:
++        state = run_workflow(req.query, **options)
+     except Exception as e:
+         raise HTTPException(status_code=500, detail=f"Pipeline error: {e}")
+ 
+     docs = state.get("retrieved_docs") or []
+ 
++    domain_results = state.get("domain_results") or []
++
+     return {
+-        "answer": state.get("answer", ""),
++        # stitched_answer = answer + knowledge-gap / "unverified" warnings; abstain sets only `answer`
++        "answer": state.get("stitched_answer") or state.get("answer", ""),
+         "abstained": bool(state.get("abstain")),
++        "settings": asdict(settings),
+         "pipeline": {
+             "classification": {
+                 "intent": state.get("intent"),
+@@ -131,6 +165,11 @@ def chat(req: ChatRequest):
+                 "verified": state.get("verified_citations", []),
+                 "failed": state.get("failed_citations", []),
+             },
++            "claim_verification": _claim_verification(domain_results),
++            "domain_results": [
++                {k: r.get(k) for k in ("domain", "grade", "reason", "retries", "error", "not_covered")}
++                for r in domain_results
++            ],
+             "groundedness": {
+                 "grade": state.get("groundedness_grade"),
+                 "reason": state.get("groundedness_reason"),
+diff --git a/docs/EXPERT_EVALUATION.md b/docs/EXPERT_EVALUATION.md
+new file mode 100644
+index 0000000..e12e50d
+--- /dev/null
++++ b/docs/EXPERT_EVALUATION.md
+@@ -0,0 +1,33 @@
++# Expert evaluation protocol
++
++Automated metrics (citation recall, groundedness) do not tell us whether a workflow is *correct and usable*.
++This protocol has legal practitioners rate the system's output.
++
++## Procedure
++1. Run the benchmark: `python evals/eval_agent.py` (results JSON now stores each answer).
++2. Make blinded sheets: `python evals/expert/make_rating_sheet.py evals/results/eval_results_<ts>.json --experts 3 --sample 30`
++   — every expert gets the same cases in a different random order, with no system metrics visible.
++3. Each expert fills in their own `expert_N.csv` independently (no discussion before submitting).
++4. Aggregate: `python evals/expert/aggregate_expert.py evals/expert/sheets/expert_*.csv`
++
++Use at least 2 experts (3 preferred) with Indian corporate/tax/IP/employment/data-protection experience, and at least
++30 cases covering all five domains, multi-domain queries and abstentions.
++
++## Rubric (1 = very poor, 5 = excellent)
++| Column | Question |
++|---|---|
++| correctness_1to5 | Are the steps legally correct and in a sensible order for this query? |
++| legal_accuracy_1to5 | Does each cited provision actually support the step it is attached to? |
++| completeness_1to5 | Are important obligations for this situation missing? (5 = nothing material missing) |
++| usefulness_1to5 | Could a startup founder or counsel act on this without major rework? |
++| critical_error_yn | Y if any step is wrong in a way that could cause non-compliance or liability |
++| would_rely_yn | Y if you would use this as a starting point for client work |
++| comments | Free text; note missing statutes, outdated law (check the "as of" date), wrong domain |
++
++For **abstained** cases, rate whether abstaining was appropriate: correctness 5 = right call, 1 = the corpus did
++cover it. Usefulness for an abstention reflects how helpful the refusal message is.
++
++## Reported outputs
++Mean ± sd per dimension, % would-rely, % critical-error, usefulness over answered cases only, and quadratic-weighted
++kappa between each pair of experts. Report kappa alongside the means; a low kappa means the rubric needs
++calibration before the means can be trusted.
+diff --git a/docs/PHASE3_EVAL_RESULTS.md b/docs/PHASE3_EVAL_RESULTS.md
+index 2eb8d1f..46b4c34 100644
+--- a/docs/PHASE3_EVAL_RESULTS.md
++++ b/docs/PHASE3_EVAL_RESULTS.md
+@@ -1,8 +1,10 @@
+ # Phase 3 Agentic RAG — Evaluation Results
+ 
++> **Note:** Eval 1 and Eval 2 below are historical results on the 196-law prototype corpus (30 July 2026). They predate the multi-domain parallel pipeline, claim verification and temporal filtering. Do not quote them as current performance.
++
+ ## System Overview
+ - Architecture: 7-node self-corrective LangGraph pipeline
+-- Dataset: 196 laws across 9 Acts, 5 domains
++- Dataset for the results below: **196-law prototype corpus (historical)**. The current corpus is 4,888 provisions; its results are in the section "Full-corpus benchmark" and are filled in by `evals/eval_agent.py` (see below).
+ - LLM: Gemini 3.1 Flash Lite
+ - Embedding: sentence-transformers/all-mpnet-base-v2
+ - Retrieval: Hybrid BM25 + Semantic (0.3/0.7 weights)
+@@ -103,7 +105,7 @@
+ 3. Groundedness grader bypassed for multi-domain queries (skipped to answerability)
+ 4. Citation verification is string-match only — doesn't catch semantically wrong citations
+ 5. Cross-border board approval (Companies Act) not retrieved in multi-domain queries
+-6. Full dataset (1050 laws) not yet ingested — all results on 196-law prototype
++6. ~~Full dataset not yet ingested~~ Resolved for the dataset (4,888 provisions); the Eval 1/2 numbers in this file were measured on the 196-law prototype and are **not comparable** to full-corpus runs
+ 
+ ---
+ 
+@@ -111,4 +113,34 @@
+ - `evals/results/eval_results_20260730_143721.json` — Phase 3 full eval results
+ - `evals/results/eval_results_20260730_143721.csv` — Phase 3 summary CSV
+ - `evals/results/eval_phase2_results_20260730_152445.json` — Phase 2 baseline results
+-- `evals/results/eval_phase2_results_20260730_152445.csv` — Phase 2 baseline CSV
+\ No newline at end of file
++- `evals/results/eval_phase2_results_20260730_152445.csv` — Phase 2 baseline CSV
++
++---
++
++## Full-corpus benchmark (4,888 provisions) — to be filled in
++
++Run on the machine that holds the ingested database:
++
++```bash
++# smoke test (3 queries), then the full 50-query benchmark; the script aborts if the DB is not 4,888 rows
++uv run python evals/eval_agent.py --limit 3
++uv run python evals/eval_agent.py --provider gemini
++# optional: law as in force on a given date, or without claim verification for an ablation
++uv run python evals/eval_agent.py --as-of 2025-01-01
++uv run python evals/eval_agent.py --no-verify-claims
++```
++
++The results JSON records corpus size, provider, top_k, as_of, errored queries (reported separately, not counted
++as answers) and entailed / partial / dropped claim counts. Copy the printed SUMMARY here:
++
++| Metric | Prototype (196 laws) | Full corpus (4,888) |
++|---|---|---|
++| Queries run / errored | 44 / 5 | _fill in_ |
++| Answer rate | 93.9% | _fill in_ |
++| Domain accuracy | 87.8% | _fill in_ |
++| Citation recall@k | 0.77 | _fill in_ |
++| Failed (hallucinated) citations | 0 | _fill in_ |
++| Claims entailed / partial / dropped | n/a | _fill in_ |
++
++Rate limits: `GEMINI_RPM` (default 12), `GROQ_RPM` (25) and `LLM_MAX_PARALLEL` (4) throttle LLM calls; with claim
++verification a multi-domain query makes roughly 15–20 calls, so the full run takes a while on the free tier.
+diff --git a/evals/eval_agent.py b/evals/eval_agent.py
+index 4e4d199..741b991 100644
+--- a/evals/eval_agent.py
++++ b/evals/eval_agent.py
+@@ -1,6 +1,7 @@
+ import json
+ import time
+ import csv
++import argparse
+ import sys
+ from datetime import datetime
+ from pathlib import Path
+@@ -12,7 +13,8 @@ import legal_workflow_generator.config.values  # noqa: F401
+ 
+ RESULTS_DIR = Path(__file__).resolve().parent / "results"
+ 
+-from legal_workflow_generator.agent.graph import graph
++from legal_workflow_generator.agent.graph import run_workflow
++from legal_workflow_generator.agent import nodes
+ 
+ # ── 50 test queries with ground truth ────────────────────────────────────────
+ TEST_QUERIES = [
+@@ -78,11 +80,29 @@ TEST_QUERIES = [
+     {"query": "how are GST proceeds distributed between states", "domain": "taxation", "expected_sections": ["igst_act_2017_sec_17", "igst_act_2017_sec_18"]},
+ ]
+ 
+-def evaluate():
++def corpus_size() -> int | None:
++    """Number of provisions in the DB this run is evaluated against (recorded in the results)."""
++    try:
++        conn = nodes._connect(); cur = conn.cursor()
++        cur.execute("SELECT count(*) FROM laws"); n = cur.fetchone()[0]
++        cur.close(); conn.close()
++        return n
++    except Exception:
++        return None
++
++
++def evaluate(provider="gemini", top_k=None, as_of=None, verify_claims=None, limit=None, expect_corpus=4888):
++    queries = TEST_QUERIES[:limit] if limit else TEST_QUERIES
++    n_corpus = corpus_size()
++    if expect_corpus and n_corpus != expect_corpus:
++        sys.exit(f"Corpus has {n_corpus} provisions, expected {expect_corpus}. Ingest the full dataset first "
++                 f"(or pass --expect-corpus 0 to skip this check).")
+     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+     results = []
+     
+-    total = len(TEST_QUERIES)
++    total = len(queries)
++    errors = 0
++    claims = {"entailed": 0, "partial": 0, "dropped": 0}
+     abstained = 0
+     total_retries_retrieval = 0
+     total_retries_generation = 0
+@@ -94,14 +114,15 @@ def evaluate():
+     print(f"AGENTIC RAG EVALUATION — {total} queries")
+     print(f"{'='*60}\n")
+ 
+-    for i, test in enumerate(TEST_QUERIES, 1):
++    for i, test in enumerate(queries, 1):
+         query = test["query"]
+         expected = set(test["expected_sections"])
+         print(f"[{i:02d}/{total}] {query[:60]}...")
+ 
+         try:
+             start = time.time()
+-            result = graph.invoke({"query": query})
++            result = run_workflow(query, provider=provider, top_k=top_k, as_of=as_of,
++                                  verify_claims=verify_claims, trace_timing=False)
+             elapsed = round(time.time() - start, 2)
+ 
+             verified = set(result.get("verified_citations", []))
+@@ -112,6 +133,11 @@ def evaluate():
+             retries_r = result.get("retry_count_retrieval", 0)
+             retries_g = result.get("retry_count_generation", 0)
+             did_abstain = result.get("abstain", False)
++            for r in result.get("domain_results") or []:
++                for st in r.get("steps", []):
++                    if st.get("verdict") in ("entailed", "partial"):
++                        claims[st["verdict"]] += 1
++                claims["dropped"] += len(r.get("dropped_steps", []))
+ 
+             total_retries_retrieval  += retries_r
+             total_retries_generation += retries_g
+@@ -144,29 +170,34 @@ def evaluate():
+                 "retry_count_generation": retries_g,
+                 "abstained": did_abstain,
+                 "abstain_reason": result.get("abstain_reason", ""),
++                "answer": result.get("stitched_answer") or result.get("answer", ""),
+                 "elapsed_seconds": elapsed,
+                 "trace": result.get("trace", []),
+             })
+ 
+         except Exception as e:
+             print(f"       ERROR: {e}")
++            errors += 1
+             results.append({"query": query, "error": str(e)})
+-
+-        time.sleep(5)  # avoid rate limiting
++        # rate limiting is handled by the per-provider RateLimiter in agent/nodes.py (GEMINI_RPM / GROQ_RPM)
+ 
+     # ── summary ───────────────────────────────────────────────────────────────
+-    answered = total - abstained
+-    avg_retries_r = round(total_retries_retrieval / total, 2)
+-    avg_retries_g = round(total_retries_generation / total, 2)
++    scored = max(total - errors, 1)          # errored queries are reported separately, not counted as answers
++    answered = total - errors - abstained
++    avg_retries_r = round(total_retries_retrieval / scored, 2)
++    avg_retries_g = round(total_retries_generation / scored, 2)
+     citation_recall = round(citation_hits / citation_total, 2) if citation_total else 0
+-    domain_acc = round(domain_correct / total * 100, 1)
++    domain_acc = round(domain_correct / scored * 100, 1)
+ 
+     print(f"\n{'='*60}")
+     print(f"SUMMARY")
+     print(f"{'='*60}")
+-    print(f"Total queries        : {total}")
+-    print(f"Answered             : {answered} ({round(answered/total*100,1)}%)")
+-    print(f"Abstained            : {abstained} ({round(abstained/total*100,1)}%)")
++    print(f"Corpus provisions    : {n_corpus}")
++    print(f"Provider / top_k     : {provider} / {top_k or 'default'}   as_of={as_of or 'today'}")
++    print(f"Total queries        : {total} ({errors} errored)")
++    print(f"Claims entailed/partial/dropped: {claims['entailed']}/{claims['partial']}/{claims['dropped']}")
++    print(f"Answered             : {answered} ({round(answered/scored*100,1)}%)")
++    print(f"Abstained            : {abstained} ({round(abstained/scored*100,1)}%)")
+     print(f"Domain accuracy      : {domain_acc}%")
+     print(f"Citation recall@k    : {citation_recall}")
+     print(f"Avg retrieval retries: {avg_retries_r}")
+@@ -180,6 +211,8 @@ def evaluate():
+ 
+     with open(json_path, "w") as f:
+         json.dump({"summary": {
++            "corpus_provisions": n_corpus, "provider": provider, "top_k": top_k, "as_of": as_of,
++            "errors": errors, "claims": claims,
+             "total": total, "answered": answered, "abstained": abstained,
+             "domain_accuracy_pct": domain_acc,
+             "citation_recall": citation_recall,
+@@ -203,4 +236,12 @@ def evaluate():
+     print(f"  {csv_path}")
+ 
+ if __name__ == "__main__":
+-    evaluate()
+\ No newline at end of file
++    ap = argparse.ArgumentParser(description="Agentic RAG benchmark")
++    ap.add_argument("--provider", default="gemini", choices=["gemini", "groq"])
++    ap.add_argument("--top-k", type=int, default=None)
++    ap.add_argument("--as-of", default=None, help="YYYY-MM-DD the law should be valid on (default today)")
++    ap.add_argument("--no-verify-claims", action="store_true")
++    ap.add_argument("--limit", type=int, default=None, help="first N queries only (smoke test)")
++    ap.add_argument("--expect-corpus", type=int, default=4888, help="abort unless the DB has this many provisions; 0 disables")
++    a = ap.parse_args()
++    evaluate(a.provider, a.top_k, a.as_of, False if a.no_verify_claims else None, a.limit, a.expect_corpus)
+\ No newline at end of file
+diff --git a/evals/expert/aggregate_expert.py b/evals/expert/aggregate_expert.py
+new file mode 100644
+index 0000000..fa21c93
+--- /dev/null
++++ b/evals/expert/aggregate_expert.py
+@@ -0,0 +1,57 @@
++"""Aggregate completed expert rating sheets: means, reliance rate, critical-error rate, inter-rater agreement.
++
++    python evals/expert/aggregate_expert.py evals/expert/sheets/expert_*.csv
++"""
++import csv
++import statistics as st
++import sys
++from collections import defaultdict
++from itertools import combinations
++
++DIMS = ["correctness_1to5", "legal_accuracy_1to5", "completeness_1to5", "usefulness_1to5"]
++
++
++def load(path):
++    return {r["case_id"]: r for r in csv.DictReader(open(path, encoding="utf-8")) if r["correctness_1to5"].strip()}
++
++
++def qwk(a, b, lo=1, hi=5):
++    """Quadratic weighted kappa between two raters over the same cases."""
++    n = hi - lo + 1
++    obs = [[0] * n for _ in range(n)]
++    for x, y in zip(a, b):
++        obs[x - lo][y - lo] += 1
++    ha = [sum(r) for r in obs]; hb = [sum(obs[i][j] for i in range(n)) for j in range(n)]
++    tot = len(a)
++    num = den = 0.0
++    for i in range(n):
++        for j in range(n):
++            w = (i - j) ** 2 / (n - 1) ** 2
++            num += w * obs[i][j]; den += w * ha[i] * hb[j] / tot
++    return 1 - num / den if den else float("nan")
++
++
++def main(paths):
++    sheets = [load(p) for p in paths]
++    print(f"{len(sheets)} raters, cases rated: {[len(s) for s in sheets]}")
++    for d in DIMS:
++        vals = [int(r[d]) for s in sheets for r in s.values() if r[d].strip()]
++        print(f"{d:24s} mean={st.mean(vals):.2f}  sd={st.pstdev(vals):.2f}  n={len(vals)}")
++    rows = [r for s in sheets for r in s.values()]
++    yn = lambda k: sum(r[k].strip().lower().startswith("y") for r in rows) / len(rows)
++    print(f"would_rely               {yn('would_rely_yn'):.0%}")
++    print(f"critical_error           {yn('critical_error_yn'):.0%}")
++    ans = [r for r in rows if str(r["abstained"]).lower() != "true"]
++    if ans:
++        print(f"usefulness (answered only) mean={st.mean(int(r['usefulness_1to5']) for r in ans):.2f}")
++    for (i, a), (j, b) in combinations(enumerate(sheets, 1), 2):
++        common = sorted(set(a) & set(b))
++        if len(common) < 2:
++            print(f"QWK expert{i}-expert{j}: skipped (fewer than 2 shared rated cases)"); continue
++        for d in DIMS:
++            k = qwk([int(a[c][d]) for c in common], [int(b[c][d]) for c in common])
++            print(f"QWK expert{i}-expert{j} {d:22s} {k:.2f}  (n={len(common)})")
++
++
++if __name__ == "__main__":
++    main(sys.argv[1:] or sys.exit(__doc__))
+diff --git a/evals/expert/make_rating_sheet.py b/evals/expert/make_rating_sheet.py
+new file mode 100644
+index 0000000..7ea8852
+--- /dev/null
++++ b/evals/expert/make_rating_sheet.py
+@@ -0,0 +1,49 @@
++"""Build blinded rating sheets for legal experts from an eval_agent.py results JSON.
++
++    python evals/expert/make_rating_sheet.py evals/results/eval_results_XXXX.json --experts 3 --sample 30 --seed 7
++
++Writes one CSV per expert (same cases, independently shuffled order, no system metrics visible) plus a key file
++mapping case_id -> query. Abstained / errored runs are included so experts also judge whether abstaining was right.
++"""
++import argparse
++import csv
++import json
++import random
++from pathlib import Path
++
++FIELDS = ["case_id", "query", "system_answer", "abstained",
++          "correctness_1to5", "legal_accuracy_1to5", "completeness_1to5", "usefulness_1to5",
++          "critical_error_yn", "would_rely_yn", "comments"]
++
++
++def main():
++    ap = argparse.ArgumentParser()
++    ap.add_argument("results_json")
++    ap.add_argument("--experts", type=int, default=3)
++    ap.add_argument("--sample", type=int, default=30)
++    ap.add_argument("--seed", type=int, default=7)
++    ap.add_argument("--out", default="evals/expert/sheets")
++    a = ap.parse_args()
++
++    rows = [r for r in json.load(open(a.results_json))["results"] if "error" not in r]
++    rng = random.Random(a.seed)
++    cases = rng.sample(rows, min(a.sample, len(rows)))
++    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
++
++    with open(out / "case_key.csv", "w", newline="", encoding="utf-8") as f:
++        w = csv.writer(f); w.writerow(["case_id", "query", "expected_domain", "abstained"])
++        for i, c in enumerate(cases, 1):
++            w.writerow([f"C{i:03d}", c["query"], c.get("expected_domain", ""), c.get("abstained")])
++
++    for e in range(1, a.experts + 1):
++        order = list(enumerate(cases, 1)); random.Random(a.seed + e).shuffle(order)
++        with open(out / f"expert_{e}.csv", "w", newline="", encoding="utf-8") as f:
++            w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader()
++            for i, c in order:
++                w.writerow({"case_id": f"C{i:03d}", "query": c["query"], "system_answer": c.get("answer", ""),
++                            "abstained": c.get("abstained")})
++    print(f"{len(cases)} cases -> {out}/expert_1..{a.experts}.csv")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/legal_workflow_generator/agent/state.py b/legal_workflow_generator/agent/state.py
+index 602264d..d30d9d7 100644
+--- a/legal_workflow_generator/agent/state.py
++++ b/legal_workflow_generator/agent/state.py
+@@ -1,4 +1,4 @@
+-from typing import TypedDict, List, Optional
++from typing import TypedDict, List, Optional, Any
+ 
+ class AgentState(TypedDict):
+     # Input
+@@ -48,4 +48,10 @@ class AgentState(TypedDict):
+ 
+     # Eval logging
+     trace: List[str]
+-    
+\ No newline at end of file
++
++    # Per-domain worker output (DomainResult.to_dict()), incl. claim-verification verdicts per step
++    domain_results: List[dict]
++
++    # Final presentation (stitch_answer): answer + knowledge-gap / unverified warnings
++    stitched_answer: str
++    domain_gaps: List[str]
+diff --git a/legal_workflow_generator/presentation/static/app.js b/legal_workflow_generator/presentation/static/app.js
+index 109dcf3..69c935b 100644
+--- a/legal_workflow_generator/presentation/static/app.js
++++ b/legal_workflow_generator/presentation/static/app.js
+@@ -31,6 +31,7 @@ const dom = {
+     providerSelect: $('#provider-select'),
+     topkSlider:     $('#topk-slider'),
+     topkValue:      $('#topk-value'),
++    asofInput:      $('#asof-input'),
+     labUnit:        $('#lab-unit'),
+     labProvider:    $('#lab-provider'),
+     labTopk:        $('#lab-topk'),
+@@ -162,6 +163,7 @@ async function sendChatMessage() {
+                 query,
+                 provider: dom.providerSelect.value,
+                 top_k: parseInt(dom.topkSlider.value),
++                as_of: dom.asofInput.value || null,
+             }),
+         });
+ 
+@@ -449,15 +451,35 @@ function buildPipelineStages(p, trace) {
+         });
+     }
+ 
++    // 5b. Claim verification (entailment of each step against its cited provision)
++    if (p.claim_verification) {
++        const c = p.claim_verification;
++        const bad = c.dropped > 0 || c.partial > 0;
++        stages.push({
++            name: 'Claim Verification',
++            summary: `${c.entailed} entailed, ${c.partial} partial, ${c.dropped} dropped`,
++            status: c.dropped > 0 ? 'warning' : 'success',
++            details: [
++                { label: 'Entailed', value: String(c.entailed) },
++                { label: 'Partial', value: String(c.partial) },
++                { label: 'Dropped', value: String(c.dropped) },
++                ...(c.steps || []).filter(s => s.verdict !== 'entailed').map(s => ({
++                    label: `${s.verdict || 'unchecked'} · ${s.provision_id}`, value: s.verdict_reason || s.action })),
++                ...(c.dropped_steps || []).map(s => ({
++                    label: `dropped · ${s.provision_id}`, value: s.verdict_reason || s.action })),
++            ],
++        });
++    }
++
+     // 6. Groundedness
+     if (p.groundedness && p.groundedness.grade) {
+         const g = p.groundedness;
+         stages.push({
+             name: 'Groundedness',
+             summary: g.grade,
+-            status: g.grade === 'grounded' ? 'success' : 'error',
++            status: g.grade === 'grounded' ? 'success' : (g.grade === 'unverified' ? 'warning' : 'error'),
+             details: [
+-                { label: 'Grade', value: g.grade, badge: g.grade === 'grounded' ? 'success' : 'error' },
++                { label: 'Grade', value: g.grade, badge: g.grade === 'grounded' ? 'success' : (g.grade === 'unverified' ? 'warning' : 'error') },
+                 { label: 'Reason', value: g.reason },
+             ],
+         });
+diff --git a/legal_workflow_generator/presentation/static/index.html b/legal_workflow_generator/presentation/static/index.html
+index 4f40817..4f7ed76 100644
+--- a/legal_workflow_generator/presentation/static/index.html
++++ b/legal_workflow_generator/presentation/static/index.html
+@@ -44,8 +44,12 @@
+                     </div>
+                     <div class="setting-item topk-control">
+                         <span class="setting-label">Top-K</span>
+-                        <input type="range" class="topk-slider" id="topk-slider" min="1" max="10" value="3">
+-                        <span class="topk-value" id="topk-value">3</span>
++                        <input type="range" class="topk-slider" id="topk-slider" min="1" max="20" value="8">
++                        <span class="topk-value" id="topk-value">8</span>
++                    </div>
++                    <div class="setting-item">
++                        <span class="setting-label">As of</span>
++                        <input type="date" class="setting-select" id="asof-input" aria-label="Law as of date">
+                     </div>
+                 </div>
+             </div>
+diff --git a/pyproject.toml b/pyproject.toml
+index 2fe8150..276500c 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -35,9 +35,10 @@ testpaths = ["tests"]
+ pythonpath = ["."]
+ # Skip the slow, external-dependency tests (live Postgres + Gemini) unless the
+ # suite is invoked with `-m integration`.
+-addopts = "-m 'not integration'"
++addopts = "-m 'not integration and not e2e'"
+ markers = [
+     "integration: needs a live Postgres database and/or Gemini API key (deselected by default)",
++    "e2e: browser tests (Playwright + chromium); run with `pytest -m e2e tests/e2e`",
+ ]
+ 
+ [tool.coverage.run]
+diff --git a/tests/e2e/__init__.py b/tests/e2e/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/tests/e2e/conftest.py b/tests/e2e/conftest.py
+new file mode 100644
+index 0000000..3de1195
+--- /dev/null
++++ b/tests/e2e/conftest.py
+@@ -0,0 +1,57 @@
++"""Browser-level tests for the frontend workflow inspector.
++
++They serve the real static frontend and mock /api/* with Playwright, so no database, corpus or LLM key is needed.
++
++    uv add --dev pytest-playwright && uv run playwright install chromium
++    uv run pytest -m e2e tests/e2e
++"""
++import functools
++import http.server
++import threading
++from pathlib import Path
++
++import pytest
++
++pytest.importorskip("playwright", reason="pip install pytest-playwright && playwright install chromium")
++
++STATIC = Path(__file__).resolve().parents[2] / "legal_workflow_generator" / "presentation" / "static"
++
++
++@pytest.fixture(scope="session")
++def frontend_url():
++    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=str(STATIC))
++    handler.log_message = lambda *a, **k: None
++    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
++    threading.Thread(target=server.serve_forever, daemon=True).start()
++    yield f"http://127.0.0.1:{server.server_address[1]}/index.html"
++    server.shutdown()
++
++
++def chat_payload(**over):
++    payload = {
++        "answer": "LEGAL COMPLIANCE WORKFLOW\nStep 1: Obtain consent — [dpdp_act_2023_sec_6]",
++        "abstained": False,
++        "settings": {"provider": "gemini", "top_k": 8, "as_of": "2026-10-13", "verify_claims": True},
++        "pipeline": {
++            "classification": {"intent": "workflow", "domain": "data_protection", "all_domains": ["data_protection"],
++                               "normalized_query": "consent", "keywords": ["consent"], "confidence": 0.9},
++            "retrieval": {"docs": [{"provision_id": "dpdp_act_2023_sec_6", "title": "Consent", "text": "t",
++                                    "combined_score": 0.9, "bm25_score": 0.8, "semantic_score": 0.9}],
++                          "rewritten_query": None, "retry_count": 0},
++            "context_grading": {"grade": "sufficient", "reason": "ok"},
++            "generation": {"citations": ["dpdp_act_2023_sec_6"], "retry_count": 0},
++            "citation_verification": {"verified": ["dpdp_act_2023_sec_6"], "failed": []},
++            "claim_verification": {
++                "entailed": 1, "partial": 1, "unchecked": 0, "dropped": 1,
++                "steps": [{"domain": "data_protection", "action": "a", "provision_id": "dpdp_act_2023_sec_6",
++                           "verdict": "partial", "verdict_reason": "adds detail", "note": ""}],
++                "dropped_steps": [{"domain": "data_protection", "action": "c",
++                                   "provision_id": "dpdp_act_2023_sec_9", "verdict_reason": "not in text"}]},
++            "groundedness": {"grade": "grounded", "reason": "ok"},
++            "answerability": {"grade": "answers", "reason": "ok"},
++            "abstain_info": {"triggered": False, "reason": ""},
++        },
++        "trace": ["classify → ok", "grade_groundedness → grounded"],
++    }
++    payload.update(over)
++    return payload
+diff --git a/tests/e2e/test_inspector.py b/tests/e2e/test_inspector.py
+new file mode 100644
+index 0000000..54a5acd
+--- /dev/null
++++ b/tests/e2e/test_inspector.py
+@@ -0,0 +1,62 @@
++import json
++
++import pytest
++from playwright.sync_api import Page, expect
++
++from .conftest import chat_payload
++
++pytestmark = pytest.mark.e2e
++
++
++def _ask(page: Page, url: str, body=None, status=200):
++    sent = {}
++
++    def handle(route):
++        sent.update(json.loads(route.request.post_data))
++        route.fulfill(status=status, content_type="application/json", body=json.dumps(body or chat_payload()))
++
++    page.route("**/api/chat", handle)
++    page.goto(url)
++    page.fill("#chat-input", "How do I comply with DPDP?")
++    page.click("#send-btn")
++    return sent
++
++
++def test_request_carries_provider_top_k_and_as_of(page: Page, frontend_url):
++    sent = {}
++    page.route("**/api/chat", lambda r: (sent.update(json.loads(r.request.post_data)),
++                                         r.fulfill(content_type="application/json", body=json.dumps(chat_payload()))))
++    page.goto(frontend_url)
++    page.select_option("#provider-select", "groq")
++    page.fill("#asof-input", "2025-06-01")
++    page.eval_on_selector("#topk-slider", "e => { e.value = 12; e.dispatchEvent(new Event('input')); }")
++    page.fill("#chat-input", "q")
++    page.click("#send-btn")
++    expect(page.locator(".pipeline-toggle")).to_be_visible()
++    assert (sent["provider"], sent["top_k"], sent["as_of"]) == ("groq", 12, "2025-06-01")
++
++
++def test_inspector_shows_stages_and_claim_verdicts(page: Page, frontend_url):
++    _ask(page, frontend_url)
++    page.locator(".pipeline-toggle").click()
++    expect(page.locator(".pipeline-content.open")).to_be_visible()
++    names = page.locator(".stage-name").all_inner_texts()
++    for stage in ("Classification", "Citation Verification", "Claim Verification", "Groundedness", "Answerability"):
++        assert stage in names
++    claim = page.locator(".stage", has_text="Claim Verification")
++    expect(claim.locator(".stage-summary")).to_have_text("1 entailed, 1 partial, 1 dropped")
++    claim.locator(".stage-header").click()
++    expect(claim).to_contain_text("dropped · dpdp_act_2023_sec_9")
++
++
++def test_abstained_answer_is_rendered(page: Page, frontend_url):
++    body = chat_payload(answer="I was unable to provide a reliable answer", abstained=True)
++    _ask(page, frontend_url, body)
++    expect(page.locator("#chat-messages")).to_contain_text("unable to provide a reliable answer")
++
++
++def test_http_error_shows_message_and_ui_recovers(page: Page, frontend_url):
++    _ask(page, frontend_url, {"detail": "Invalid option: top_k must be between 1 and 20"}, status=422)
++    expect(page.locator("#chat-messages")).to_contain_text("top_k must be between 1 and 20")
++    page.fill("#chat-input", "again")
++    expect(page.locator("#send-btn")).to_be_enabled()
+diff --git a/tests/test_agent_hardening.py b/tests/test_agent_hardening.py
+new file mode 100644
+index 0000000..77c150c
+--- /dev/null
++++ b/tests/test_agent_hardening.py
+@@ -0,0 +1,125 @@
++"""Offline tests for entailment verification, rate limiting, deterministic traces and temporal filtering.
++Every LLM / DB / search boundary is replaced by a fake."""
++import datetime
++import json
++import threading
++import time
++
++import pytest
++
++from legal_workflow_generator.agent import nodes
++from legal_workflow_generator.agent.settings import build_config, use_settings
++
++D = datetime.date
++
++
++def _docs():
++    return [{"provision_id": "p1", "title": "T1", "text": "x", "full_text": "Employers must pay gratuity after five years."},
++            {"provision_id": "p2", "title": "T2", "text": "y", "full_text": "A company must keep a registered office."}]
++
++
++# ── claim-to-citation entailment ─────────────────────────────────────────────
++def _steps():
++    return [nodes.Step("Pay gratuity after 5 years", "p1"), nodes.Step("Pay gratuity after 1 year", "p1"),
++            nodes.Step("Keep a registered office and file annual returns", "p2")]
++
++
++def test_verify_claims_drops_unsupported_and_flags_partial(monkeypatch):
++    verdicts = {"verdicts": [{"n": 1, "verdict": "entailed", "reason": "ok"},
++                             {"n": 2, "verdict": "unsupported", "reason": "text says five years"},
++                             {"n": 3, "verdict": "partial", "reason": "no returns mentioned"}]}
++    monkeypatch.setattr(nodes, "_llm", lambda *a, **k: json.dumps(verdicts))
++    kept, dropped, msg = nodes._verify_claims("employment", _steps(), _docs())
++    assert [s.verdict for s in kept] == ["entailed", "partial"]
++    assert [s.action for s in dropped] == ["Pay gratuity after 1 year"]
++    assert "1 dropped" in msg
++
++
++def test_verify_claims_fails_open_when_llm_unavailable(monkeypatch):
++    def boom(*a, **k): raise nodes.LLMUnavailable("quota")
++    monkeypatch.setattr(nodes, "_llm", boom)
++    kept, dropped, msg = nodes._verify_claims("employment", _steps(), _docs())
++    assert len(kept) == 3 and dropped == [] and all(s.verdict == "unchecked" for s in kept)
++
++
++def test_verify_claims_fails_open_on_garbage(monkeypatch):
++    monkeypatch.setattr(nodes, "_llm", lambda *a, **k: "not json")
++    kept, dropped, _ = nodes._verify_claims("employment", _steps(), _docs())
++    assert len(kept) == 3 and dropped == []
++
++
++def test_invented_provision_ids_are_rejected():
++    ids = {"p1": "p1"}
++    assert nodes.Step.from_llm({"action": "a", "provision_id": "zzz"}, ids) is None
++    assert nodes.Step.from_llm({"action": "a", "provision_id": "P1", "applies_to": "weird"}, ids).applies_to == "unspecified"
++
++
++# ── rate limiter ─────────────────────────────────────────────────────────────
++def test_rate_limiter_enforces_window():
++    rl = nodes.RateLimiter(rpm=3, max_parallel=3, window=0.4)
++    t0 = time.monotonic()
++    for _ in range(4):
++        rl.acquire()
++    assert time.monotonic() - t0 >= 0.35          # 4th call had to wait for the window
++
++
++def test_rate_limiter_caps_parallel_calls():
++    rl = nodes.RateLimiter(rpm=1000, max_parallel=2)
++    live, peak, lock = 0, 0, threading.Lock()
++
++    def work():
++        nonlocal live, peak
++        with rl.slot():
++            with lock:
++                live += 1; peak = max(peak, live)
++            time.sleep(0.05)
++            with lock:
++                live -= 1
++    ts = [threading.Thread(target=work) for _ in range(8)]
++    [t.start() for t in ts]; [t.join() for t in ts]
++    assert peak <= 2
++
++
++def test_llm_retries_then_reports_unavailable(monkeypatch):
++    use_settings(build_config(provider="gemini"))
++    monkeypatch.setattr(time, "sleep", lambda *_: None)
++    monkeypatch.setitem(nodes._PROVIDERS, "gemini", lambda s, u: (_ for _ in ()).throw(Exception("429 RESOURCE_EXHAUSTED")))
++    with pytest.raises(nodes.LLMUnavailable):
++        nodes._llm("s", "u", max_retries=2)
++
++
++# ── deterministic trace ──────────────────────────────────────────────────────
++def test_grade_parallel_trace_order_is_fixed(monkeypatch):
++    use_settings(build_config(provider="gemini"))
++    def slow_or_fast(*a, **k):
++        time.sleep(0.05 * (hash(threading.current_thread().name) % 3)); return '{"grade":"grounded","reason":"r"}'
++    monkeypatch.setattr(nodes, "_llm", slow_or_fast)
++    monkeypatch.setattr(nodes, "_domain_of", lambda pid: "taxation")
++    base = {"answer": "a", "retrieved_docs": _docs(), "all_domains": ["taxation"], "domain": "taxation",
++            "verified_citations": ["p1"]}
++    traces = []
++    for _ in range(5):
++        st = {**base, "trace": []}
++        nodes.grade_parallel(st)
++        traces.append(tuple(st["trace"]))
++    assert len(set(traces)) == 1
++    assert traces[0][0].startswith("grade_groundedness") and traces[0][1].startswith("grade_answerability")
++
++
++def test_trace_timing_can_be_disabled():
++    use_settings(build_config(trace_timing=False))
++    assert nodes._el(time.perf_counter()) == ""
++
++
++# ── temporal awareness ───────────────────────────────────────────────────────
++def test_not_yet_in_force_provisions_are_excluded():
++    assert nodes._in_force({"effective_date": D(2024, 1, 1)}, D(2025, 1, 1))
++    assert not nodes._in_force({"effective_date": D(2026, 4, 1)}, D(2025, 1, 1))
++    assert nodes._in_force({"effective_date": None}, D(2025, 1, 1))          # unknown date is kept
++
++
++def test_superseded_statute_is_flagged_only_after_cutover():
++    pid = "income_tax_act_1961_sec_195"
++    assert nodes._temporal_note(pid, D(2026, 3, 31)) == ""
++    assert "Income-tax Act, 2025" in nodes._temporal_note(pid, D(2026, 10, 13))
++    assert nodes._temporal_note("dpdp_act_2023_sec_6", D(2026, 10, 13)) == ""
+diff --git a/tests/test_app_routes.py b/tests/test_app_routes.py
+index 6a79029..13164b3 100644
+--- a/tests/test_app_routes.py
++++ b/tests/test_app_routes.py
+@@ -30,14 +30,20 @@ def test_chat_returns_pipeline_sections(monkeypatch):
+         "trace": ["done"],
+     }
+ 
+-    class FakeGraph:
+-        def invoke(self, payload):
+-            assert payload == {"query": "How do I comply?"}
+-            return state
++    seen = {}
+ 
+-    monkeypatch.setattr(app, "graph", FakeGraph())
++    def fake_run(query, **options):
++        seen.update(query=query, **options)
++        return state
+ 
+-    result = app.chat(app.ChatRequest(query="How do I comply?"))
++    monkeypatch.setattr(app, "run_workflow", fake_run)
++
++    result = app.chat(app.ChatRequest(query="How do I comply?", provider="gemini", top_k=5, as_of="2025-01-01"))
++
++    # provider / top_k / as_of now reach the workflow instead of being dropped
++    assert seen["query"] == "How do I comply?"
++    assert (seen["provider"], seen["top_k"], seen["as_of"]) == ("gemini", 5, "2025-01-01")
++    assert result["settings"]["top_k"] == 5 and result["settings"]["as_of"] == "2025-01-01"
+ 
+     assert result["answer"] == state["answer"]
+     assert result["pipeline"]["classification"]["domain"] == "data_protection"
+@@ -49,11 +55,10 @@ def test_chat_returns_pipeline_sections(monkeypatch):
+ 
+ 
+ def test_chat_converts_pipeline_errors_to_http_error(monkeypatch):
+-    class FailingGraph:
+-        def invoke(self, payload):
+-            raise RuntimeError("database unavailable")
++    def failing(query, **options):
++        raise RuntimeError("database unavailable")
+ 
+-    monkeypatch.setattr(app, "graph", FailingGraph())
++    monkeypatch.setattr(app, "run_workflow", failing)
+ 
+     try:
+         app.chat(app.ChatRequest(query="What is required?"))
+@@ -85,3 +90,31 @@ def test_query_route_returns_classifier_state(monkeypatch):
+     assert result["domain"] == "taxation"
+     assert result["confidence"] == 0.91
+     assert result["trace"] == ["classified"]
++
++
++def test_chat_rejects_invalid_options_with_422(monkeypatch):
++    monkeypatch.setattr(app, "run_workflow", lambda *a, **k: (_ for _ in ()).throw(AssertionError("must not run")))
++    for bad in ({"top_k": 0}, {"top_k": 99}, {"provider": "openai"}, {"as_of": "13/10/2026"}):
++        try:
++            app.chat(app.ChatRequest(query="q", **bad))
++        except HTTPException as error:
++            assert error.status_code == 422
++        else:
++            raise AssertionError(f"{bad} should be rejected")
++
++
++def test_chat_prefers_stitched_answer_and_exposes_claim_verdicts(monkeypatch):
++    state = {
++        "answer": "raw", "stitched_answer": "raw + knowledge gaps", "retrieved_docs": [], "trace": [],
++        "domain_results": [{
++            "domain": "taxation", "grade": "sufficient", "reason": "", "retries": 0, "error": "", "not_covered": "",
++            "steps": [{"action": "a", "provision_id": "p1", "verdict": "entailed", "verdict_reason": "", "note": ""},
++                      {"action": "b", "provision_id": "p2", "verdict": "partial", "verdict_reason": "adds detail", "note": ""}],
++            "dropped_steps": [{"action": "c", "provision_id": "p3", "verdict_reason": "not in text"}],
++        }],
++    }
++    monkeypatch.setattr(app, "run_workflow", lambda q, **k: state)
++    result = app.chat(app.ChatRequest(query="q"))
++    cv = result["pipeline"]["claim_verification"]
++    assert result["answer"] == "raw + knowledge gaps"
++    assert (cv["entailed"], cv["partial"], cv["dropped"]) == (1, 1, 1)
+diff --git a/tests/test_settings.py b/tests/test_settings.py
+new file mode 100644
+index 0000000..6287e84
+--- /dev/null
++++ b/tests/test_settings.py
+@@ -0,0 +1,35 @@
++"""Run settings: validation, config parsing and contextvar propagation (no network)."""
++import pytest
++
++from legal_workflow_generator.agent.settings import (
++    RunSettings, build_config, current_settings, use_settings,
++)
++
++
++def test_defaults_and_overrides():
++    s = RunSettings.from_config(build_config(provider="Gemini", top_k="5", as_of="2025-04-01", verify_claims="false"))
++    assert (s.provider, s.top_k, s.verify_claims) == ("gemini", 5, False)
++    assert str(s.as_of_date) == "2025-04-01"
++
++
++@pytest.mark.parametrize("bad", [{"top_k": 0}, {"top_k": 21}, {"provider": "openai"}, {"as_of": "01-04-2025"},
++                                 {"max_domain_retries": 9}])
++def test_invalid_values_raise(bad):
++    with pytest.raises(ValueError):
++        RunSettings.from_config(build_config(**bad))
++
++
++def test_none_values_fall_back_to_defaults():
++    assert RunSettings.from_config(build_config(top_k=None, provider=None)).top_k == 8
++
++
++def test_langgraph_keys_are_ignored():
++    assert RunSettings.from_config({"configurable": {"thread_id": "x", "top_k": 3}}).top_k == 3
++
++
++def test_settings_reach_worker_threads():
++    from concurrent.futures import ThreadPoolExecutor
++    from legal_workflow_generator.agent.nodes import _submit
++    use_settings(build_config(top_k=4))
++    with ThreadPoolExecutor(max_workers=2) as ex:
++        assert _submit(ex, lambda: current_settings().top_k).result() == 4

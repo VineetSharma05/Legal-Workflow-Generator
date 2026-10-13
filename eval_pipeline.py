@@ -24,15 +24,16 @@ minute) so the free-tier quota (15/min) is not exceeded.
 """
 import argparse
 import collections
+import datetime
+import hashlib
 import json
 import os
 import statistics
+import subprocess
 import sys
 import threading
 import time
 
-from legal_workflow_generator.agent import nodes as N
-from legal_workflow_generator.agent.graph import graph
 
 DP, CG, IP, TX, EM = "data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"
 
@@ -138,69 +139,52 @@ CASES = [
 CATEGORIES = ["single", "two", "three", "four", "five", "startup", "abstain", "adversarial"]
 
 
-# --------------------------------------------------------------------------- rate limiting
-class RateLimiter:
-    """Sliding window: at most `rpm` LLM calls in any 60 seconds, across all threads."""
+# --------------------------------------------------------------------------- rate limiting & provenance
+# The SAME limiter the workflow uses (agent/llm_limits.py), so the eval cannot bypass the quota budget.
+from legal_workflow_generator.agent.llm_limits import LIMITERS, set_rate_limit   # noqa: E402
+from legal_workflow_generator.agent.graph import run_workflow                    # noqa: E402
 
-    def __init__(self, rpm):
-        self.rpm = rpm
-        self.stamps = collections.deque()
-        self.lock = threading.Lock()
-        self.calls = 0
-        self.errors = 0
+CORPUS_FILE = os.path.join("datasets", "complete", "combined_complete_dataset.json")
+EXPECTED_PROVISIONS = 4888      # the corpus this benchmark is defined on; a different count aborts the run
 
-    def acquire(self):
-        while True:
-            with self.lock:
-                now = time.monotonic()
-                while self.stamps and now - self.stamps[0] >= 60:
-                    self.stamps.popleft()
-                if len(self.stamps) < self.rpm:
-                    self.stamps.append(now)
-                    self.calls += 1
-                    return
-                wait = 60 - (now - self.stamps[0]) + 0.25
-            time.sleep(max(wait, 0.25))
+SETTINGS = {"provider": "gemini", "top_k": 8, "as_of": None, "verify_claims": None}   # set from the CLI
 
 
-LIM = None
-
-
-def install_limiter(rpm):
-    global LIM
-    LIM = RateLimiter(rpm)
-    original = N._llm
-
-    def limited(*args, **kwargs):
-        LIM.acquire()
-        return original(*args, **kwargs)
-
-    N._llm = limited
-
-
- 
 class DailyQuota(BaseException):
-    """BaseException on purpose: the `except Exception` blocks in nodes.py must not swallow it."""
+    """BaseException on purpose: the `except Exception` blocks in the workflow must not swallow it."""
     pass
 
 
-def install_limiter(rpm):
-    global LIM
-    LIM = RateLimiter(rpm)
-    original = N._llm
+class IncompleteCase(RuntimeError):
+    """The workflow finished, but an LLM step was unavailable, so the answer is not a real result."""
+    pass
 
-    def limited(*args, **kwargs):
-        LIM.acquire()
-        try:
-            return original(*args, **kwargs)
-        except Exception as e:
-            msg = str(e)
-            if "PerDay" in msg or "per day" in msg.lower():
-                raise DailyQuota(msg)
-            LIM.errors += 1          # nodes.py will swallow this; we record it
-            raise
 
-    N._llm = limited
+def corpus_fingerprint() -> dict:
+    """Count + sha256 of the corpus file, and the row count of the live DB table when reachable."""
+    with open(CORPUS_FILE, "rb") as f:
+        raw = f.read()
+    rows = len(json.loads(raw))
+    info = {"file": CORPUS_FILE.replace(os.sep, "/"), "provisions_in_file": rows,
+            "sha256": hashlib.sha256(raw).hexdigest()}
+    try:
+        from legal_workflow_generator.agent.nodes import _connect
+        conn = _connect()
+        cur = conn.cursor()
+        cur.execute("SELECT count(*) FROM laws")
+        info["provisions_in_db"] = cur.fetchone()[0]
+        conn.close()
+    except Exception as e:   # noqa: BLE001 - recorded, not fatal
+        info["provisions_in_db"] = f"unavailable ({type(e).__name__})"
+    return info
+
+
+def git_commit() -> str:
+    try:
+        out = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=10)
+        return out.stdout.strip() or "unknown"
+    except Exception:   # noqa: BLE001
+        return "unknown"
 
 
 # --------------------------------------------------------------------------- running
@@ -209,10 +193,17 @@ def ascii_(s):
 
 
 def run_case(case):
-    before = LIM.calls
+    before = LIMITERS["gemini"].calls
     t = time.perf_counter()
-    out = graph.invoke({"query": case["q"]})
+    out = run_workflow(case["q"], provider=SETTINGS["provider"], top_k=SETTINGS["top_k"],
+                       as_of=SETTINGS["as_of"], verify_claims=SETTINGS["verify_claims"])
     dt = time.perf_counter() - t
+    # A quota/overload failure inside a domain worker does not raise; it shows up as an "unavailable" result.
+    # Scoring such a run as an answer would corrupt the benchmark, so it is re-run later instead.
+    unavailable = [r.get("domain") for r in out.get("domain_results", []) if "unavailable" in str(r.get("reason", "")).lower()]
+    if unavailable or out.get("groundedness_grade") == "unverified":
+        raise IncompleteCase(f"LLM unavailable during the run (domains: {unavailable or 'groundedness'})")
+    steps = [st for r in out.get("domain_results", []) for st in r.get("steps", [])]
     return {
         "id": case["id"], "category": case["category"], "error": None,
         "domains": list(out.get("all_domains") or []),
@@ -220,8 +211,9 @@ def run_case(case):
         "abstain": bool(out.get("abstain")),
         "answerability": out.get("answerability_grade"),
         "gaps": list(out.get("domain_gaps") or []),
-        "latency": round(dt, 1), "calls": LIM.calls - before,
-        "answer": (out.get("stitched_answer") or out.get("answer") or "")[:5000],
+        "claims": {v: sum(st.get("verdict") == v for st in steps) for v in ("entailed", "partial", "unchecked")},
+        "latency": round(dt, 1), "calls": LIMITERS["gemini"].calls - before,
+        "answer": (out.get("answer") or "")[:5000],
     }
 
 
@@ -240,7 +232,7 @@ def run_safe(case, retry_wait=70):
             if attempt == 1:
                 print(f"    waiting {retry_wait}s and retrying once...")
                 time.sleep(retry_wait)
-    return {"id": case["id"], "category": case["category"], "error": msg[:300]}
+    return {"id": case["id"], "category": case["category"], "error": msg[:300] or "unknown error"}
 
 
 # --------------------------------------------------------------------------- scoring
@@ -334,7 +326,14 @@ def main():
     ap.add_argument("--fresh", action="store_true")
     ap.add_argument("--summary", action="store_true")
     ap.add_argument("--out", default="eval_results.jsonl")
+    ap.add_argument("--provider", choices=["gemini", "groq"], default="gemini")
+    ap.add_argument("--top-k", type=int, default=8, dest="top_k")
+    ap.add_argument("--as-of", default=None, help="ISO date the answers must be valid on (default: today)")
+    ap.add_argument("--no-verify-claims", action="store_true", help="skip the per-step entailment check")
+    ap.add_argument("--expect-provisions", type=int, default=EXPECTED_PROVISIONS)
     a = ap.parse_args()
+    SETTINGS.update(provider=a.provider, top_k=a.top_k, as_of=a.as_of,
+                    verify_claims=False if a.no_verify_claims else None)
 
     if a.fresh and os.path.exists(a.out):
         os.remove(a.out)
@@ -349,11 +348,24 @@ def main():
         todo = todo[: a.limit]
     print(f"{len(CASES)} queries total, {len(todo)} to run now (rate limit {a.rpm} calls/min).")
     print(f"Rough time: {len(todo) * 9 / a.rpm:.0f}-{len(todo) * 13 / a.rpm:.0f} minutes. Ctrl+C is safe; re-run to resume.\n")
-    install_limiter(a.rpm)
+    fp = corpus_fingerprint()
+    if fp["provisions_in_file"] != a.expect_provisions:
+        raise SystemExit(f"corpus has {fp['provisions_in_file']} provisions, expected {a.expect_provisions}; "
+                         f"refusing to run (pass --expect-provisions to override)")
+    set_rate_limit("gemini", a.rpm)            # only after every precondition has passed
+    manifest = {"started": datetime.datetime.now().isoformat(timespec="seconds"), "commit": git_commit(),
+                "settings": dict(SETTINGS), "corpus": fp, "cases": len(CASES), "rpm": a.rpm}
+    with open(a.out + ".manifest.json", "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2)
+    print(f"corpus: {fp['provisions_in_file']} provisions in file, DB: {fp.get('provisions_in_db')}, "
+          f"settings: {SETTINGS}")
 
     try:
         for c in todo:
-            rec = run_safe(c)
+            try:
+                rec = run_safe(c)
+            except IncompleteCase as e:
+                rec = {"id": c["id"], "category": c["category"], "error": f"incomplete: {e}"}
             with open(a.out, "a", encoding="utf-8") as f:
                 f.write(json.dumps(rec) + "\n")
             recs[c["id"]] = rec

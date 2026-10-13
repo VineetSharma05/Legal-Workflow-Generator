@@ -1,6 +1,7 @@
 import logging
 from google import genai
 from legal_workflow_generator.config.values import GEMINI_API_KEY, GEMINI_MODEL
+from legal_workflow_generator.agent.llm_limits import LIMITERS
 from legal_workflow_generator.typings.types import NormalizedQuery, QueryIntent
 
 logger = logging.getLogger(__name__)
@@ -25,16 +26,17 @@ class IntentClassifier:
         prompt = self._build_prompt(query_text)
 
         try:
-            response = self.client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=f"""You are an intent classifier for a legal compliance system for Indian tech startups. Your job is to classify user queries into exactly one intent category.
+            with LIMITERS["gemini"].slot():
+                response = self.client.models.generate_content(
+                    model=GEMINI_MODEL,
+                    contents=f"""You are an intent classifier for a legal compliance system for Indian tech startups. Your job is to classify user queries into exactly one intent category.
 Respond in this exact format and nothing else:
 INTENT: <intent>
 CONFIDENCE: <score between 0.0 and 1.0>
 REASON: <one line explanation>
 
 {prompt}""",
-            )
+                )
             return self._parse_response(response.text)
         except Exception as e:
             logger.error(f"Gemini API error: {e}")
