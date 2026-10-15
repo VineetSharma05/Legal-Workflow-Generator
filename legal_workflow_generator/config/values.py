@@ -66,7 +66,10 @@ GROQ_MODEL = optional_env("GROQ_MODEL", "llama-3.3-70b-versatile")
 # ─────────────────────────────────────────────
 # GEMINI CONFIG
 # ─────────────────────────────────────────────
-GEMINI_API_KEY = require_env("GEMINI_API_KEY")
+# GEMINI_API_KEY may be a comma-separated list. Keys are tried in order; when a call fails or hits a
+# rate limit the next key is used (see agent/gemini_client.py). GEMINI_API_KEY stays the first key.
+GEMINI_API_KEYS = [k.strip() for k in require_env("GEMINI_API_KEY").split(",") if k.strip()]
+GEMINI_API_KEY = GEMINI_API_KEYS[0]
 GEMINI_MODEL = optional_env("GEMINI_MODEL", "models/gemini-3.1-flash-lite")
 
 # ─────────────────────────────────────────────

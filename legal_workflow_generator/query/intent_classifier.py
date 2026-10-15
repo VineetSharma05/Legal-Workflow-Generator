@@ -1,6 +1,7 @@
 import logging
 from google import genai
-from legal_workflow_generator.config.values import GEMINI_API_KEY, GEMINI_MODEL
+from legal_workflow_generator.config.values import GEMINI_MODEL
+from legal_workflow_generator.agent.gemini_client import RotatingGeminiClient
 from legal_workflow_generator.agent.llm_limits import LIMITERS
 from legal_workflow_generator.typings.types import NormalizedQuery, QueryIntent
 
@@ -18,7 +19,7 @@ CONFIDENCE_THRESHOLD = 0.5
 
 class IntentClassifier:
     def __init__(self):
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+        self.client = RotatingGeminiClient()
         logger.info("IntentClassifier initialized")
 
     def classify(self, normalized_query: NormalizedQuery) -> tuple[QueryIntent, float]:

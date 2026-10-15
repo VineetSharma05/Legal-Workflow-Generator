@@ -1,9 +1,9 @@
 from typing import Any
 
-from google import genai
 from groq import Groq
 
 from legal_workflow_generator.config.values import GEMINI_API_KEY, GEMINI_MODEL
+from legal_workflow_generator.agent.gemini_client import RotatingGeminiClient
 from legal_workflow_generator.agent.llm_limits import LIMITERS
 from legal_workflow_generator.config.values import GROQ_API_KEY, GROQ_MODEL
 
@@ -21,7 +21,7 @@ class GeminiAnswerGenerator:
         if not GEMINI_API_KEY:
             raise ValueError("GEMINI_API_KEY is not set in environment")
 
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+        self.client = RotatingGeminiClient()
         self.model_name = model_name
 
     def generate(self, query: str, retrieved_chunks: list[dict[str, Any]]) -> str:

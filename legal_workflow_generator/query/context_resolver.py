@@ -3,9 +3,9 @@ from collections import Counter
 from google import genai
 from google.genai import types as genai_types
 
+from legal_workflow_generator.agent.gemini_client import RotatingGeminiClient
 from legal_workflow_generator.agent.llm_limits import LIMITERS
 from legal_workflow_generator.config.values import (
-    GEMINI_API_KEY,
     GEMINI_MODEL,
     SELF_CONSISTENCY_ENABLED,
     SELF_CONSISTENCY_SAMPLES,
@@ -58,7 +58,7 @@ class LegalContextResolver:
         keyword_match_threshold: float | None = None,
         keyword_strong_match_threshold: float | None = None,
     ):
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+        self.client = RotatingGeminiClient()
         self._keyword_classifier = KeywordDomainClassifier()
 
         # Config defaults can be overridden per-instance (e.g. for eval

@@ -28,8 +28,6 @@ from typing import Any, TypedDict
 
 import psycopg2
 
-from google import genai as _genai
-
 try:
     from langchain_core.runnables import RunnableConfig
 except Exception:  # pragma: no cover - only if langchain_core is missing
@@ -37,12 +35,13 @@ except Exception:  # pragma: no cover - only if langchain_core is missing
 
 from legal_workflow_generator.agent.settings import RunSettings, current_settings, use_settings
 from legal_workflow_generator.agent.llm_limits import LIMITERS, RateLimiter, set_rate_limit  # noqa: F401 (re-exported)
+from legal_workflow_generator.agent.gemini_client import RotatingGeminiClient
 from legal_workflow_generator.agent.state import AgentState
 from legal_workflow_generator.rag.pipeline import RagPipeline
 from legal_workflow_generator.query.normalizer import QueryNormalizer
 from legal_workflow_generator.query.intent_classifier import IntentClassifier
 from legal_workflow_generator.query.context_resolver import LegalContextResolver
-from legal_workflow_generator.config.values import GEMINI_API_KEY, GEMINI_MODEL
+from legal_workflow_generator.config.values import GEMINI_MODEL
 import legal_workflow_generator.config.values as app_config
 
 logger = logging.getLogger(__name__)
@@ -52,7 +51,7 @@ _normalizer = QueryNormalizer()
 _intent_classifier = IntentClassifier()
 _context_resolver = LegalContextResolver()
 _rag_pipeline = None
-_gemini_client = _genai.Client(api_key=GEMINI_API_KEY)
+_gemini_client = RotatingGeminiClient()
 
 VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
 
