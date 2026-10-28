@@ -1,0 +1,80 @@
+{
+  "bm25": {
+    "all": {
+      "n": 90,
+      "recall@3": 0.22,
+      "recall@8": 0.299,
+      "recall@20": 0.421,
+      "any_gold_in_top8": 0.578,
+      "mrr": 0.395
+    },
+    "single": {
+      "n": 50,
+      "recall@3": 0.416,
+      "recall@8": 0.539,
+      "recall@20": 0.708,
+      "any_gold_in_top8": 0.74,
+      "mrr": 0.521
+    },
+    "multi": {
+      "n": 40,
+      "recall@3": 0.08,
+      "recall@8": 0.128,
+      "recall@20": 0.216,
+      "any_gold_in_top8": 0.375,
+      "mrr": 0.237
+    }
+  },
+  "dense": {
+    "all": {
+      "n": 90,
+      "recall@3": 0.36,
+      "recall@8": 0.463,
+      "recall@20": 0.575,
+      "any_gold_in_top8": 0.856,
+      "mrr": 0.615
+    },
+    "single": {
+      "n": 50,
+      "recall@3": 0.551,
+      "recall@8": 0.697,
+      "recall@20": 0.843,
+      "any_gold_in_top8": 0.94,
+      "mrr": 0.729
+    },
+    "multi": {
+      "n": 40,
+      "recall@3": 0.224,
+      "recall@8": 0.296,
+      "recall@20": 0.384,
+      "any_gold_in_top8": 0.75,
+      "mrr": 0.472
+    }
+  },
+  "hybrid": {
+    "all": {
+      "n": 90,
+      "recall@3": 0.332,
+      "recall@8": 0.458,
+      "recall@20": 0.551,
+      "any_gold_in_top8": 0.822,
+      "mrr": 0.579
+    },
+    "single": {
+      "n": 50,
+      "recall@3": 0.551,
+      "recall@8": 0.753,
+      "recall@20": 0.843,
+      "any_gold_in_top8": 0.94,
+      "mrr": 0.72
+    },
+    "multi": {
+      "n": 40,
+      "recall@3": 0.176,
+      "recall@8": 0.248,
+      "recall@20": 0.344,
+      "any_gold_in_top8": 0.675,
+      "mrr": 0.402
+    }
+  }
+}
