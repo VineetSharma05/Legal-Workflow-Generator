@@ -66,6 +66,8 @@ python main.py ingest complete
 - Generate embeddings
 ```bash
 python main.py embed
+# recompute every embedding (needed after changing what is embedded, e.g. the sub_structure clauses)
+python main.py embed all
 ```
 
 ## Run Chatbot UI

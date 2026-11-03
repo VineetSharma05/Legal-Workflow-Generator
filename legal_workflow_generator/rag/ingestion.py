@@ -1,3 +1,4 @@
+import json
 import re
 from typing import List
 import psycopg2
@@ -278,6 +279,31 @@ def combine_fields_for_embedding(law: dict) -> str:
         parts.append(law["chapter_title"])
 
     return ". ".join(parts)
+
+
+# ── Search text (BM25 + embeddings) ──────────────────────────────────────────
+def clauses_text(sub_structure) -> str:
+    """The statute wording kept in `sub_structure` (one entry per sub-section), as one string."""
+    if isinstance(sub_structure, str):
+        try:
+            sub_structure = json.loads(sub_structure)
+        except ValueError:
+            return sub_structure
+    if not isinstance(sub_structure, dict):
+        return ""
+    return " ".join(str(v) for v in sub_structure.values() if v)
+
+
+def searchable_text(text: str, sub_structure) -> str:
+    """What BM25 and the embeddings index: the `text` column plus the clauses in `sub_structure`.
+
+    `text` only holds title, summary, keywords and the first clause; most of a section's duties
+    (e.g. DPDP s.8: security safeguards, breach intimation, erasure, grievances) are in sub_structure.
+    """
+    clauses = clauses_text(sub_structure)
+    if not clauses:
+        return text or ""
+    return f"{text or ''} {normalize_text(clauses, for_embedding=True)}".strip()
 
 
 # ── Ingestion ────────────────────────────────────────────────────────────────

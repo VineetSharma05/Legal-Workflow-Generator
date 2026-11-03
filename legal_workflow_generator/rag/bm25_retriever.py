@@ -2,7 +2,7 @@ import psycopg2
 from rank_bm25 import BM25Okapi
 
 import legal_workflow_generator.config.values as config
-from legal_workflow_generator.rag.ingestion import normalize_text, expand_query
+from legal_workflow_generator.rag.ingestion import normalize_text, searchable_text
 
 
 class BM25Retriever:
@@ -22,11 +22,11 @@ class BM25Retriever:
         )
         cur = conn.cursor()
 
-        cur.execute("SELECT provision_id, text FROM laws WHERE text IS NOT NULL")
+        cur.execute("SELECT provision_id, text, sub_structure FROM laws WHERE text IS NOT NULL")
         rows = cur.fetchall()
 
         self.law_ids = [row[0] for row in rows]
-        self.law_texts = [row[1] for row in rows]
+        self.law_texts = [searchable_text(row[1], row[2]) for row in rows]
 
         # Tokenize with BM25-specific normalization (stopwords + stemming)
         tokenized_corpus = [self._tokenize(text) for text in self.law_texts]
