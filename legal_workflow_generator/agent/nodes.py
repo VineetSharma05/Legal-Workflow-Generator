@@ -424,6 +424,13 @@ def _in_force(doc: dict, as_of: datetime.date) -> bool:
     return not (isinstance(ed, datetime.date) and ed > as_of)
 
 
+def _commencement_note(doc, as_of: datetime.date) -> str:
+    """For a provision that commences after `as_of` (e.g. most DPDP Act duties, from 13 May 2027)."""
+    if _in_force(doc, as_of):
+        return ""
+    return f"Not yet in force on {as_of.isoformat()}; applies from {doc.get('effective_date').isoformat()}."
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 # Node 1: classify
 # ══════════════════════════════════════════════════════════════════════════════
@@ -487,6 +494,10 @@ def classify_query(state: AgentState, config: RunnableConfig = None) -> AgentSta
     combined = list(dict.fromkeys(retrieval_domains + llm_domains + [state["domain"]]))
     combined = [d for d in combined if d in VALID_DOMAINS]
     state["all_domains"] = combined if combined else [state["domain"]]
+    # Domains that only the LLM suggested are unconfirmed: they still run, but are dropped from the
+    # answer (instead of shown as "not addressed") when their retrieval turns out to be irrelevant.
+    state["tentative_domains"] = [d for d in llm_domains
+                                  if d not in retrieval_domains and d != state["domain"]]
     state["domain_detection_method"] = f"retrieval({len(retrieval_domains)})+llm({len(llm_domains)})"
 
     state["trace"] = [
@@ -515,13 +526,33 @@ def _hybrid_search(rag, query: str, s: RunSettings) -> list:
         return rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates)
 
 
+# "Machinery" provisions: they set up a statute or its regulator but put no duty on the user. They mention
+# many topics at once (e.g. DPDP s.40 lists every rule the government may make on notice, consent, breach ...),
+# so they outrank the section that actually states the duty. They are moved behind substantive provisions,
+# unless the question itself is about rules, the regulator or commencement.
+_MACHINERY_TITLE = re.compile(
+    r"short title|power(s)? (of [\w ]+ )?to make (rules|regulations)|laying of (rules|regulations)"
+    r"|power to (remove difficulties|amend (the )?schedule)|repeal and saving|bar of jurisdiction"
+    r"|protection of action taken in good faith|to be public servants|salary, allowances|resignation by"
+    r"|officers and employees of|proceedings of (the )?board", re.I)
+_MACHINERY_QUERY = re.compile(r"\brules?\b|regulations?\b|\bboard\b|tribunal|commencement|in force|short title", re.I)
+
+
+def _demote_machinery(docs: list, query: str) -> list:
+    if _MACHINERY_QUERY.search(query):
+        return docs
+    keep = [d for d in docs if not _MACHINERY_TITLE.search(d.get("title") or "")]
+    return keep + [d for d in docs if _MACHINERY_TITLE.search(d.get("title") or "")]
+
+
 def _domain_candidates(rag, query: str, domain: str) -> list:
     """Search, then keep every provision that belongs to this domain (no cap yet, best first)."""
     s = current_settings()
     hint = DOMAIN_QUERY_HINTS.get(domain, "")
     docs = _hybrid_search(rag, f"{query} {hint}".strip(), s)
-    return [d for d in docs if "_forms_" not in d.get("provision_id", "")
+    docs = [d for d in docs if "_forms_" not in d.get("provision_id", "")
             and _domain_of(d.get("provision_id", "")) == domain]
+    return _demote_machinery(docs, query)
 
 
 def _cut(cands: list, s: RunSettings) -> list:
@@ -532,8 +563,10 @@ def _cut(cands: list, s: RunSettings) -> list:
 
 
 def _chunks(docs: list, query: str, limit: int) -> str:
+    as_of = current_settings().as_of_date
     return "\n\n".join(
-        f"[{d.get('provision_id', '')}] {d.get('title', '')}: "
+        f"[{d.get('provision_id', '')}] {d.get('title', '')}"
+        f"{' [NOT YET IN FORCE: ' + _commencement_note(d, as_of) + ']' if not _in_force(d, as_of) else ''}: "
         f"{_snippet(d.get('full_text') or d.get('text', '') or d.get('plain_english_summary', ''), query, limit)}"
         for d in docs)
 
@@ -580,25 +613,75 @@ Reply with ONLY the query."""
         return sub_q
 
 
-def _focus_query(domain: str, user_q: str, fallback: str) -> str:
-    """Multi-domain queries: extract only this domain's part as a standalone search query."""
+MAX_ASPECTS = 4
+
+
+def _plan_queries(domain: str, user_q: str, fallback: str) -> tuple:
+    """One LLM call per domain. Returns (focus query, aspect queries).
+
+    focus   : the question narrowed to this domain (used as the search query for multi-domain questions).
+    aspects : for broad questions ("what is the DPDP Act and how do I follow it"), up to MAX_ASPECTS short
+              queries, one per topic a complete answer needs (duties, notice, consent, breach reporting ...).
+              A single vague query ranks definitions and rule-making powers above the sections that hold
+              the actual obligations; searching each topic separately brings those sections up.
+    Aspects only steer retrieval; every step is still generated from, and checked against, retrieved text."""
+    label = _DOMAIN_LABELS[domain]
     system = "You are a legal search query writer."
     user = f"""Question: {user_q}
 
-Rewrite this question as a short standalone search query covering ONLY the {_DOMAIN_LABELS[domain]} aspects.
-Rules:
+Write search queries for finding the Indian statute provisions that answer this question.
+
+"focus": rewrite the question as a short standalone search query covering ONLY the {label} aspects.
 - Keep the concrete nouns from the question.
 - Use only words and concepts that appear in the question. Do NOT add new legal concepts
   (for example, do not add GST, TDS or any statute unless the question mentions it).
 - Drop everything that belongs to other legal areas.
 - If the question uses an abbreviation, write the full words statutes use (PF = provident fund, ESI = employees state insurance, TDS = tax deducted at source, GST = goods and services tax, DPDP = digital personal data protection, LLP = limited liability partnership).
-Reply with ONLY the query."""
+
+"aspects": ONLY if the question is broad (for example "what is <Act> and how do I comply with it") or has several
+{label} parts, list up to {MAX_ASPECTS} short search queries. Each names ONE specific {label} topic that a complete
+answer must cover (for example a duty, a right, a notice or consent requirement, a reporting deadline, a penalty).
+Use the terms Indian statutes use. Never cite section numbers. For a narrow question use [].
+Do NOT put the name of the Act in the aspects (write "notice to data principal before collecting personal data",
+not "DPDP Act notice requirements"): the Act's name matches every section of it and hides the one on the topic.
+
+Reply ONLY with JSON: {{"focus": "...", "aspects": ["...", "..."]}}"""
     try:
-        return _llm(system, user).strip() or fallback
+        raw = _llm(system, user)
     except LLMUnavailable:
         raise
     except Exception:
-        return fallback
+        return fallback, []
+    try:
+        p = _parse_json(raw)
+        focus = str(p.get("focus") or "").strip() or fallback
+        aspects = [str(a).strip() for a in (p.get("aspects") or []) if str(a).strip()]
+    except Exception:                       # plain-text reply: treat it as the focus query
+        focus, aspects = (raw.strip().splitlines() or [fallback])[0].strip() or fallback, []
+    aspects = [a for a in dict.fromkeys(aspects) if a.lower() != focus.lower()][:MAX_ASPECTS]
+    return focus, aspects
+
+
+# Reciprocal rank fusion over several searches. Shallow (top RRF_DEPTH of each list, small k) so that
+# a provision ranked high by one aspect query, or found by several, beats one that is only mid-ranked
+# everywhere. Tested on "what is dpdp act and how can i make sure to follow it": with a single query
+# DPDP s.8 (general obligations) ranked 60th; fused, it ranks 3rd.
+RRF_K, RRF_DEPTH = 2, 6
+
+
+def _fused_candidates(rag, queries: list, domain: str) -> list:
+    lists = [_domain_candidates(rag, q, domain) for q in queries]
+    if len(lists) == 1:
+        return lists[0]
+    first, score = {}, {}
+    for docs in lists:
+        for rank, d in enumerate(docs):
+            pid = d.get("provision_id", "")
+            first.setdefault(pid, d)
+            if rank < RRF_DEPTH:
+                score[pid] = score.get(pid, 0.0) + 1.0 / (RRF_K + rank + 1)
+    head = sorted(score, key=lambda p: -score[p])
+    return [first[p] for p in head] + [d for p, d in first.items() if p not in score]
 
 
 def _generate_domain(domain: str, sub_q: str, docs: list) -> tuple:
@@ -621,6 +704,12 @@ Rules:
 - A provision must answer the actual question asked. Do NOT include one merely because it shares a word with the
   query (for example "abroad" or "contractor") if it regulates a different subject (such as accident compensation
   or migrant-worker conditions). Leave it out.
+- A provision that only gives the government or a regulator a power (to make rules, appoint or pay members,
+  run its own proceedings) is not a duty of the user. Do not turn it into a step.
+- Definitions may be used to say who a duty applies to, but prefer the provisions that state the duties themselves.
+- If the query asks what a law is, base the summary on what the provisions say about its scope and purpose.
+- Provisions marked NOT YET IN FORCE still count: use them when they answer the query, because the user has to
+  prepare for them. Do not write commencement dates into the action text; the system adds them to each step.
 - If nothing in the provisions answers part of the query, say so in "not_covered" instead of padding the steps.
 
 Provisions:
@@ -707,27 +796,35 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
     res = DomainResult(domain=domain, reason="No documents retrieved")
     try:
         q, sub_q = search_q, user_q
+        focus, aspects = _plan_queries(domain, user_q, search_q)
         if multi:
-            q = _focus_query(domain, user_q, search_q)
-            sub_q = q
+            q = sub_q = focus
             trace.append(f"{_el(t0)}[{domain}] focus → '{q}'")
+        if aspects:
+            trace.append(f"{_el(t0)}[{domain}] aspects → {aspects}")
 
         for attempt in range(s.max_domain_retries + 1):
             try:
-                cands = _domain_candidates(rag, q, domain)
+                cands = _fused_candidates(rag, [q] + aspects, domain)
             except Exception as e:
                 cands, res.reason = [], f"Search failed: {e}"
             # effective_date is only known after hydration; filter on it before cutting to top_k so that
             # provisions not in force on as_of do not push valid ones out of the window.
             cands = _hydrate(cands)
-            live = [d for d in cands if _in_force(d, as_of)]
+            exclude = s.future_provisions == "exclude"
+            live = [d for d in cands if _in_force(d, as_of)] if exclude else cands
             docs = _hydrate(_with_anchors(domain, user_q, _cut(live, s)))
-            docs = [d for d in docs if _in_force(d, as_of)]        # anchors are checked as well
+            if exclude:
+                docs = [d for d in docs if _in_force(d, as_of)]    # anchors are checked as well
             res.docs = [Provision.from_dict(d) for d in docs]     # typed from here on
             trace.append(f"{_el(t0)}[{domain}] retrieve (try {attempt + 1}) → {len(docs)} docs")
             if len(cands) != len(live):
                 trace.append(f"{_el(t0)}[{domain}] excluded {len(cands) - len(live)} provision(s) "
                              f"not in force on {as_of}")
+            n_future = sum(not _in_force(d, as_of) for d in docs)
+            if n_future:
+                trace.append(f"{_el(t0)}[{domain}] {n_future} provision(s) not yet in force on {as_of} "
+                             f"(kept, steps flagged with their start date)")
             if docs:
                 res.grade, res.reason = _grade_domain(domain, sub_q, docs)
                 trace.append(f"{_el(t0)}[{domain}] grade → {res.grade}: {res.reason}")
@@ -748,8 +845,11 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
                 trace.append(f"{_el(t0)}[{domain}] verify_claims → {msg}")
                 if not steps and res.dropped_steps:
                     res.reason = "Every generated step failed verification against the provision it cited."
+            by_id = {d.get("provision_id"): d for d in res.docs}
             for st in steps:
-                st.note = _temporal_note(st.provision_id, as_of)
+                notes = (_temporal_note(st.provision_id, as_of),
+                         _commencement_note(by_id.get(st.provision_id, {}), as_of))
+                st.note = " ".join(n for n in notes if n)
             res.steps = steps
             res.cited = list(dict.fromkeys(st.provision_id for st in steps))
             trace.append(f"{_el(t0)}[{domain}] result → {len(res.steps)} steps, {len(res.cited)} citations")
@@ -782,6 +882,9 @@ def _stitch_sections(query: str, results: list, as_of: str = "") -> str:
             checklist += [f"**{label}**", f"No steps available. {note}", ""]
             continue
         summary += [f"- {label}: {b}" for b in r.summary]
+        if any("Not yet in force" in st.note for st in r.steps):
+            summary.append(f"- {label}: some of these obligations are not yet in force"
+                           f"{' on ' + as_of if as_of else ''}; each step below shows the date it applies from.")
         if r.not_covered:
             summary.append(f"- {label} (not addressed by retrieved provisions): {r.not_covered}")
         checklist.append(f"**{label}**")
@@ -831,6 +934,16 @@ def domain_pipeline(state: AgentState, config: RunnableConfig = None) -> AgentSt
     results = [r for r, _ in outputs]
     for _, trace in outputs:                               # each worker's trace stays contiguous, in domain order
         state["trace"].extend(trace)
+
+    # Drop unconfirmed domains whose provisions were graded irrelevant (never errors: those must be reported).
+    tentative = set(state.get("tentative_domains") or [])
+    unconfirmed = [r for r in results if r.domain in tentative and r.grade == "insufficient" and not r.steps]
+    if unconfirmed and len(unconfirmed) < len(results):
+        gone = {r.domain for r in unconfirmed}
+        results = [r for r in results if r.domain not in gone]
+        state["all_domains"] = [d for d in state.get("all_domains") or [] if d not in gone]
+        state["trace"].append(f"domain_pipeline → dropped unconfirmed domain(s) {sorted(gone)}: "
+                              f"suggested only by the LLM classifier and nothing relevant was retrieved")
 
     seen, all_docs = set(), []
     for r in results:

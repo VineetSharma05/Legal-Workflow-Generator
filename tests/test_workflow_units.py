@@ -320,7 +320,7 @@ def test_provisions_not_yet_in_force_are_excluded(wired, monkeypatch):
     future = datetime.date(2030, 1, 1)
     monkeypatch.setattr(N, "_hydrate", lambda docs: [
         {**d, "effective_date": future if d["provision_id"] == "income_tax_act_1961_sec_9" else None} for d in docs])
-    out = run_workflow(QUERY, as_of="2026-10-13", trace_timing=False)
+    out = run_workflow(QUERY, as_of="2026-10-13", future_provisions="exclude", trace_timing=False)
     assert "income_tax_act_1961_sec_9" not in [d["provision_id"] for d in out["retrieved_docs"]]
     assert any("excluded 1 provision(s) not in force" in t for t in out["trace"])
 
@@ -378,7 +378,7 @@ def test_expired_provisions_do_not_shrink_top_k(wired, monkeypatch):
     monkeypatch.setattr(N, "_hydrate", lambda docs: [
         {**d, "effective_date": future if d["provision_id"] == "income_tax_act_1961_sec_9" else None}
         for d in docs])
-    out = run_workflow(QUERY, as_of="2026-10-13", top_k=1, trace_timing=False)
+    out = run_workflow(QUERY, as_of="2026-10-13", top_k=1, future_provisions="exclude", trace_timing=False)
     tax = [d["provision_id"] for d in out["retrieved_docs"] if N._domain_of(d["provision_id"]) == "taxation"]
     assert tax == ["income_tax_act_1961_sec_195"]                  # the valid provision took the slot
 
@@ -460,3 +460,53 @@ def test_domain_results_hold_typed_provisions_but_graph_state_stays_plain(wired)
     assert isinstance(r.docs[0], N.Provision)
     assert r.to_dict()["docs"] == [{"provision_id": "income_tax_act_1961_sec_195", "title": "Other sums",
                                     "combined_score": 0.6}]
+
+
+# ─────────────────────────────── broad-question retrieval + unconfirmed domains ───────────────────────────────
+def test_plan_queries_parses_json_and_falls_back_on_plain_text(monkeypatch):
+    monkeypatch.setattr(N, "_llm", lambda *a, **k:
+                        '{"focus": "dpdp compliance", "aspects": ["data fiduciary duties", "consent", "consent", ""]}')
+    assert N._plan_queries("data_protection", "q", "fb") == ("dpdp compliance", ["data fiduciary duties", "consent"])
+    monkeypatch.setattr(N, "_llm", lambda *a, **k: "just a query")
+    assert N._plan_queries("data_protection", "q", "fb") == ("just a query", [])
+
+
+def test_fusion_lifts_a_provision_that_aspect_queries_rank_high(monkeypatch):
+    ranked = {"broad": ["p_defs", "p_rules_power"] + [f"p_noise{i}" for i in range(10)] + ["p_duties"],
+              "duties": ["p_duties", "p_defs"], "consent": ["p_consent", "p_duties"]}
+    monkeypatch.setattr(N, "_domain_candidates",
+                        lambda rag, q, dom: [{"provision_id": p} for p in ranked[q]])
+    out = [d["provision_id"] for d in N._fused_candidates(None, ["broad", "duties", "consent"], "x")]
+    assert set(out[:2]) == {"p_duties", "p_defs"} and out.index("p_consent") < out.index("p_rules_power")
+    assert len(out) == len(set(out)) == 14                        # nothing lost, nothing duplicated
+
+
+def test_unconfirmed_domain_with_irrelevant_provisions_is_dropped(wired, monkeypatch):
+    real_grade = N._grade_domain
+    monkeypatch.setattr(N, "_grade_domain", lambda dom, q, docs: ("insufficient", "unrelated")
+                        if dom == "employment" else real_grade(dom, q, docs))
+    out = run_workflow(QUERY, trace_timing=False)                  # LLM suggests employment; retrieval does not
+    assert "employment" not in out["all_domains"] and "Employment" not in out["answer"]
+    assert any("dropped unconfirmed domain(s) ['employment']" in t for t in out["trace"])
+
+
+def test_future_provisions_are_kept_and_flagged_by_default(wired, monkeypatch):
+    """Phased statutes (DPDP Act duties apply from 13 May 2027) must still be answered, with the date shown."""
+    future = datetime.date(2027, 5, 13)
+    monkeypatch.setattr(N, "_hydrate", lambda docs: [
+        {**d, "effective_date": future if d["provision_id"] == "copyright_act_1957_sec_17" else None} for d in docs])
+    out = run_workflow(QUERY, as_of="2026-11-03", trace_timing=False)
+    assert any(d["provision_id"] == "copyright_act_1957_sec_17" for d in out["retrieved_docs"])
+    assert "[NOTE: Not yet in force on 2026-11-03; applies from 2027-05-13.]" in out["answer"]
+    assert "some of these obligations are not yet in force on 2026-11-03" in out["answer"]
+    assert any("not yet in force on 2026-11-03 (kept" in t for t in out["trace"])
+    with pytest.raises(ValueError):
+        S.RunSettings(future_provisions="ignore")
+
+
+def test_machinery_provisions_go_behind_substantive_ones_unless_asked_about():
+    docs = [{"provision_id": "a", "title": "Power to make rules"}, {"provision_id": "b", "title": "Consent"},
+            {"provision_id": "c", "title": "Short title and commencement"},
+            {"provision_id": "d", "title": "General obligations of Data Fiduciary"}]
+    assert [d["provision_id"] for d in N._demote_machinery(docs, "how do I comply")] == ["b", "d", "a", "c"]
+    assert [d["provision_id"] for d in N._demote_machinery(docs, "what rules can the government make")] == ["a", "b", "c", "d"]

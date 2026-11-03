@@ -18,6 +18,9 @@ Meaning of the options
   max_domain_retries rewrite+retrieve retries per domain
   verify_claims      check every generated step against the provision it cites (1 extra LLM call per domain)
   as_of              ISO date (YYYY-MM-DD) the answer should be valid on; default = today
+  future_provisions  what to do with provisions that commence after as_of:
+                     "annotate" (default) keeps them and marks each step "not yet in force; applies from <date>",
+                     "exclude" drops them (the behaviour before phased statutes such as the DPDP Act were dated)
   trace_timing       False removes "+1.4s" prefixes so traces are byte-for-byte reproducible
 """
 import contextvars
@@ -26,6 +29,7 @@ import os
 from dataclasses import dataclass, fields
 
 ALLOWED_PROVIDERS = ("gemini", "groq")
+FUTURE_PROVISION_MODES = ("annotate", "exclude")
 MAX_TOP_K = 20
 
 
@@ -40,6 +44,7 @@ class RunSettings:
     max_domain_retries: int = 1
     verify_claims: bool = True
     as_of: str = ""
+    future_provisions: str = "annotate"
     trace_timing: bool = True
 
     def __post_init__(self):
@@ -51,6 +56,8 @@ class RunSettings:
             raise ValueError("act_cap, search_depth and bm25_candidates must be >= 1; vector_candidates >= 0")
         if self.max_domain_retries < 0 or self.max_domain_retries > 3:
             raise ValueError("max_domain_retries must be between 0 and 3")
+        if self.future_provisions not in FUTURE_PROVISION_MODES:
+            raise ValueError(f"future_provisions must be one of {FUTURE_PROVISION_MODES}, got {self.future_provisions!r}")
         if self.as_of:
             _dt.date.fromisoformat(self.as_of)        # raises ValueError on a bad date
 
@@ -76,6 +83,8 @@ class RunSettings:
                 picked[k] = picked[k].strip().lower() in ("1", "true", "yes", "on")
         if "as_of" in picked:
             picked["as_of"] = str(picked["as_of"])
+        if "future_provisions" in picked:
+            picked["future_provisions"] = str(picked["future_provisions"]).strip().lower()
         return cls(**picked)
 
 

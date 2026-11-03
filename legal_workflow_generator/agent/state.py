@@ -6,6 +6,7 @@ class AgentState(TypedDict):
     all_domains: List[str]
 
     domain_detection_method: str  # "retrieval", "llm_fallback", or "primary_only"
+    tentative_domains: List[str]  # suggested only by the LLM; dropped if nothing relevant is retrieved
 
     # Node 1: classify
     intent: str
