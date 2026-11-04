@@ -14,6 +14,7 @@ class AgentState(TypedDict):
     normalized_query: str
     keywords: List[str]
     confidence: float
+    llm_error: str              # set when the LLM could not be reached during classification
 
     # Node 2: retrieve
     rewritten_query: Optional[str]

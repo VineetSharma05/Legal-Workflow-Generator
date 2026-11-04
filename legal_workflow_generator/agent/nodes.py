@@ -17,7 +17,6 @@ import contextvars
 import datetime
 import json
 import logging
-import os
 import random
 import re
 import threading
@@ -35,6 +34,7 @@ except Exception:  # pragma: no cover - only if langchain_core is missing
 
 from legal_workflow_generator.agent.settings import RunSettings, current_settings, use_settings
 from legal_workflow_generator.agent.llm_limits import LIMITERS, RateLimiter, set_rate_limit  # noqa: F401 (re-exported)
+from legal_workflow_generator.agent import groq_client
 from legal_workflow_generator.agent.gemini_client import RotatingGeminiClient
 from legal_workflow_generator.agent.state import AgentState
 from legal_workflow_generator.rag.pipeline import RagPipeline
@@ -173,18 +173,8 @@ def _call_gemini(system: str, user: str) -> str:
     return response.text.strip()
 
 
-_groq_client = None
-
-
 def _call_groq(system: str, user: str) -> str:
-    global _groq_client
-    if _groq_client is None:
-        from groq import Groq   # pip install groq
-        _groq_client = Groq(api_key=getattr(app_config, "GROQ_API_KEY", None) or os.getenv("GROQ_API_KEY"))
-    model = getattr(app_config, "GROQ_MODEL", None) or os.getenv("GROQ_MODEL") or "llama-3.3-70b-versatile"
-    r = _groq_client.chat.completions.create(
-        model=model, messages=[{"role": "system", "content": system}, {"role": "user", "content": user}])
-    return (r.choices[0].message.content or "").strip()
+    return groq_client.complete(system, user)
 
 
 _PROVIDERS = {"gemini": _call_gemini, "groq": _call_groq}
@@ -196,10 +186,19 @@ def _llm(system: str, user: str, grader: bool = False, max_retries: int = 5) -> 
     Raises LLMUnavailable when quota/overload persists; other errors propagate unchanged."""
     provider = current_settings().provider
     call, limiter = _PROVIDERS[provider], LIMITERS[provider]
+
+    def once():
+        with limiter.slot():
+            return call(system, user)
+    return _with_retries(provider, once, max_retries)
+
+
+def _with_retries(provider: str, fn, max_retries: int = 5):
+    """Run fn(), retrying on 429/5xx with backoff. Raises LLMUnavailable when quota/overload persists."""
+    limiter = LIMITERS[provider]
     for attempt in range(max_retries):
         try:
-            with limiter.slot():
-                return call(system, user)
+            return fn()
         except Exception as e:  # noqa
             msg = str(e)
             if "PerDay" in msg or "per day" in msg.lower():
@@ -467,8 +466,21 @@ Example: data_protection, employment"""
 def classify_query(state: AgentState, config: RunnableConfig = None) -> AgentState:
     s = use_settings(config)
     normalized = _normalizer.normalize(text=state["query"])
-    intent, confidence = _intent_classifier.classify(normalized)
-    context = _context_resolver.resolve(normalized, intent, confidence)
+    try:
+        intent, confidence = _with_retries(s.provider, lambda: _intent_classifier.classify(
+            normalized, provider=s.provider, raise_errors=True))
+        context = _with_retries(s.provider, lambda: _context_resolver.resolve(
+            normalized, intent, confidence, provider=s.provider, raise_errors=True))
+    except Exception as e:  # noqa  (LLMUnavailable, bad model name, missing key, ...)
+        # The LLM could not be reached: say so instead of abstaining with "please rephrase".
+        state.update(intent="unknown", domain="unknown", all_domains=[], tentative_domains=[],
+                     normalized_query=normalized.get("normalized", "") if isinstance(normalized, dict) else str(normalized),
+                     keywords=[], confidence=0.0,
+                     retry_count_retrieval=0, retry_count_generation=0, abstain=False, abstain_reason="",
+                     llm_error=f"{s.provider}: {str(e)[:200]}")
+        state["trace"] = [f"classify → LLM unavailable ({state['llm_error']})"]
+        return state
+    state["llm_error"] = ""
 
     state["intent"] = str(context["intent"])
     state["domain"] = context["legal_domain"]
@@ -1073,7 +1085,10 @@ def grade_parallel(state: AgentState, config: RunnableConfig = None) -> AgentSta
 # ══════════════════════════════════════════════════════════════════════════════
 def abstain(state: AgentState) -> AgentState:
     state["abstain"] = True
-    if state.get("domain") == "unknown" or state.get("intent") == "unknown":
+    if state.get("llm_error"):
+        reason = (f"The language model could not be reached ({state['llm_error']}). "
+                  f"This is a service problem, not a problem with your question; please try again later.")
+    elif state.get("domain") == "unknown" or state.get("intent") == "unknown":
         reason = "Could not determine the legal domain of your query."
     elif state.get("confidence", 1.0) < 0.5:
         reason = (f"Query classification confidence too low ({state.get('confidence')}). "

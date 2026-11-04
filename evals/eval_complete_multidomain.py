@@ -43,6 +43,7 @@ Usage
   python evals/eval_complete_multidomain.py                 # full run (100 queries)
   python evals/eval_complete_multidomain.py --category multi
   python evals/eval_complete_multidomain.py --limit 10 --sleep 2
+  python evals/eval_complete_multidomain.py --provider groq
   python evals/eval_complete_multidomain.py --validate      # offline: check every
                                                             # expected id exists in
                                                             # datasets/complete/
@@ -414,17 +415,21 @@ def per_domain(rows: list[dict]) -> dict:
 
 
 # ── main loop ────────────────────────────────────────────────────────────────
-def evaluate(selected: list[dict], sleep_s: float):
+def evaluate(selected: list[dict], sleep_s: float, provider: str | None = None):
     # Imported lazily so --validate works without a database or API key.
     import legal_workflow_generator.config.values  # noqa: F401  (loads .env, fails fast)
     from legal_workflow_generator.agent.graph import graph
+    from legal_workflow_generator.agent.settings import RunSettings, build_config
+
+    cfg = build_config(provider=provider)
+    provider = RunSettings.from_config(cfg).provider
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     total = len(selected)
     rows, errors = [], []
 
     print(f"\n{'='*70}")
-    print(f"COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — {total} queries")
+    print(f"COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — {total} queries (provider={provider})")
     print(f"{'='*70}\n")
 
     for i, test in enumerate(selected, 1):
@@ -435,7 +440,7 @@ def evaluate(selected: list[dict], sleep_s: float):
 
         try:
             start = time.time()
-            result = graph.invoke({"query": query})
+            result = graph.invoke({"query": query}, config=cfg)
             elapsed = round(time.time() - start, 2)
 
             predicted = set(result.get("all_domains") or [result.get("domain")]) - {None, "unknown"}
@@ -497,6 +502,7 @@ def evaluate(selected: list[dict], sleep_s: float):
             by_cat["multi_all"].append(r)
 
     summary = {
+        "provider": provider,
         "total": total,
         "errored": len(errors),
         "overall": summarize(rows) if rows else {},
@@ -550,6 +556,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--category", choices=["all", "single", "multi", "edge"], default="all",
                         help="Run only a subset of the test set (default: all).")
+    parser.add_argument("--provider", choices=["gemini", "groq"], default=None,
+                        help="LLM provider for every agent call (default: LLM_PROVIDER env var, else gemini).")
     parser.add_argument("--limit", type=int, default=None, help="Run only the first N selected queries.")
     parser.add_argument("--sleep", type=float, default=5.0,
                         help="Seconds to sleep between queries to avoid rate limiting (default: 5).")
@@ -572,4 +580,4 @@ if __name__ == "__main__":
     ]
     if args.limit:
         selected = selected[: args.limit]
-    evaluate(selected, sleep_s=args.sleep)
+    evaluate(selected, sleep_s=args.sleep, provider=args.provider)

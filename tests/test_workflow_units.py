@@ -51,12 +51,12 @@ class FakeNormalizer:
 
 
 class FakeIntent:
-    def classify(self, text):
+    def classify(self, text, provider="gemini", raise_errors=False):
         return "qa", 0.95
 
 
 class FakeResolver:
-    def resolve(self, normalized, intent, confidence):
+    def resolve(self, normalized, intent, confidence, provider="gemini", raise_errors=False):
         return {"intent": intent, "legal_domain": "ip_licensing", "normalized_query": normalized,
                 "keywords": [], "confidence": confidence, "original_query": normalized}
 
@@ -418,6 +418,70 @@ def test_query_side_gemini_calls_use_the_shared_limiter(monkeypatch):
     monkeypatch.setitem(LIMITERS, "gemini", FakeLimiter())
     clf.classify({"original": "q", "normalized": "q", "source": "t"})
     assert entered == [1]
+
+
+def test_classification_uses_the_selected_provider(wired, monkeypatch):
+    seen = []
+
+    class RecordingIntent(FakeIntent):
+        def classify(self, text, provider="gemini", raise_errors=False):
+            seen.append(("intent", provider))
+            return super().classify(text)
+
+    class RecordingResolver(FakeResolver):
+        def resolve(self, normalized, intent, confidence, provider="gemini", raise_errors=False):
+            seen.append(("resolver", provider))
+            return super().resolve(normalized, intent, confidence)
+
+    monkeypatch.setattr(N, "_intent_classifier", RecordingIntent())
+    monkeypatch.setattr(N, "_context_resolver", RecordingResolver())
+    run_workflow(QUERY, provider="groq", trace_timing=False)
+    assert seen == [("intent", "groq"), ("resolver", "groq")]
+
+
+def test_llm_outage_during_classification_abstains_with_a_service_reason(wired, monkeypatch):
+    class DownIntent(FakeIntent):
+        def classify(self, text, provider="gemini", raise_errors=False):
+            raise RuntimeError("404 model_not_found")
+
+    monkeypatch.setattr(N, "_intent_classifier", DownIntent())
+    out = run_workflow(QUERY, provider="groq", trace_timing=False)
+    assert out["abstain"] is True
+    assert "could not be reached" in out["abstain_reason"] and "model_not_found" in out["abstain_reason"]
+    assert "rephrase" not in out["abstain_reason"]
+
+
+def test_intent_classifier_calls_groq_and_reads_markdown_labels(monkeypatch):
+    from legal_workflow_generator.agent import groq_client
+    from legal_workflow_generator.query.intent_classifier import IntentClassifier
+    from legal_workflow_generator.typings.types import QueryIntent
+
+    class NoGemini:
+        def generate_content(self, **kw):
+            raise AssertionError("gemini must not be used when provider=groq")
+
+    monkeypatch.setattr(groq_client, "complete", lambda system, user, temperature=None:
+                        "**INTENT:** workflow\n**CONFIDENCE:** 0.9\n**REASON:** r")
+    clf = IntentClassifier.__new__(IntentClassifier)
+    clf.client = type("C", (), {"models": NoGemini()})()
+    nq = {"original": "q", "normalized": "q", "source": "t"}
+    assert clf.classify(nq, provider="groq") == (QueryIntent.WORKFLOW, 0.9)
+
+
+def test_intent_classifier_raises_api_errors_only_when_asked(monkeypatch):
+    from legal_workflow_generator.agent import groq_client
+    from legal_workflow_generator.query.intent_classifier import IntentClassifier
+    from legal_workflow_generator.typings.types import QueryIntent
+
+    def down(system, user, temperature=None):
+        raise RuntimeError("503 UNAVAILABLE")
+
+    monkeypatch.setattr(groq_client, "complete", down)
+    clf = IntentClassifier.__new__(IntentClassifier)
+    nq = {"original": "q", "normalized": "q", "source": "t"}
+    assert clf.classify(nq, provider="groq") == (QueryIntent.UNKNOWN, 0.0)
+    with pytest.raises(RuntimeError):
+        clf.classify(nq, provider="groq", raise_errors=True)
 
 
 def test_numbers_in_a_step_must_appear_in_the_cited_text():

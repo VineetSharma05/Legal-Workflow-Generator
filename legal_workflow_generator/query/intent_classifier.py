@@ -1,5 +1,6 @@
 import logging
 from google import genai
+from legal_workflow_generator.agent import groq_client
 from legal_workflow_generator.config.values import GEMINI_MODEL
 from legal_workflow_generator.agent.gemini_client import RotatingGeminiClient
 from legal_workflow_generator.agent.llm_limits import LIMITERS
@@ -22,26 +23,35 @@ class IntentClassifier:
         self.client = RotatingGeminiClient()
         logger.info("IntentClassifier initialized")
 
-    def classify(self, normalized_query: NormalizedQuery) -> tuple[QueryIntent, float]:
+    def classify(self, normalized_query: NormalizedQuery, provider: str = "gemini",
+                 raise_errors: bool = False) -> tuple[QueryIntent, float]:
+        """Classify with the given provider ("gemini" or "groq").
+
+        An API error gives (UNKNOWN, 0.0), or is re-raised when raise_errors is True, so the agent
+        can tell "the LLM is down" apart from "the query is unclear".
+        """
         query_text = normalized_query["normalized"]
         prompt = self._build_prompt(query_text)
-
-        try:
-            with LIMITERS["gemini"].slot():
-                response = self.client.models.generate_content(
-                    model=GEMINI_MODEL,
-                    contents=f"""You are an intent classifier for a legal compliance system for Indian tech startups. Your job is to classify user queries into exactly one intent category.
+        contents = f"""You are an intent classifier for a legal compliance system for Indian tech startups. Your job is to classify user queries into exactly one intent category.
 Respond in this exact format and nothing else:
 INTENT: <intent>
 CONFIDENCE: <score between 0.0 and 1.0>
 REASON: <one line explanation>
 
-{prompt}""",
-                )
-            return self._parse_response(response.text)
+{prompt}"""
+
+        try:
+            with LIMITERS[provider].slot():
+                if provider == "groq":
+                    text = groq_client.complete("", contents)
+                else:
+                    text = self.client.models.generate_content(model=GEMINI_MODEL, contents=contents).text
         except Exception as e:
-            logger.error(f"Gemini API error: {e}")
+            logger.error(f"{provider} API error: {e}")
+            if raise_errors:
+                raise
             return QueryIntent.UNKNOWN, 0.0
+        return self._parse_response(text)
 
     def _build_prompt(self, query: str) -> str:
         intent_options = "\n".join([
@@ -57,7 +67,8 @@ REASON: <one line explanation>
 
     def _parse_response(self, response_text: str) -> tuple[QueryIntent, float]:
         try:
-            lines = response_text.strip().split("\n")
+            # strip markdown some models add ("**INTENT:** qa")
+            lines = [l.replace("**", "").strip() for l in response_text.strip().split("\n")]
             intent_line = next(l for l in lines if l.startswith("INTENT:"))
             intent_str = intent_line.split(":")[1].strip().lower()
             confidence_line = next(l for l in lines if l.startswith("CONFIDENCE:"))
@@ -74,5 +85,5 @@ REASON: <one line explanation>
                 return QueryIntent.UNKNOWN, confidence
             return intent, confidence
         except Exception as e:
-            logger.error(f"Failed to parse Gemini response: {e}\nResponse was: {response_text}")
+            logger.error(f"Failed to parse LLM response: {e}\nResponse was: {response_text}")
             return QueryIntent.UNKNOWN, 0.0
