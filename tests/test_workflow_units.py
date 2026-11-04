@@ -484,6 +484,39 @@ def test_intent_classifier_raises_api_errors_only_when_asked(monkeypatch):
         clf.classify(nq, provider="groq", raise_errors=True)
 
 
+def test_groundedness_grader_does_not_see_system_annotations(monkeypatch):
+    seen = {}
+
+    def grader(system, user, grader=False):
+        seen["user"] = user
+        return '{"grade": "grounded", "reason": "r"}'
+
+    monkeypatch.setattr(N, "_llm", grader)
+    answer = ("Summary\n- Data Protection: some of these obligations are not yet in force on 2026-11-04; "
+              "each step below shows the date it applies from.\n"
+              "1. Obtain consent (dpdp_act_2023_sec_6) [NOTE: Not yet in force on 2026-11-04; applies from 2027-05-13.]")
+    state = {"answer": answer, "retrieved_docs": [], "domain": "data_protection", "all_domains": ["data_protection"]}
+    N._groundedness(state)
+    assert "Obtain consent" in seen["user"]
+    assert "2027-05-13" not in seen["user"] and "not yet in force" not in seen["user"]
+
+
+def test_groundedness_grader_sees_the_full_text_of_cited_provisions_only(monkeypatch):
+    seen = {}
+
+    def grader(system, user, grader=False):
+        seen["user"] = user
+        return '{"grade": "grounded", "reason": "r"}'
+
+    monkeypatch.setattr(N, "_llm", grader)
+    long_text = "x " * 600 + "grievance redressal mechanism"          # clause past the first 800 chars
+    docs = [{"provision_id": "a", "full_text": long_text}, {"provision_id": "b", "full_text": "uncited text"}]
+    state = {"answer": "set up grievance redressal (a)", "retrieved_docs": docs, "verified_citations": ["a"],
+             "domain": "data_protection", "all_domains": ["data_protection"]}
+    N._groundedness(state)
+    assert "grievance redressal mechanism" in seen["user"] and "uncited text" not in seen["user"]
+
+
 def test_numbers_in_a_step_must_appear_in_the_cited_text():
     docs = [{"provision_id": "p1", "title": "t", "text": "file within 48 hours; fee Rs 1,00,000"}]
     steps = [N.Step("notify within 72 hours", "p1"), N.Step("notify within 48 hours", "p1")]

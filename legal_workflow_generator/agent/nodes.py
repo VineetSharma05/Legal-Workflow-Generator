@@ -1007,9 +1007,26 @@ def verify_citations(state: AgentState) -> AgentState:
 # Nodes 6+7: graders. Pure helpers return (state updates, trace line); the node merges them in fixed order,
 # so the trace never depends on thread timing.
 # ══════════════════════════════════════════════════════════════════════════════
+_ANNOTATION = re.compile(r" ?\[NOTE:[^\]]*\]|^- [^\n]*: some of these obligations are not yet in force[^\n]*$", re.M)
+
+
+GROUNDING_TEXT_LIMIT = 4000
+
+
+def _strip_annotations(answer: str) -> str:
+    """Remove the notes the system adds itself (commencement dates, verification status). They come from
+    the provisions' metadata, not their text, so the grader must not judge them against the text."""
+    return _ANNOTATION.sub("", answer)
+
+
 def _groundedness(state: AgentState) -> tuple:
-    chunks = "\n\n".join(f"[{d.get('provision_id', '')}]: {(d.get('full_text') or d.get('text', ''))[:800]}"
-                         for d in state["retrieved_docs"])
+    # Grade against the provisions the answer cites, in full (up to GROUNDING_TEXT_LIMIT chars each): a long
+    # section like DPDP s.8 has the clause a step relies on far past the first few hundred characters.
+    cited = set(state.get("verified_citations") or [])
+    docs = [d for d in state["retrieved_docs"] if d.get("provision_id") in cited] or state["retrieved_docs"]
+    limit = GROUNDING_TEXT_LIMIT if cited else 800
+    chunks = "\n\n".join(f"[{d.get('provision_id', '')}]: {(d.get('full_text') or d.get('text', ''))[:limit]}"
+                         for d in docs)
     multi = len(state.get("all_domains", [state["domain"]])) > 1
     system = """You are a legal grounding verifier. Reply in JSON only.
 Be lenient: grade as 'grounded' if the main claims are supported by context.
@@ -1018,7 +1035,7 @@ directly contradict or are completely absent from the retrieved context.
 Minor elaborations and reasonable inferences are acceptable.
 Statements saying that no provision was found for a topic are NOT legal claims; ignore them.
 Text in square brackets starting with 'NOTE:' is a system annotation, not a legal claim; ignore it."""
-    user = f"""Answer: {state['answer'][:3000]}
+    user = f"""Answer: {_strip_annotations(state['answer'])[:3000]}
 
 Retrieved context:
 {chunks}
