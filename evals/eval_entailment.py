@@ -28,6 +28,7 @@ then run `judge --system full_pre` and `judge --system full_final`.
 """
 import argparse
 import csv
+import os
 import json
 import random
 import re
@@ -40,6 +41,10 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from eval_complete_multidomain import RESULTS_DIR, TEST_QUERIES, category  # noqa: E402
 import eval_baselines as eb  # noqa: E402
+from run_status import EXIT_DONE, EXIT_PARTIAL, EXIT_STOPPED, FailureTracker  # noqa: E402
+
+# Independent judge: a different (stronger) model than the generator and the pipeline's own claim checker.
+DEFAULT_JUDGE_MODEL = os.getenv("JUDGE_MODEL", "models/gemini-3.5-flash")
 
 GEN_SYSTEMS = {
     "llm_only": ("llm_only", False),
@@ -73,10 +78,7 @@ def clean_id(s):
 # ── 1. generation with steps saved ───────────────────────────────────────────
 def cmd_gen(args):
     mode, allow_abstain = GEN_SYSTEMS[args.system]
-    model = args.model
-    if model is None:
-        import legal_workflow_generator.config.values as cfg
-        model = cfg.GEMINI_MODEL
+    model = args.model or eb.default_model(eb.PROVIDER)
     print(f"Generator model: {model}")
     provs = eb.load_corpus()
     as_of = date.fromisoformat(args.as_of)
@@ -86,32 +88,80 @@ def cmd_gen(args):
     done = {r["query"] for r in read_jsonl(out)} if args.resume else set()
     if not args.resume and out.exists():
         out.unlink()
-    for i, t in enumerate(TEST_QUERIES, 1):
-        if t["query"] in done:
-            continue
-        retrieved = ret.top(t["query"], "hybrid", args.k) if ret else []
-        prompt = eb.build_prompt(mode, t["query"], retrieved, provs, allow_abstain)
-        start = time.time()
-        try:
-            raw = eb.call_llm(client, model, prompt)
-        except eb.DailyQuota as e:
-            print(f"Daily quota hit: {e}\nRerun with --resume later.")
-            break
-        parsed = eb.parse_json(raw)
-        steps = []
-        for s in parsed.get("steps") or []:
-            ids = s.get("provision_id") or s.get("provision_ids") or []
-            ids = [ids] if isinstance(ids, str) else list(ids)
-            steps.append({"action": str(s.get("action", "")), "raw_ids": [clean_id(x) for x in ids]})
-        abstained = bool(parsed.get("abstain")) or (allow_abstain and not steps)
-        row = {"query": t["query"], "category": category(t), "should_abstain": t["should_abstain"],
-               "abstained": abstained, "steps": [] if abstained else steps,
-               "retrieved": retrieved, "raw": raw, "unparsed": not parsed,
-               "elapsed_seconds": round(time.time() - start, 2), "model": model}
-        with open(out, "a", encoding="utf-8") as f:
-            f.write(json.dumps(row) + "\n")
-        print(f"[{i:03d}/100] {category(t):8s} steps={len(row['steps'])} abstained={abstained}")
-        time.sleep(args.sleep)
+    tracker = FailureTracker()
+    try:
+        for i, t in enumerate(TEST_QUERIES, 1):
+            if t["query"] in done:
+                continue
+            retrieved = ret.top(t["query"], "hybrid", args.k) if ret else []
+            prompt = eb.build_prompt(mode, t["query"], retrieved, provs, allow_abstain)
+            start = time.time()
+            try:
+                raw = eb.call_llm(client, model, prompt)
+            except (eb.DailyQuota, eb.ModelUnavailable) as e:
+                tracker.stop_reason = f"{type(e).__name__}: {str(e)[:200]}"
+                break
+            except Exception as e:  # noqa: BLE001
+                msg = f"{type(e).__name__}: {e}"
+                print(f"        ERROR (not saved, retried on the next run): {msg[:200]}")
+                tracker.failed(msg)
+                if tracker.should_stop:
+                    break
+                continue
+            tracker.ok()
+            parsed = eb.parse_json(raw)
+            steps = []
+            for s_ in parsed.get("steps") or []:
+                if not isinstance(s_, dict):
+                    continue
+                ids = s_.get("provision_id") or s_.get("provision_ids") or []
+                ids = [ids] if isinstance(ids, str) else list(ids)
+                steps.append({"action": str(s_.get("action", "")), "raw_ids": [clean_id(x) for x in ids]})
+            abstained = bool(parsed.get("abstain")) or (allow_abstain and not steps)
+            row = {"query": t["query"], "category": category(t), "should_abstain": t["should_abstain"],
+                   "abstained": abstained, "steps": [] if abstained else steps,
+                   "retrieved": retrieved, "raw": raw, "unparsed": not parsed,
+                   "elapsed_seconds": round(time.time() - start, 2), "model": model,
+                   "run_date": time.strftime("%Y-%m-%dT%H:%M:%S")}
+            with open(out, "a", encoding="utf-8") as f:
+                f.write(json.dumps(row) + "\n")
+            print(f"[{i:03d}/100] {category(t):8s} steps={len(row['steps'])} abstained={abstained}", flush=True)
+            time.sleep(args.sleep)
+    except KeyboardInterrupt:
+        tracker.stop_reason = "interrupted (Ctrl+C)"
+    return finish(len({r["query"] for r in read_jsonl(out)}), len(TEST_QUERIES), tracker, f"steps_{args.system}")
+
+
+def finish(n_done: int, n_total: int, tracker: FailureTracker, what: str) -> int:
+    print(f"\n{what}: {n_done}/{n_total} saved.")
+    if tracker.should_stop:
+        print(f"STOPPED: {tracker.stop_reason}\nProgress is saved; run the same command with --resume later.")
+        return EXIT_STOPPED
+    return EXIT_DONE if n_done >= n_total else EXIT_PARTIAL
+
+
+# ── 1b. export the pipeline's steps ──────────────────────────────────────────
+def cmd_export(args):
+    """steps_full_final = steps in the final answer; steps_full_pre = those plus the steps the pipeline's
+    own claim check dropped (i.e. every generated step that passed the identifier gate)."""
+    src = RESULTS_DIR / f"eval_{args.tag}.jsonl"
+    rows = read_jsonl(src)
+    if not rows:
+        print(f"No pipeline results at {src}")
+        return EXIT_PARTIAL
+    for system, with_dropped in (("full_final", False), ("full_pre", True)):
+        out = []
+        for r in rows:
+            steps = []
+            if not r["abstained"]:
+                for d in r.get("domain_results") or []:
+                    for st in (d.get("steps") or []) + ((d.get("dropped_steps") or []) if with_dropped else []):
+                        steps.append({"action": st.get("action", ""), "raw_ids": [st.get("provision_id", "")]})
+            out.append({"query": r["query"], "category": r["category"], "should_abstain": r["should_abstain"],
+                        "abstained": r["abstained"], "steps": steps, "source": src.name})
+        path("steps", system).write_text("".join(json.dumps(x) + "\n" for x in out), encoding="utf-8")
+        print(f"wrote {path('steps', system)} ({len(out)} queries, {sum(len(x['steps']) for x in out)} steps)")
+    return EXIT_DONE if len(rows) >= len(TEST_QUERIES) else EXIT_PARTIAL
 
 
 # ── 2. judging ───────────────────────────────────────────────────────────────
@@ -149,56 +199,75 @@ def judge_items(client, model, items):
 
 
 def cmd_judge(args):
-    if args.judge_model is None:
-        sys.exit("Pass --judge-model. Use a different model (ideally a different family) from the "
-                 "generator and the pipeline's own entailment checker, otherwise the judge is not independent.")
+    args.judge_model = args.judge_model or DEFAULT_JUDGE_MODEL
+    print(f"Judge model: {args.judge_model}")
     provs = eb.load_corpus()
     lower = {p.lower(): p for p in provs}
     client = eb.make_client()
     src = read_jsonl(path("steps", args.system))
     if not src:
-        sys.exit(f"No {path('steps', args.system)}")
+        print(f"No {path('steps', args.system)}")
+        return EXIT_PARTIAL
     out = path("judged", args.system)
     done = {r["query"] for r in read_jsonl(out)} if args.resume else set()
     if not args.resume and out.exists():
         out.unlink()
-    for i, r in enumerate(src, 1):
-        if r["query"] in done:
-            continue
-        pairs, items = [], []
-        for s in r["steps"]:
-            for rid in s["raw_ids"] or [""]:
-                pid = lower.get(rid.lower())
-                p = {"claim": s["action"], "raw_id": rid, "pid": pid, "verdict": None,
-                     "reason": "", "numeric_flag": False}
-                if pid is None:
-                    p["verdict"] = "invalid_id"
-                else:
-                    items.append({"claim": s["action"], "pid": pid, "text": eb.doc_text(provs[pid])})
-                pairs.append(p)
-        if items:
-            try:
-                res = judge_items(client, args.judge_model, items)
-            except eb.DailyQuota as e:
-                print(f"Daily quota hit: {e}\nRerun with --resume.")
-                return
-            k = 0
-            for p in pairs:
-                if p["verdict"] is not None:
+    tracker = FailureTracker()
+    try:
+        for i, r in enumerate(src, 1):
+            if r["query"] in done:
+                continue
+            pairs, items = [], []
+            for st in r["steps"]:
+                for rid in st["raw_ids"] or [""]:
+                    pid = lower.get(rid.lower())
+                    p = {"claim": st["action"], "raw_id": rid, "pid": pid, "verdict": None,
+                         "reason": "", "numeric_flag": False}
+                    if pid is None:
+                        p["verdict"] = "invalid_id"
+                    else:
+                        items.append({"claim": st["action"], "pid": pid, "text": eb.doc_text(provs[pid])})
+                    pairs.append(p)
+            if items:
+                try:
+                    res = judge_items(client, args.judge_model, items)
+                except (eb.DailyQuota, eb.ModelUnavailable) as e:
+                    tracker.stop_reason = f"{type(e).__name__}: {str(e)[:200]}"
+                    break
+                except Exception as e:  # noqa: BLE001
+                    msg = f"{type(e).__name__}: {e}"
+                    print(f"        ERROR (not saved, retried on the next run): {msg[:200]}")
+                    tracker.failed(msg)
+                    if tracker.should_stop:
+                        break
                     continue
-                v, why = res.get(k, ("judge_error", "missing"))
-                if v not in ("entailed", "partial", "unsupported"):
-                    v = "judge_error"
-                p["verdict"], p["reason"] = v, why
-                if v == "entailed" and numbers_missing(p["claim"], items[k]["text"]):
-                    p["verdict"], p["numeric_flag"] = "partial", True
-                k += 1
-            time.sleep(args.sleep)
-        row = {k: r[k] for k in ("query", "category", "should_abstain", "abstained")}
-        row["pairs"] = pairs
-        with open(out, "a", encoding="utf-8") as f:
-            f.write(json.dumps(row) + "\n")
-        print(f"[{i:03d}/{len(src)}] {len(pairs)} pairs")
+                if not res:   # unparseable judge output: not a verdict, retry this query on the next run
+                    tracker.failed("judge returned no parseable verdicts")
+                    print("        judge output unparseable (not saved, retried on the next run)")
+                    if tracker.should_stop:
+                        break
+                    continue
+                k = 0
+                for p in pairs:
+                    if p["verdict"] is not None:
+                        continue
+                    v, why = res.get(k, ("judge_error", "missing"))
+                    if v not in ("entailed", "partial", "unsupported"):
+                        v = "judge_error"
+                    p["verdict"], p["reason"] = v, why
+                    if v == "entailed" and numbers_missing(p["claim"], items[k]["text"]):
+                        p["verdict"], p["numeric_flag"] = "partial", True
+                    k += 1
+                time.sleep(args.sleep)
+            tracker.ok()
+            row = {k: r[k] for k in ("query", "category", "should_abstain", "abstained")}
+            row.update(pairs=pairs, judge_model=args.judge_model)
+            with open(out, "a", encoding="utf-8") as f:
+                f.write(json.dumps(row) + "\n")
+            print(f"[{i:03d}/{len(src)}] {len(pairs)} pairs", flush=True)
+    except KeyboardInterrupt:
+        tracker.stop_reason = "interrupted (Ctrl+C)"
+    return finish(len({r["query"] for r in read_jsonl(out)}), len(src), tracker, f"judged_{args.system}")
 
 
 # ── 3. report ────────────────────────────────────────────────────────────────
@@ -300,6 +369,7 @@ def cmd_report(args):
             w.writerow([s, q, p["claim"], p["pid"], p["verdict"], p["reason"], ""])
     print(f"\nWrote {len(sample)} rows to audit_sample.csv (label the last column by hand, "
           "hide the judge columns while labelling, then compute Cohen's kappa).")
+    return EXIT_DONE
 
 
 def main():
@@ -317,10 +387,12 @@ def main():
     j.add_argument("--judge-model", default=None)
     j.add_argument("--sleep", type=float, default=2.0)
     j.add_argument("--resume", action="store_true")
+    x = sub.add_parser("export", help="turn a pipeline run (eval_<tag>.jsonl) into steps_full_*.jsonl")
+    x.add_argument("--tag", required=True)
     r = sub.add_parser("report")
     r.add_argument("--audit-per-cell", type=int, default=12)
     args = ap.parse_args()
-    {"gen": cmd_gen, "judge": cmd_judge, "report": cmd_report}[args.cmd](args)
+    sys.exit({"gen": cmd_gen, "judge": cmd_judge, "export": cmd_export, "report": cmd_report}[args.cmd](args))
 
 
 if __name__ == "__main__":

@@ -51,6 +51,7 @@ Usage
 
 import argparse
 import csv
+import os
 import glob
 import json
 import sys
@@ -61,8 +62,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-RESULTS_DIR = Path(__file__).resolve().parent / "results"
+# EVAL_RESULTS_DIR lets a run (e.g. the Groq comparison) keep its files apart from earlier runs.
+RESULTS_DIR = Path(os.getenv("EVAL_RESULTS_DIR") or Path(__file__).resolve().parent / "results")
+if not RESULTS_DIR.is_absolute():
+    RESULTS_DIR = ROOT / RESULTS_DIR
 COMPLETE_DIR = ROOT / "datasets" / "complete"
 
 DP, CG, IP, TAX, EMP = (
@@ -415,107 +420,126 @@ def per_domain(rows: list[dict]) -> dict:
 
 
 # ── main loop ────────────────────────────────────────────────────────────────
-def evaluate(selected: list[dict], sleep_s: float, provider: str | None = None):
-    # Imported lazily so --validate works without a database or API key.
-    import legal_workflow_generator.config.values  # noqa: F401  (loads .env, fails fast)
-    from legal_workflow_generator.agent.graph import graph
-    from legal_workflow_generator.agent.settings import RunSettings, build_config
+def score_result(test: dict, result: dict, elapsed: float) -> dict:
+    expected_domains = set(test["domains"]) - {"unknown"}
+    expected = set(test["expected_sections"])
+    predicted = set(result.get("all_domains") or [result.get("domain")]) - {None, "unknown"}
+    did_abstain = bool(result.get("abstain", False))
+    raw_verified = set(result.get("verified_citations", []))
+    # an abstention shows the user no citations, so it earns no credit (same rule as the baselines)
+    verified = set() if did_abstain else raw_verified
+    cited_domains = {domain_of(p) for p in verified} - {None}
+    hits = len(verified & expected)
+    overlap = predicted & expected_domains
+    return {
+        "query": test["query"],
+        "category": category(test),
+        "should_abstain": test["should_abstain"],
+        "expected_domains": sorted(expected_domains),
+        "predicted_domains": sorted(predicted),
+        "primary_domain": result.get("domain"),
+        "domain_recall": ratio(len(overlap), len(expected_domains)),
+        "domain_precision": ratio(len(overlap), len(predicted)),
+        "domain_exact_match": predicted == expected_domains,
+        "primary_domain_correct": result.get("domain") in expected_domains,
+        "expected_sections": sorted(expected),
+        "verified_citations": sorted(verified),
+        "verified_citations_before_abstain": sorted(raw_verified),
+        "citation_hits": hits,
+        "citation_recall": ratio(hits, len(expected)),
+        "cited_domains": sorted(cited_domains),
+        "citation_domain_coverage": ratio(len(cited_domains & expected_domains), len(expected_domains)),
+        "abstained": did_abstain,
+        "abstain_correct": did_abstain == test["should_abstain"],
+        "abstain_reason": result.get("abstain_reason", ""),
+        "llm_error": result.get("llm_error", ""),
+        "domain_errors": [d.get("domain") for d in result.get("domain_results") or [] if d.get("grade") == "error"],
+        "groundedness_grade": result.get("groundedness_grade"),
+        "answerability_grade": result.get("answerability_grade"),
+        "retry_count_retrieval": result.get("retry_count_retrieval", 0),
+        "retry_count_generation": result.get("retry_count_generation", 0),
+        "domain_detection_method": result.get("domain_detection_method", ""),
+        "domain_results": result.get("domain_results", []),
+        "answer": result.get("answer", ""),
+        "elapsed_seconds": round(elapsed, 2),
+        "trace": result.get("trace", []),
+    }
 
-    cfg = build_config(provider=provider)
-    provider = RunSettings.from_config(cfg).provider
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    total = len(selected)
-    rows, errors = [], []
+def is_incomplete(row: dict) -> bool:
+    """An LLM failure (quota, outage) is not a result: such rows are re-run instead of being scored.
+    Besides hard errors this catches the stages that carry on after a failed call (claim check "skipped",
+    groundedness "unverified", LLM domain detection missing): `llm_failures` counts every call that finally
+    failed while the query ran."""
+    return (bool(row.get("llm_error")) or bool(row.get("domain_errors"))
+            or int(row.get("llm_failures") or 0) > 0)
 
-    print(f"\n{'='*70}")
-    print(f"COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — {total} queries (provider={provider})")
-    print(f"{'='*70}\n")
 
-    for i, test in enumerate(selected, 1):
-        query, cat = test["query"], category(test)
-        expected_domains = set(test["domains"]) - {"unknown"}
-        expected = set(test["expected_sections"])
-        print(f"[{i:03d}/{total}] ({cat}) {query[:70]}...")
+def incomplete_reason(row: dict) -> str:
+    if row.get("llm_error"):
+        return row["llm_error"]
+    if row.get("domain_errors"):
+        return f"LLM error in domain(s) {row['domain_errors']}"
+    return f"{row.get('llm_failures')} LLM call(s) failed: {row.get('llm_failure_last', '')}"
 
-        try:
-            start = time.time()
-            result = graph.invoke({"query": query}, config=cfg)
-            elapsed = round(time.time() - start, 2)
 
-            predicted = set(result.get("all_domains") or [result.get("domain")]) - {None, "unknown"}
-            verified = set(result.get("verified_citations", []))
-            cited_domains = {domain_of(p) for p in verified} - {None}
-            did_abstain = bool(result.get("abstain", False))
+def check_manifest(path: Path, manifest: dict, resume: bool) -> str:
+    """A resumed run must use the same settings as the rows already saved; returns an error message or ''."""
+    keys = ("provider", "model", "as_of", "settings", "temperature")
+    if resume and path.exists():
+        old = json.loads(path.read_text(encoding="utf-8"))
+        diff = [k for k in keys if old.get(k) != manifest.get(k)]
+        if diff:
+            return (f"saved rows in this tag were produced with different settings ({', '.join(diff)}):\n"
+                    f"  saved: { {k: old.get(k) for k in diff} }\n  now:   { {k: manifest.get(k) for k in diff} }\n"
+                    f"Use another --tag, or drop --resume to start this tag again.")
+        manifest["sessions"] = old.get("sessions", [])
+    manifest.setdefault("sessions", [])
+    manifest["sessions"].append({"started": datetime.now().isoformat(timespec="seconds"), "commit": git_commit()})
+    path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    return ""
 
-            hits = len(verified & expected)
-            overlap = predicted & expected_domains
-            row = {
-                "query": query,
-                "category": cat,
-                "should_abstain": test["should_abstain"],
-                "expected_domains": sorted(expected_domains),
-                "predicted_domains": sorted(predicted),
-                "primary_domain": result.get("domain"),
-                "domain_recall": ratio(len(overlap), len(expected_domains)),
-                "domain_precision": ratio(len(overlap), len(predicted)),
-                "domain_exact_match": predicted == expected_domains,
-                "primary_domain_correct": result.get("domain") in expected_domains,
-                "expected_sections": sorted(expected),
-                "verified_citations": sorted(verified),
-                "citation_hits": hits,
-                "citation_recall": ratio(hits, len(expected)),
-                "cited_domains": sorted(cited_domains),
-                "citation_domain_coverage": ratio(len(cited_domains & expected_domains), len(expected_domains)),
-                "abstained": did_abstain,
-                "abstain_correct": did_abstain == test["should_abstain"],
-                "abstain_reason": result.get("abstain_reason", ""),
-                "retry_count_retrieval": result.get("retry_count_retrieval", 0),
-                "retry_count_generation": result.get("retry_count_generation", 0),
-                "domain_detection_method": result.get("domain_detection_method", ""),
-                "elapsed_seconds": elapsed,
-                "trace": result.get("trace", []),
-            }
-            rows.append(row)
 
-            status = "ABSTAIN" if did_abstain else "ANSWER"
-            ok = "OK" if row["abstain_correct"] else "WRONG"
-            print(
-                f"        {status} ({ok}) | domains exp={sorted(expected_domains)} got={sorted(predicted)} "
-                f"| cit_recall={row['citation_recall']} cov={row['citation_domain_coverage']} | {elapsed}s"
-            )
-            if did_abstain:
-              print(f"        reason: {row['abstain_reason']}")
-              print(f"        retries: retrieval={row['retry_count_retrieval']} generation={row['retry_count_generation']}")
-              print(f"        trace: {' | '.join(row['trace'])}")
-        except Exception as e:
-            print(f"        ERROR: {e}")
-            errors.append({"query": query, "category": cat, "error": str(e)})
+def git_commit() -> str:
+    import subprocess
+    try:
+        out = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, timeout=10,
+                             cwd=ROOT)
+        dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], capture_output=True,
+                               text=True, timeout=10, cwd=ROOT).stdout.strip()
+        return (out.stdout.strip() or "unknown") + ("+dirty" if dirty else "")
+    except Exception:  # noqa: BLE001
+        return "unknown"
 
-        time.sleep(sleep_s)  # avoid rate limiting
 
-    # ── summary ──────────────────────────────────────────────────────────────
+def load_jsonl(path: Path) -> list:
+    if not path.exists():
+        return []
+    return [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines() if l.strip()]
+
+
+def build_summary(rows: list, provider: str, total: int, errors: list, extra: dict | None = None) -> dict:
     by_cat = defaultdict(list)
     for r in rows:
         by_cat[r["category"]].append(r)
         if r["category"].startswith("multi_"):
             by_cat["multi_all"].append(r)
-
-    summary = {
-        "provider": provider,
-        "total": total,
-        "errored": len(errors),
+    return {
+        "provider": provider, **(extra or {}),
+        "total": total, "scored": len(rows), "errored": len(errors),
         "overall": summarize(rows) if rows else {},
         "by_category": {c: summarize(rs) for c, rs in sorted(by_cat.items())},
         "per_domain": per_domain(rows),
     }
 
+
+def print_summary(summary: dict) -> None:
     o = summary["overall"]
     print(f"\n{'='*70}\nSUMMARY\n{'='*70}")
-    print(f"Total queries             : {total} ({len(errors)} errored)")
+    print(f"Scored queries            : {summary['scored']} of {summary['total']} ({summary['errored']} errored)")
     for key in ("answered_pct", "domain_recall", "domain_precision", "domain_exact_match",
                 "primary_domain_accuracy", "citation_recall", "citation_domain_coverage",
-                "false_abstain_rate", "abstain_accuracy"):
+                "false_abstain_rate", "abstain_accuracy", "avg_elapsed_seconds"):
         print(f"{key:26s}: {o.get(key)}")
     print("\nBy category (domain_recall / exact / citation_recall / coverage / abstain_acc):")
     for c, s in summary["by_category"].items():
@@ -527,27 +551,135 @@ def evaluate(selected: list[dict], sleep_s: float, provider: str | None = None):
               f"{s['false_positive_detections']}")
     print(f"{'='*70}\n")
 
-    # ── save results ─────────────────────────────────────────────────────────
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    json_path = RESULTS_DIR / f"eval_complete_multidomain_{timestamp}.json"
-    csv_path = RESULTS_DIR / f"eval_complete_multidomain_{timestamp}.csv"
 
-    with open(json_path, "w") as f:
-        json.dump({"summary": summary, "results": rows, "errors": errors}, f, indent=2)
+def provider_name(provider: str | None) -> str:
+    return provider or os.getenv("LLM_PROVIDER", "gemini")
+
+
+def evaluate(selected: list[dict], sleep_s: float, provider: str | None = None, as_of: str | None = None,
+             tag: str = "pipeline", resume: bool = False, options: dict | None = None):
+    # Imported lazily so --validate works without a database or API key.
+    import legal_workflow_generator.config.values as app_config  # noqa: F401  (loads .env, fails fast)
+    from legal_workflow_generator.agent.graph import graph
+    from legal_workflow_generator.agent.settings import RunSettings, build_config
+    from legal_workflow_generator.agent import groq_client, gemini_client
+    usage_src = groq_client.USAGE if provider_name(provider) == "groq" else gemini_client.USAGE
+
+    cfg = build_config(provider=provider, as_of=as_of, **(options or {}))
+    settings = RunSettings.from_config(cfg)
+    provider = settings.provider
+    model = app_config.GROQ_MODEL if provider == "groq" else app_config.GEMINI_MODEL
+
+    import legal_workflow_generator.agent.nodes as nodes
+    from run_status import EXIT_DONE, EXIT_PARTIAL, EXIT_STOPPED, FailureTracker
+
+    temperature = os.getenv("GEMINI_TEMPERATURE" if provider == "gemini" else "GROQ_TEMPERATURE", "")
+    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    rows_path = RESULTS_DIR / f"eval_{tag}.jsonl"
+    manifest = {"tag": tag, "provider": provider, "model": model, "as_of": settings.as_of_date.isoformat(),
+                "temperature": temperature,
+                "settings": {k: v for k, v in vars(settings).items() if k not in ("as_of", "provider", "trace_timing")}}
+    problem = check_manifest(RESULTS_DIR / f"eval_{tag}.manifest.json", manifest, resume)
+    if problem:
+        print("ERROR: " + problem)
+        return 1
+
+    wanted = {t["query"] for t in selected}
+    old = load_jsonl(rows_path) if resume else []
+    done = {r["query"]: r for r in old if not is_incomplete(r) and r["query"] in wanted}
+    if not resume and rows_path.exists():
+        rows_path.unlink()
+    elif resume:   # keep only valid rows; the rest are re-run below
+        rows_path.write_text("".join(json.dumps(r, default=str) + "\n" for r in done.values()), encoding="utf-8")
+
+    total = len(selected)
+    errors = []
+    tracker = FailureTracker()
+    print(f"\n{'='*70}")
+    print(f"COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — {total} queries "
+          f"(provider={provider}, model={model}, as_of={settings.as_of_date}, tag={tag}, "
+          f"{len(done)} already done)")
+    print(f"{'='*70}\n")
+
+    try:
+        for i, test in enumerate(selected, 1):
+            query, cat = test["query"], category(test)
+            if query in done:
+                continue
+            print(f"[{i:03d}/{total}] ({cat}) {query[:70]}...", flush=True)
+            before = dict(usage_src)
+            fails_before = nodes.LLM_FAILURES["count"]
+            try:
+                start = time.time()
+                result = graph.invoke({"query": query}, config=cfg)
+                row = score_result(test, result, time.time() - start)
+            except Exception as e:  # noqa: BLE001
+                msg = f"{type(e).__name__}: {e}"
+                print(f"        ERROR (not saved, retried on the next run): {msg[:200]}")
+                errors.append({"query": query, "category": cat, "error": msg})
+                tracker.failed(msg)
+                if tracker.should_stop:
+                    break
+                continue
+            row["llm_failures"] = nodes.LLM_FAILURES["count"] - fails_before
+            if row["llm_failures"]:
+                row["llm_failure_last"] = nodes.LLM_FAILURES["last"]
+            row["tokens"] = {k: usage_src[k] - before[k] for k in usage_src}
+            row.update(provider=provider, model=model, as_of=settings.as_of_date.isoformat(),
+                       temperature=temperature, run_date=datetime.now().isoformat(timespec="seconds"))
+            if is_incomplete(row):
+                msg = incomplete_reason(row)
+                print(f"        INCOMPLETE (not saved, retried on the next run): {msg[:200]}")
+                errors.append({"query": query, "category": cat, "error": msg})
+                tracker.failed(msg)
+                if tracker.should_stop:
+                    break
+                continue
+            tracker.ok()
+            with open(rows_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(row, default=str) + "\n")
+            done[query] = row
+            status = "ABSTAIN" if row["abstained"] else "ANSWER"
+            ok = "OK" if row["abstain_correct"] else "WRONG"
+            print(f"        {status} ({ok}) | domains exp={row['expected_domains']} got={row['predicted_domains']} "
+                  f"| cit_recall={row['citation_recall']} cov={row['citation_domain_coverage']} "
+                  f"| {row['elapsed_seconds']}s | {row['tokens']['total_tokens']} tok", flush=True)
+            if row["abstained"]:
+                print(f"        reason: {row['abstain_reason'][:200]}")
+            time.sleep(sleep_s)
+    except KeyboardInterrupt:
+        tracker.stop_reason = "interrupted (Ctrl+C)"
+
+    order = {t["query"]: n for n, t in enumerate(TEST_QUERIES)}
+    rows = sorted(done.values(), key=lambda r: order.get(r["query"], 10**6))
+    summary = build_summary(rows, provider, total, errors,
+                            {"model": model, "as_of": settings.as_of_date.isoformat(), "tag": tag,
+                             "options": options or {},
+                             "tokens": sum(r.get("tokens", {}).get("total_tokens", 0) for r in rows)})
+    print_summary(summary)
+    sum_path = RESULTS_DIR / f"eval_{tag}_summary.json"
+    summary["complete"] = len(rows) == total
+    sum_path.write_text(json.dumps({"summary": summary, "errors": errors}, indent=2), encoding="utf-8")
 
     fields = ["query", "category", "expected_domains", "predicted_domains", "primary_domain",
               "domain_recall", "domain_precision", "domain_exact_match", "citation_recall",
               "citation_domain_coverage", "abstained", "abstain_correct",
               "retry_count_retrieval", "retry_count_generation", "elapsed_seconds"]
+    csv_path = RESULTS_DIR / f"eval_{tag}.csv"
     with open(csv_path, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
         for r in rows:
             writer.writerow({k: ("|".join(r[k]) if isinstance(r[k], list) else r[k]) for k in fields})
-
-    print("Results saved to:")
-    print(f"  {json_path}")
-    print(f"  {csv_path}")
+    print(f"Results saved to:\n  {rows_path}\n  {sum_path}\n  {csv_path}")
+    print(f"\n{len(rows)}/{total} queries have a saved result.")
+    if tracker.should_stop:
+        print(f"STOPPED: {tracker.stop_reason}\nProgress is saved; run the same command again later to continue.")
+        return EXIT_STOPPED
+    if len(rows) < total:
+        print("Some queries failed this pass; run the same command again to retry them.")
+        return EXIT_PARTIAL
+    return EXIT_DONE
 
 
 def parse_args() -> argparse.Namespace:
@@ -561,6 +693,14 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--limit", type=int, default=None, help="Run only the first N selected queries.")
     parser.add_argument("--sleep", type=float, default=5.0,
                         help="Seconds to sleep between queries to avoid rate limiting (default: 5).")
+    parser.add_argument("--as-of", default="2026-10-15",
+                        help="Query date for the in-force filter (default 2026-10-15, the paper's date).")
+    parser.add_argument("--tag", default="pipeline",
+                        help="Name of the run; results go to <results dir>/eval_<tag>.jsonl.")
+    parser.add_argument("--resume", action="store_true", help="Keep saved rows of this tag and run the rest.")
+    parser.add_argument("--option", action="append", default=[], metavar="KEY=VALUE",
+                        help="Extra RunSettings option, e.g. --option top_k=8 (repeatable).")
+    parser.add_argument("--summary", action="store_true", help="Only summarise the saved rows of --tag.")
     parser.add_argument("--validate", action="store_true",
                         help="Offline: verify every expected provision id exists in datasets/complete/ "
                              "and belongs to a labeled domain, then exit. No DB or API calls.")
@@ -580,4 +720,10 @@ if __name__ == "__main__":
     ]
     if args.limit:
         selected = selected[: args.limit]
-    evaluate(selected, sleep_s=args.sleep, provider=args.provider)
+    options = dict(o.split("=", 1) for o in args.option)
+    if args.summary:
+        rows = load_jsonl(RESULTS_DIR / f"eval_{args.tag}.jsonl")
+        print_summary(build_summary(rows, rows[0].get("provider", "?") if rows else "?", len(selected), []))
+        sys.exit(0)
+    sys.exit(evaluate(selected, sleep_s=args.sleep, provider=args.provider, as_of=args.as_of, tag=args.tag,
+                      resume=args.resume, options=options))

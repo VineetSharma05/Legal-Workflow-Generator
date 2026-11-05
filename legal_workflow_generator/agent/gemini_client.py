@@ -11,6 +11,7 @@ Drop-in for ``genai.Client``: only ``.models.generate_content`` is used in this 
     response = client.models.generate_content(model=..., contents=...)
 """
 import logging
+import os
 import re
 import threading
 import time
@@ -25,6 +26,42 @@ logger = logging.getLogger(__name__)
 _DAILY_COOLDOWN = 3600.0
 _DEFAULT_COOLDOWN = 60.0
 _BAD_KEY_MARKERS = ("PERMISSION_DENIED", "API_KEY_INVALID", "UNAUTHENTICATED")
+
+# Sampling temperature for calls that do not set their own (GEMINI_TEMPERATURE; empty = the API default).
+# The evaluation sets 0 so that the pipeline and the baselines sample the same way.
+DEFAULT_TEMPERATURE = os.getenv("GEMINI_TEMPERATURE", "").strip()
+
+# Running totals for this process (read by the eval harnesses to report cost).
+USAGE = {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+_usage_lock = threading.Lock()
+
+
+def _with_default_temperature(kwargs: dict) -> dict:
+    if not DEFAULT_TEMPERATURE:
+        return kwargs
+    t = float(DEFAULT_TEMPERATURE)
+    cfg = kwargs.get("config")
+    if cfg is None:
+        return {**kwargs, "config": {"temperature": t}}
+    if isinstance(cfg, dict):
+        return kwargs if "temperature" in cfg else {**kwargs, "config": {**cfg, "temperature": t}}
+    if getattr(cfg, "temperature", None) is None:
+        cfg = cfg.model_copy(update={"temperature": t})
+        return {**kwargs, "config": cfg}
+    return kwargs
+
+
+def _record_usage(response) -> None:
+    meta = getattr(response, "usage_metadata", None)
+    if meta is None:
+        return
+    prompt = int(getattr(meta, "prompt_token_count", 0) or 0)
+    total = int(getattr(meta, "total_token_count", 0) or 0)
+    with _usage_lock:
+        USAGE["calls"] += 1
+        USAGE["prompt_tokens"] += prompt
+        USAGE["completion_tokens"] += max(total - prompt, 0)
+        USAGE["total_tokens"] += total
 
 
 def _cooldown_for(msg: str) -> float:
@@ -78,6 +115,7 @@ class _RotatingModels:
 
     def generate_content(self, *args, **kwargs):
         pool = self._owner.pool
+        kwargs = _with_default_temperature(kwargs)
         last_exc = None
         for idx in pool.order():
             try:
@@ -89,6 +127,7 @@ class _RotatingModels:
                     logger.warning("Gemini key #%d failed (%s); trying next key", idx + 1, str(e)[:120])
                 continue
             pool.mark_ok(idx)
+            _record_usage(response)
             return response
         assert last_exc is not None
         raise last_exc

@@ -563,9 +563,36 @@ def test_domain_results_hold_typed_provisions_but_graph_state_stays_plain(wired)
 def test_plan_queries_parses_json_and_falls_back_on_plain_text(monkeypatch):
     monkeypatch.setattr(N, "_llm", lambda *a, **k:
                         '{"focus": "dpdp compliance", "aspects": ["data fiduciary duties", "consent", "consent", ""]}')
-    assert N._plan_queries("data_protection", "q", "fb") == ("dpdp compliance", ["data fiduciary duties", "consent"])
+    assert N._plan_queries("data_protection", "q", "fb") == ("dpdp compliance", ["data fiduciary duties", "consent"], [])
     monkeypatch.setattr(N, "_llm", lambda *a, **k: "just a query")
-    assert N._plan_queries("data_protection", "q", "fb") == ("just a query", [])
+    assert N._plan_queries("data_protection", "q", "fb") == ("just a query", [], [])
+
+
+FAKE_CATALOG = {d: {"lines": [], "ids": {}, "prefixes": {}} for d in N.VALID_DOMAINS}
+FAKE_CATALOG["taxation"]["ids"] = {"cgst_act_2017_sec_9": "cgst_act_2017_sec_9",
+                                   "income_tax_act_1961_sec_195": "income_tax_act_1961_sec_195"}
+FAKE_CATALOG["ip_licensing"]["ids"] = {"it_act_2000_sec_4": "it_act_2000_sec_4"}
+
+
+def test_suggestions_keep_only_existing_ids_of_the_domain(monkeypatch):
+    monkeypatch.setattr(N, "_catalog", lambda: FAKE_CATALOG)
+    raw = ["[CGST_ACT_2017_SEC_9]", "cgst_act_2017_sec_9(1)", "cgst_act_2017_sec_999",
+           "ca_2013_sec_7", "income_tax_act_1961_sec_195", ""]
+    assert N._resolve_suggestions("taxation", raw) == ["cgst_act_2017_sec_9", "income_tax_act_1961_sec_195"]
+    # the IT Act is split over two prefixes: a suggestion under the wrong one still resolves
+    assert N._resolve_suggestions("ip_licensing", ["information_technology_act_2000_sec_4"]) == ["it_act_2000_sec_4"]
+
+
+def test_plan_queries_returns_suggestions_only_when_enabled(monkeypatch):
+    from legal_workflow_generator.agent.settings import build_config, use_settings
+    monkeypatch.setattr(N, "_catalog", lambda: FAKE_CATALOG)
+    monkeypatch.setattr(N, "_llm", lambda *a, **k:
+                        '{"focus": "gst", "aspects": [], "provisions": ["cgst_act_2017_sec_9", "made_up_sec_1"]}')
+    use_settings(build_config(suggest_provisions=True, suggest_cap=4))
+    assert N._plan_queries("taxation", "q", "fb") == ("gst", [], ["cgst_act_2017_sec_9"])
+    use_settings(build_config(suggest_provisions=False))
+    assert N._plan_queries("taxation", "q", "fb") == ("gst", [], [])
+    use_settings(None)
 
 
 def test_fusion_lifts_a_provision_that_aspect_queries_rank_high(monkeypatch):

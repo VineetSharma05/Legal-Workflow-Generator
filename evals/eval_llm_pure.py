@@ -341,6 +341,7 @@ def main():
     ap.add_argument("--sleep", type=float, default=4.0)
     ap.add_argument("--allow-abstain", action="store_true")
     ap.add_argument("--resume", action="store_true")
+    ap.add_argument("--provider", choices=["gemini", "groq"], default=eb.PROVIDER)
     args = ap.parse_args()
 
     for var, val in (("PGPASSWORD", "unused"), ("PGHOST", "localhost"), ("PGUSER", "unused"),
@@ -376,8 +377,7 @@ def main():
 
     if args.model is None:
         try:
-            import legal_workflow_generator.config.values as cfg
-            args.model = cfg.GEMINI_MODEL
+            args.model = eb.default_model(args.provider)
         except Exception:
             sys.exit("Could not read GEMINI_MODEL from the project config. Pass --model <name>.")
         print(f"Using the pipeline's model: {args.model}")
@@ -388,7 +388,7 @@ def main():
     queries = queries[: args.limit] if args.limit else queries
     print(f"{len(provs)} provisions loaded; {len(queries)} queries")
 
-    ctx = {"client": eb.make_client(), "model": args.model, "allow_abstain": args.allow_abstain,
+    ctx = {"client": eb.make_client(args.provider), "model": args.model, "allow_abstain": args.allow_abstain,
            "resolver": resolver, "provs": provs}
     done = {r["query"] for r in eb.load_rows(MODE_NAME)} if args.resume else set()
     if not args.resume and out_path.exists():

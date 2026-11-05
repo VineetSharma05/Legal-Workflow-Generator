@@ -15,7 +15,7 @@ class HybridSearcher:
         """Build BM25 index"""
         self.bm25_retriever.build_index()
 
-    def search(self, query, top_k=3, bm25_candidates=20, vector_candidates=0):
+    def search(self, query, top_k=3, bm25_candidates=20, vector_candidates=0, domain=None):
         """
         Hybrid search:
         1. BM25 retrieves top `bm25_candidates`
@@ -26,9 +26,11 @@ class HybridSearcher:
         4. Return top_k results as dicts
 
         vector_candidates=0 keeps the original behaviour, so existing callers are unaffected.
+        domain restricts every stage to provisions of that domain, so a small domain is not crowded out
+        of the candidate pool by a large one (the filter is applied before the top_k cut, not after).
         """
         # Step 1: BM25 retrieval
-        bm25_results = self.bm25_retriever.search(query, top_k=bm25_candidates)
+        bm25_results = self.bm25_retriever.search(query, top_k=bm25_candidates, domain=domain)
         candidate_ids = [pid for pid, score in bm25_results]
 
         # Step 2: normalise BM25 scores to 0-1
@@ -53,13 +55,13 @@ class HybridSearcher:
             # Step 1b: add nearest neighbours from the whole corpus
             if vector_candidates:
                 cur.execute(
-                    """
+                    f"""
                     SELECT provision_id FROM laws
-                    WHERE embedding IS NOT NULL
+                    WHERE embedding IS NOT NULL {"AND domain = %s" if domain else ""}
                     ORDER BY embedding <=> %s::vector
                     LIMIT %s
                     """,
-                    (query_embedding, int(vector_candidates)),
+                    ([domain] if domain else []) + [query_embedding, int(vector_candidates)],
                 )
                 vec_ids = [r[0] for r in cur.fetchall()]
                 candidate_ids = list(dict.fromkeys(candidate_ids + vec_ids))

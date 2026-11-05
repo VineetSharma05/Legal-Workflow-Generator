@@ -46,15 +46,19 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from run_status import EXIT_DONE, EXIT_PARTIAL, EXIT_STOPPED, FailureTracker  # noqa: E402
 from eval_complete_multidomain import (  # noqa: E402
     COMPLETE_DIR, FEMA, RESULTS_DIR, STATUTE_PREFIX_DOMAIN, TEST_QUERIES,
     category, domain_of, mean, ratio,
 )
 
-CACHE_DIR = RESULTS_DIR / "cache"
+# shared by every results folder (the embeddings depend only on the corpus)
+CACHE_DIR = Path(__file__).resolve().parent / "results" / "cache"
 KS = (3, 8, 20)
 RAG_KIND = {"rag_hybrid": "hybrid", "rag_bm25": "bm25", "rag_dense": "dense"}
 ALL_MODES = ["llm_only", "rag_hybrid", "rag_bm25", "rag_dense", "full"]
+# saved runs, including the abstaining variants, in the order the report lists them
+REPORT_RUNS = ["llm_only", "llm_pure", "rag_bm25", "rag_dense", "rag_hybrid", "rag_hybrid_abstain", "full"]
 
 
 # ── corpus and retrieval ─────────────────────────────────────────────────────
@@ -174,7 +178,38 @@ class ModelUnavailable(Exception):
     pass
 
 
-def make_client():
+class _GroqResponse:
+    def __init__(self, text):
+        self.text = text
+
+
+class _GroqModels:
+    """Same call shape as google-genai's client.models, backed by the project's Groq client."""
+
+    def generate_content(self, model, contents, config=None):
+        from legal_workflow_generator.agent import groq_client
+        config = config or {}
+        json_mode = config.get("response_mime_type") == "application/json"
+        return _GroqResponse(groq_client.complete("", contents, temperature=config.get("temperature"),
+                                                  json_mode=json_mode))
+
+
+class GroqClient:
+    models = _GroqModels()
+
+
+PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
+
+
+def default_model(provider: str) -> str:
+    import legal_workflow_generator.config.values as cfg
+    return cfg.GROQ_MODEL if provider == "groq" else cfg.GEMINI_MODEL
+
+
+def make_client(provider: str | None = None):
+    if (provider or PROVIDER) == "groq":
+        import legal_workflow_generator.config.values  # noqa: F401  (loads .env)
+        return GroqClient()
     try:  # loads .env and uses the key pool from the project
         import legal_workflow_generator.config.values  # noqa: F401
         from legal_workflow_generator.agent.gemini_client import RotatingGeminiClient
@@ -310,7 +345,9 @@ def make_row(t: dict, cited: list, provs: dict, abstained: bool, reason: str,
 def run_query(t, mode, ctx):
     start = time.time()
     if mode == "full":
-        r = ctx["graph"].invoke({"query": t["query"]})
+        from legal_workflow_generator.agent.settings import build_config
+        r = ctx["graph"].invoke({"query": t["query"]},
+                                config=build_config(provider=ctx.get("provider"), as_of=ctx.get("as_of")))
         return make_row(t, sorted(set(r.get("verified_citations", []))), ctx["provs"],
                         bool(r.get("abstain", False)), r.get("abstain_reason", ""),
                         time.time() - start, [])
@@ -392,8 +429,9 @@ def report_old():
 # ── main ─────────────────────────────────────────────────────────────────────
 def report():
     """One combined view: every system side by side, per category, plus retrieval metrics."""
-    names = {"llm_only": "LLM, no retrieval", "rag_hybrid": "Single-pass RAG (hybrid)",
-             "rag_bm25": "BM25 only", "rag_dense": "Dense only", "full": "Full pipeline"}
+    names = {"llm_only": "LLM only (ids given)", "llm_pure": "LLM only (names only)",
+             "rag_hybrid": "RAG, hybrid (no abstain)", "rag_hybrid_abstain": "RAG, hybrid (abstain)",
+             "rag_bm25": "RAG, BM25", "rag_dense": "RAG, dense", "full": "Full pipeline"}
     lines = []
 
     def out(s=""):
@@ -403,7 +441,7 @@ def report():
     def f(v):
         return "--" if v is None else (f"{v:.3f}" if isinstance(v, float) else str(v))
 
-    data = {m: summarize(load_rows(m)) for m in ALL_MODES if load_rows(m)}
+    data = {m: summarize(load_rows(m)) for m in REPORT_RUNS if load_rows(m)}
     if not data:
         print("No saved results found in", RESULTS_DIR)
     for group, title in (("overall", "Overall"), ("single", "Single-domain"),
@@ -467,10 +505,15 @@ def main():
                     help="Tell the baseline it may abstain. Default off (the paper defines the "
                          "baselines as having no abstention).")
     ap.add_argument("--resume", action="store_true", help="Skip queries already saved for this mode.")
+    ap.add_argument("--provider", choices=["gemini", "groq"], default=PROVIDER,
+                    help="LLM provider (default: LLM_PROVIDER env var, else gemini).")
     args = ap.parse_args()
+    # abstaining and non-abstaining runs are different systems: keep them in different files
+    run_name = args.mode + ("_abstain" if args.allow_abstain and args.mode not in ("retrieval", "full") else "")
 
     if args.mode == "report":
-        return report()
+        report()
+        return EXIT_DONE
 
     if args.mode != "full":
         # The baselines read the JSON corpus, not Postgres. The project config still insists
@@ -481,8 +524,7 @@ def main():
 
     if args.model is None and args.mode not in ("retrieval", "full"):
         try:
-            import legal_workflow_generator.config.values as cfg
-            args.model = cfg.GEMINI_MODEL
+            args.model = default_model(args.provider)
         except Exception:
             sys.exit("Could not read GEMINI_MODEL from the project config. "
                      "Pass it explicitly, e.g. --model <name used by the pipeline>.")
@@ -505,10 +547,11 @@ def main():
                 print(f"  {g:8s} n={m['n']:3d}  R@3={m['recall@3']} R@8={m['recall@8']} "
                       f"R@20={m['recall@20']}  any@8={m['any_gold_in_top8']}  MRR={m['mrr']}")
         print(f"\nSaved {path}")
-        return
+        return EXIT_DONE
 
     ctx = {"provs": provs, "lower": {p.lower(): p for p in provs}, "model": args.model,
-           "k": args.k, "allow_abstain": args.allow_abstain}
+           "k": args.k, "allow_abstain": args.allow_abstain, "provider": args.provider,
+           "as_of": args.as_of}
     if args.mode in RAG_KIND:
         ctx["ret"] = Retriever(provs, as_of, dense=RAG_KIND[args.mode] != "bm25")
     if args.mode == "full":
@@ -516,52 +559,62 @@ def main():
         from legal_workflow_generator.agent.graph import graph
         ctx["graph"] = graph
     else:
-        ctx["client"] = make_client()
+        ctx["client"] = make_client(args.provider)
 
-    out_path = RESULTS_DIR / f"baseline_{args.mode}.jsonl"
-    done = {r["query"] for r in load_rows(args.mode)} if args.resume else set()
+    out_path = RESULTS_DIR / f"baseline_{run_name}.jsonl"
+    done = {r["query"] for r in load_rows(run_name)} if args.resume else set()
     if not args.resume and out_path.exists():
         out_path.unlink()
 
-    errors = 0
+    tracker = FailureTracker()
     try:
         for i, t in enumerate(queries, 1):
             if t["query"] in done:
                 continue
-            print(f"[{i:03d}/{len(queries)}] ({category(t)}) {t['query'][:70]}...")
+            print(f"[{i:03d}/{len(queries)}] ({category(t)}) {t['query'][:70]}...", flush=True)
             try:
                 row = run_query(t, args.mode, ctx)
             except DailyQuota as e:
-                print(f"\nDaily quota exhausted: {e}\nProgress saved. Rerun with --resume later.")
+                tracker.stop_reason = f"daily quota exhausted: {str(e)[:200]}"
                 break
             except ModelUnavailable as e:
-                print(f"\nModel '{args.model}' is not available to your keys: {str(e)[:200]}\n"
-                      "Set GEMINI_MODEL (or pass --model) to a model your keys can use, then rerun. "
-                      "Nothing was saved for this query.")
+                tracker.stop_reason = f"model '{args.model}' is not available to these keys: {str(e)[:200]}"
                 break
-            except Exception as e:
-                errors += 1
-                print(f"        ERROR: {e}")
+            except Exception as e:  # noqa: BLE001
+                msg = f"{type(e).__name__}: {e}"
+                print(f"        ERROR (not saved, retried on the next run): {msg[:200]}")
+                tracker.failed(msg)
+                if tracker.should_stop:
+                    break
                 continue
+            tracker.ok()
+            row["run_date"] = time.strftime("%Y-%m-%dT%H:%M:%S")
             with open(out_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(row) + "\n")
             print(f"        cited={len(row['cited'])} valid={len(row['valid_cited'])} "
                   f"hits={row['hits']}/{len(row['expected_sections'])} "
-                  f"abstained={row['abstained']} {row['elapsed_seconds']}s")
+                  f"abstained={row['abstained']} {row['elapsed_seconds']}s", flush=True)
             time.sleep(args.sleep)
     except KeyboardInterrupt:
-        print("\nInterrupted. Progress saved; rerun with --resume.")
+        tracker.stop_reason = "interrupted (Ctrl+C)"
 
-    rows = load_rows(args.mode)
+    rows = load_rows(run_name)
     if rows:
         summ = summarize(rows)
-        (RESULTS_DIR / f"baseline_{args.mode}_summary.json").write_text(json.dumps(summ, indent=2))
-        print(f"\n{'=' * 60}\n{args.mode}: {len(rows)}/{len(queries)} done, {errors} errors this session")
+        (RESULTS_DIR / f"baseline_{run_name}_summary.json").write_text(json.dumps(summ, indent=2))
+        print(f"\n{'=' * 60}\n{run_name}: {len(rows)}/{len(queries)} done, {tracker.total} errors this session")
         for g, m in summ.items():
             print(f"  {g:8s} n={m['n']:3d} recall={m['gold_provision_recall']} prec={m['citation_precision']} "
                   f"valid={m['citation_validity']} abstain_acc={m['abstain_accuracy']} "
                   f"wrong_decl={m['wrongly_declined']} lat={m['avg_latency_s']}s")
+    wanted = {t["query"] for t in queries}
+    n_done = len({r["query"] for r in rows} & wanted)
+    print(f"\n{n_done}/{len(queries)} queries have a saved result.")
+    if tracker.should_stop:
+        print(f"STOPPED: {tracker.stop_reason}\nProgress is saved; run the same command with --resume later.")
+        return EXIT_STOPPED
+    return EXIT_DONE if n_done == len(queries) else EXIT_PARTIAL
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

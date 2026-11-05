@@ -193,8 +193,29 @@ def _llm(system: str, user: str, grader: bool = False, max_retries: int = 5) -> 
     return _with_retries(provider, once, max_retries)
 
 
+# Number of LLM calls that finally failed (after retries) in this process. Some stages deliberately carry on
+# after a failure (the answer is marked "unchecked" / "unverified"); the evaluation reads this counter to tell a
+# degraded run apart from a real result, and re-runs such queries instead of scoring them.
+LLM_FAILURES = {"count": 0, "last": ""}
+_FAIL_LOCK = threading.Lock()
+
+
+def _note_failure(msg: str) -> None:
+    with _FAIL_LOCK:
+        LLM_FAILURES["count"] += 1
+        LLM_FAILURES["last"] = msg[:300]
+
+
 def _with_retries(provider: str, fn, max_retries: int = 5):
     """Run fn(), retrying on 429/5xx with backoff. Raises LLMUnavailable when quota/overload persists."""
+    try:
+        return _with_retries_inner(provider, fn, max_retries)
+    except Exception as e:  # noqa: BLE001 - counted, then re-raised unchanged
+        _note_failure(f"{type(e).__name__}: {e}")
+        raise
+
+
+def _with_retries_inner(provider: str, fn, max_retries: int):
     limiter = LIMITERS[provider]
     for attempt in range(max_retries):
         try:
@@ -366,6 +387,17 @@ def _with_anchors(domain: str, question: str, docs: list) -> list:
     return _fetch_by_ids([w for w in wanted if w not in have]) + docs
 
 
+def _with_suggested(ids: list, docs: list) -> list:
+    """Append the planner's suggested provisions that retrieval did not already bring in."""
+    have = {d.get("provision_id", "").lower() for d in docs}
+    extra = _fetch_by_ids([i for i in ids if i.lower() not in have])
+    rank = {i.lower(): n for n, i in enumerate(ids)}
+    extra.sort(key=lambda d: rank.get(d["provision_id"].lower(), 99))
+    for d in extra:
+        d["anchor"], d["combined_score"] = False, None
+    return docs + extra
+
+
 _STOP = {"which", "under", "where", "other", "there", "their", "about", "whether", "being", "would", "could"}
 
 
@@ -500,8 +532,8 @@ def classify_query(state: AgentState, config: RunnableConfig = None) -> AgentSta
             llm_domains, llm_note = f_llm.result(), ""
         except LLMUnavailable as e:
             llm_domains, llm_note = [], f" [LLM domain detection unavailable: {e}]"
-        except Exception:
-            llm_domains, llm_note = [], ""
+        except Exception as e:  # noqa: BLE001
+            llm_domains, llm_note = [], f" [LLM domain detection failed: {type(e).__name__}]"
 
     combined = list(dict.fromkeys(retrieval_domains + llm_domains + [state["domain"]]))
     combined = [d for d in combined if d in VALID_DOMAINS]
@@ -530,7 +562,10 @@ def _el(t0: float) -> str:
     return f"+{time.perf_counter() - t0:4.1f}s " if current_settings().trace_timing else ""
 
 
-def _hybrid_search(rag, query: str, s: RunSettings) -> list:
+def _hybrid_search(rag, query: str, s: RunSettings, domain: str | None = None) -> list:
+    if domain and s.domain_search == "domain":
+        return rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates,
+                                   vector_candidates=s.vector_candidates, domain=domain)
     try:
         return rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates,
                                    vector_candidates=s.vector_candidates)
@@ -561,7 +596,7 @@ def _domain_candidates(rag, query: str, domain: str) -> list:
     """Search, then keep every provision that belongs to this domain (no cap yet, best first)."""
     s = current_settings()
     hint = DOMAIN_QUERY_HINTS.get(domain, "")
-    docs = _hybrid_search(rag, f"{query} {hint}".strip(), s)
+    docs = _hybrid_search(rag, f"{query} {hint}".strip(), s, domain)
     docs = [d for d in docs if "_forms_" not in d.get("provision_id", "")
             and _domain_of(d.get("provision_id", "")) == domain]
     return _demote_machinery(docs, query)
@@ -627,17 +662,97 @@ Reply with ONLY the query."""
 
 MAX_ASPECTS = 4
 
+# ── LLM-suggested provisions ─────────────────────────────────────────────────
+# The planner call also names the provisions the model expects to answer the question, written as corpus
+# identifiers. Only identifiers that exist in this domain of the corpus are kept; they join the context next to
+# the retrieved provisions and then pass the same grading, generation, identifier gate and entailment check.
+# A suggestion is therefore never trusted: a wrong or invented section either does not exist (dropped here) or
+# does not support the step (dropped by the claim check). This recovers central provisions that broad questions
+# rank low (e.g. the GST levy or the company incorporation section), which the LLM recalls from memory.
+_ID_PREFIX = re.compile(r"^(.*?_(?:sec|rule|reg|dir|sch|schedule|annex))_", re.I)
+_CATALOG = None
+_CATALOG_LOCK = threading.Lock()
+
+
+def _statute_name(statute_id: str) -> str:
+    return " ".join(w.upper() if len(w) <= 4 and not w.isdigit() and w not in ("act", "code") else w.capitalize()
+                    for w in statute_id.split("_"))
+
+
+def _catalog() -> dict:
+    """{domain: {"lines": [catalog text lines], "ids": {lower id: canonical id}}} built once from the DB."""
+    global _CATALOG
+    with _CATALOG_LOCK:
+        if _CATALOG is not None:
+            return _CATALOG
+        cat = {d: {"prefixes": {}, "ids": {}} for d in VALID_DOMAINS}
+        try:
+            conn = _connect()
+            cur = conn.cursor()
+            cur.execute("SELECT provision_id, statute_id, domain FROM laws WHERE domain IS NOT NULL")
+            rows = cur.fetchall()
+            cur.close()
+            conn.close()
+        except Exception as e:  # noqa: BLE001
+            logger.warning("catalog load failed: %s", e)
+            rows = []
+        for pid, statute, dom in rows:
+            if dom not in cat or "_forms_" in pid:
+                continue
+            cat[dom]["ids"][pid.lower()] = pid
+            m = _ID_PREFIX.match(pid)
+            if m:
+                cat[dom]["prefixes"].setdefault(m.group(1) + "_", statute or "")
+        for d in cat.values():
+            d["lines"] = [f"- {p}<number>  ({_statute_name(st)})" for p, st in sorted(d["prefixes"].items())]
+        _CATALOG = cat
+        return cat
+
+
+def _resolve_suggestions(domain: str, raw: list) -> list:
+    """Map the planner's suggested identifiers to existing provision ids of this domain (order kept)."""
+    ids = _catalog()[domain]["ids"]
+    out = []
+    for r in raw or []:
+        cand = re.sub(r"[\s\[\]\"'`]", "", str(r)).strip(".").lower()
+        if not cand:
+            continue
+        tries = [cand, re.sub(r"\(.*$", "", cand), re.sub(r"_\d+[a-z]?$", "", cand)]
+        # the IT Act is split across two prefixes (data protection vs IP sections)
+        tries += [t.replace("information_technology_act_2000_", "it_act_2000_") for t in tries[:2]]
+        tries += [t.replace("it_act_2000_", "information_technology_act_2000_") for t in tries[:2]]
+        for t in tries:
+            if t in ids:
+                out.append(ids[t])
+                break
+    return list(dict.fromkeys(out))
+
 
 def _plan_queries(domain: str, user_q: str, fallback: str) -> tuple:
-    """One LLM call per domain. Returns (focus query, aspect queries).
+    """One LLM call per domain. Returns (focus query, aspect queries, suggested provision ids).
 
     focus   : the question narrowed to this domain (used as the search query for multi-domain questions).
     aspects : for broad questions ("what is the DPDP Act and how do I follow it"), up to MAX_ASPECTS short
               queries, one per topic a complete answer needs (duties, notice, consent, breach reporting ...).
               A single vague query ranks definitions and rule-making powers above the sections that hold
               the actual obligations; searching each topic separately brings those sections up.
-    Aspects only steer retrieval; every step is still generated from, and checked against, retrieved text."""
+    Aspects only steer retrieval; every step is still generated from, and checked against, retrieved text.
+    suggested: when settings.suggest_provisions is on, up to settings.suggest_cap corpus ids the model expects to
+              answer the question (see _resolve_suggestions); [] otherwise."""
     label = _DOMAIN_LABELS[domain]
+    s = current_settings()
+    suggest = s.suggest_provisions and s.suggest_cap > 0
+    suggest_block, suggest_json = "", ""
+    if suggest:
+        catalog = "\n".join(_catalog()[domain]["lines"])
+        suggest_block = f"""
+"provisions": list up to {s.suggest_cap} {label} provisions of Indian law that most directly answer this question,
+most important first, written as identifiers in this format (prefix + section, rule or regulation number,
+for example cgst_act_2017_sec_16 or ca_2013_sec_135). Use only these prefixes:
+{catalog}
+Name only provisions you are confident exist and apply. For a question with no {label} part use [].
+"""
+        suggest_json = ', "provisions": ["..."]'
     system = "You are a legal search query writer."
     user = f"""Question: {user_q}
 
@@ -657,21 +772,25 @@ Use the terms Indian statutes use. Never cite section numbers. For a narrow ques
 Do NOT put the name of the Act in the aspects (write "notice to data principal before collecting personal data",
 not "DPDP Act notice requirements"): the Act's name matches every section of it and hides the one on the topic.
 
-Reply ONLY with JSON: {{"focus": "...", "aspects": ["...", "..."]}}"""
+{suggest_block}
+Reply ONLY with JSON: {{"focus": "...", "aspects": ["...", "..."]{suggest_json}}}"""
     try:
         raw = _llm(system, user)
     except LLMUnavailable:
         raise
     except Exception:
-        return fallback, []
+        return fallback, [], []
+    suggested = []
     try:
         p = _parse_json(raw)
         focus = str(p.get("focus") or "").strip() or fallback
         aspects = [str(a).strip() for a in (p.get("aspects") or []) if str(a).strip()]
+        if suggest and isinstance(p.get("provisions"), list):
+            suggested = _resolve_suggestions(domain, p["provisions"])[:s.suggest_cap]
     except Exception:                       # plain-text reply: treat it as the focus query
         focus, aspects = (raw.strip().splitlines() or [fallback])[0].strip() or fallback, []
     aspects = [a for a in dict.fromkeys(aspects) if a.lower() != focus.lower()][:MAX_ASPECTS]
-    return focus, aspects
+    return focus, aspects, suggested
 
 
 # Reciprocal rank fusion over several searches. Shallow (top RRF_DEPTH of each list, small k) so that
@@ -808,12 +927,14 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
     res = DomainResult(domain=domain, reason="No documents retrieved")
     try:
         q, sub_q = search_q, user_q
-        focus, aspects = _plan_queries(domain, user_q, search_q)
+        focus, aspects, suggested = _plan_queries(domain, user_q, search_q)
         if multi:
             q = sub_q = focus
             trace.append(f"{_el(t0)}[{domain}] focus → '{q}'")
         if aspects:
             trace.append(f"{_el(t0)}[{domain}] aspects → {aspects}")
+        if suggested:
+            trace.append(f"{_el(t0)}[{domain}] suggested → {suggested}")
 
         for attempt in range(s.max_domain_retries + 1):
             try:
@@ -825,7 +946,7 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
             cands = _hydrate(cands)
             exclude = s.future_provisions == "exclude"
             live = [d for d in cands if _in_force(d, as_of)] if exclude else cands
-            docs = _hydrate(_with_anchors(domain, user_q, _cut(live, s)))
+            docs = _hydrate(_with_suggested(suggested, _with_anchors(domain, user_q, _cut(live, s))))
             if exclude:
                 docs = [d for d in docs if _in_force(d, as_of)]    # anchors are checked as well
             res.docs = [Provision.from_dict(d) for d in docs]     # typed from here on

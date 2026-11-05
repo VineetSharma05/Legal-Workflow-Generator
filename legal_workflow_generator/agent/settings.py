@@ -21,6 +21,12 @@ Meaning of the options
   future_provisions  what to do with provisions that commence after as_of:
                      "annotate" (default) keeps them and marks each step "not yet in force; applies from <date>",
                      "exclude" drops them (the behaviour before phased statutes such as the DPDP Act were dated)
+  domain_search      "global": search the whole corpus, then keep this domain's provisions from the top
+                     search_depth (the original design); "domain": search only this domain's provisions,
+                     so a small domain is not crowded out of the candidate pool by a large one
+  suggest_provisions the per-domain planner call also names up to suggest_cap provisions (as corpus ids) that the
+                     model expects to answer the question; ids that exist in the domain join the context and
+                     are graded, cited and claim-checked like retrieved provisions (no extra LLM call)
   trace_timing       False removes "+1.4s" prefixes so traces are byte-for-byte reproducible
 """
 import contextvars
@@ -30,6 +36,7 @@ from dataclasses import dataclass, fields
 
 ALLOWED_PROVIDERS = ("gemini", "groq")
 FUTURE_PROVISION_MODES = ("annotate", "exclude")
+DOMAIN_SEARCH_MODES = ("global", "domain")
 MAX_TOP_K = 20
 
 
@@ -45,6 +52,9 @@ class RunSettings:
     verify_claims: bool = True
     as_of: str = ""
     future_provisions: str = "annotate"
+    domain_search: str = "global"
+    suggest_provisions: bool = False
+    suggest_cap: int = 4
     trace_timing: bool = True
 
     def __post_init__(self):
@@ -58,6 +68,10 @@ class RunSettings:
             raise ValueError("max_domain_retries must be between 0 and 3")
         if self.future_provisions not in FUTURE_PROVISION_MODES:
             raise ValueError(f"future_provisions must be one of {FUTURE_PROVISION_MODES}, got {self.future_provisions!r}")
+        if not (0 <= int(self.suggest_cap) <= 10):
+            raise ValueError(f"suggest_cap must be between 0 and 10, got {self.suggest_cap!r}")
+        if self.domain_search not in DOMAIN_SEARCH_MODES:
+            raise ValueError(f"domain_search must be one of {DOMAIN_SEARCH_MODES}, got {self.domain_search!r}")
         if self.as_of:
             _dt.date.fromisoformat(self.as_of)        # raises ValueError on a bad date
 
@@ -75,14 +89,16 @@ class RunSettings:
         picked = {k: v for k, v in cfg.items() if k in known and v is not None}
         if "provider" in picked:
             picked["provider"] = str(picked["provider"]).strip().lower()
-        for k in ("top_k", "act_cap", "search_depth", "bm25_candidates", "vector_candidates", "max_domain_retries"):
+        for k in ("suggest_cap", "top_k", "act_cap", "search_depth", "bm25_candidates", "vector_candidates", "max_domain_retries"):
             if k in picked:
                 picked[k] = int(picked[k])
-        for k in ("verify_claims", "trace_timing"):
+        for k in ("verify_claims", "trace_timing", "suggest_provisions"):
             if k in picked and isinstance(picked[k], str):
                 picked[k] = picked[k].strip().lower() in ("1", "true", "yes", "on")
         if "as_of" in picked:
             picked["as_of"] = str(picked["as_of"])
+        if "domain_search" in picked:
+            picked["domain_search"] = str(picked["domain_search"]).strip().lower()
         if "future_provisions" in picked:
             picked["future_provisions"] = str(picked["future_provisions"]).strip().lower()
         return cls(**picked)
