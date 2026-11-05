@@ -37,7 +37,7 @@ A `critical error` (O2 = Y) is reported separately and cannot be offset by high 
 
 ## Procedure
 
-1. Build the sheet: `python evals/expert_review/build_review_sheet.py --results eval_results.jsonl --out review/`.
+1. Build the sheet: `python evals/expert_review/build_review_sheet.py --results evals/results/eval_results.jsonl --out review/`.
 2. Each reviewer fills only their own CSV. Cases marked `double=yes` are scored by two reviewers, which measures agreement.
 3. Score each row independently and do not discuss rows before submitting.
 4. Aggregate: `python evals/expert_review/score_reviews.py review/reviewer_*.csv --out review/summary.md`.

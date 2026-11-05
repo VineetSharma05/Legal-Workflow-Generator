@@ -1,6 +1,6 @@
 """Build blinded expert-review sheets from an evaluation run.
 
-    python evals/expert_review/build_review_sheet.py --results eval_results.jsonl --out review/ \
+    python evals/expert_review/build_review_sheet.py --results evals/results/eval_results.jsonl --out review/ \
         [--sample 20] [--double 0.25] [--reviewers 2] [--seed 7]
 
 Only completed evaluation rows are used (errored or incomplete rows are skipped). Each reviewer gets a CSV
@@ -16,6 +16,7 @@ import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.insert(0, ROOT)
+sys.path.insert(0, os.path.join(ROOT, "evals"))   # for eval_pipeline
 
 SCORE_COLS = ["C1_citation_faithfulness", "C2_applicability", "C3_completeness", "C4_no_invented_obligations",
               "C5_temporal_validity", "U1_actionability", "U2_clarity_ordering", "U3_honest_gaps"]
@@ -83,7 +84,7 @@ def build(rows: list, out_dir: str, *, sample: int | None, double: float, review
 
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument("--results", default="eval_results.jsonl")
+    ap.add_argument("--results", default="evals/results/eval_results.jsonl")
     ap.add_argument("--out", default="review")
     ap.add_argument("--sample", type=int, default=None, help="review only a random sample of N completed cases")
     ap.add_argument("--double", type=float, default=0.25, help="fraction of rows scored by two reviewers")

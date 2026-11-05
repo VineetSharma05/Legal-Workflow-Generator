@@ -21,7 +21,3 @@ htmlcov/
 dataset.json
 *.bak
 eval_results.jsonl
-*.bak
-eval_results.jsonl
-*.bak
-eval_results.jsonl

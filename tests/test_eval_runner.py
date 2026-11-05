@@ -1,9 +1,12 @@
-"""Offline tests for eval_pipeline.py: incomplete cases are never scored, corpus guard, settings passed through."""
+"""Offline tests for evals/eval_pipeline.py: incomplete cases are never scored, corpus guard, settings passed through."""
 import sys
+from pathlib import Path
 
 import pytest
 
-import eval_pipeline as E
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "evals"))
+
+import eval_pipeline as E  # noqa: E402
 
 
 def _state(**over):

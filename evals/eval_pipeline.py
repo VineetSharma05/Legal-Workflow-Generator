@@ -2,14 +2,14 @@
 eval_pipeline.py  -  50-query evaluation for the Legal Workflow Generator.
 
 Usage (from the project root):
-    python eval_pipeline.py                  # run everything not yet done (resumable)
-    python eval_pipeline.py --rpm 10         # slower / safer pacing (default 12 calls per minute)
-    python eval_pipeline.py --only five      # one category: single two three four five startup abstain adversarial
-    python eval_pipeline.py --limit 5        # only the next 5 pending queries
-    python eval_pipeline.py --fresh          # forget saved results and start again
-    python eval_pipeline.py --summary        # just print the summary of saved results
+    python evals/eval_pipeline.py                  # run everything not yet done (resumable)
+    python evals/eval_pipeline.py --rpm 10         # slower / safer pacing (default 12 calls per minute)
+    python evals/eval_pipeline.py --only five      # one category: single two three four five startup abstain adversarial
+    python evals/eval_pipeline.py --limit 5        # only the next 5 pending queries
+    python evals/eval_pipeline.py --fresh          # forget saved results and start again
+    python evals/eval_pipeline.py --summary        # just print the summary of saved results
 
-Every finished query is appended to eval_results.jsonl, so you can stop (Ctrl+C) and
+Every finished query is appended to evals/results/eval_results.jsonl, so you can stop (Ctrl+C) and
 re-run later; it continues where it left off. Failed queries are retried on the next run.
 
 HOW SCORING WORKS (the gold sets are hand-written judgements - edit them freely)
@@ -33,6 +33,9 @@ import subprocess
 import sys
 import threading
 import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 
 DP, CG, IP, TX, EM = "data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"
@@ -325,7 +328,7 @@ def main():
     ap.add_argument("--limit", type=int)
     ap.add_argument("--fresh", action="store_true")
     ap.add_argument("--summary", action="store_true")
-    ap.add_argument("--out", default="eval_results.jsonl")
+    ap.add_argument("--out", default="evals/results/eval_results.jsonl")
     ap.add_argument("--provider", choices=["gemini", "groq"], default="gemini")
     ap.add_argument("--top-k", type=int, default=8, dest="top_k")
     ap.add_argument("--as-of", default=None, help="ISO date the answers must be valid on (default: today)")

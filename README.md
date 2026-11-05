@@ -2,12 +2,13 @@
 
 ```
 main.py                     CLI entrypoint for database setup / ingestion / embedding
+app.py                      FastAPI web app (chat UI + API)
 legal_workflow_generator/   library code (query, rag, agent, workflow units)
-scripts/                    runnable helper scripts (agent queries, demos, validation)
-evals/                      evaluation harnesses; evals/results/ holds saved runs
+scripts/                    runnable helper scripts (agent queries, batch runs, DB check, demos)
+evals/                      evaluation harnesses (e.g. eval_pipeline.py); evals/results/ holds saved runs
 tests/                      unit and pipeline tests
 datasets/                   source legal corpora
-docs/                       architecture diagram and evaluation write-ups
+docs/                       architecture diagram, workflow pseudocode and evaluation write-ups
 ```
 
 All commands below are meant to be run from the repository root.

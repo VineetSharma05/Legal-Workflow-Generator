@@ -1,9 +1,13 @@
-"""Run: python eval_pipeline.py
+"""Run: python evals/eval_pipeline_10query.py
 Scores the pipeline against a hand-written gold set.
 Gold sets are judgements, edit them freely. Each 'groups' entry is a list of
 provision-id prefixes; the group counts as HIT if any cited id starts with any prefix."""
 import statistics
+import sys
 import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from legal_workflow_generator.agent.graph import graph
 

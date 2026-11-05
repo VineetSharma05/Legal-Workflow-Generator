@@ -2,21 +2,25 @@
 Run a batch of queries from a text file through the agent graph.
 
 Usage:
-    python run_batch.py queries.txt
+    python scripts/run_batch.py scripts/queries.txt
 
 Each non-empty line in the file is treated as one query.
-Full output (answer + trace) for every query is written to batch_results.txt.
+Full output (answer + trace) for every query is written to evals/results/batch_results.txt.
 A short summary table is printed to the terminal at the end.
 """
 
 import sys
 import time
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from legal_workflow_generator.agent.graph import graph
 
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python run_batch.py queries.txt")
+        print("Usage: python scripts/run_batch.py scripts/queries.txt")
         sys.exit(1)
 
     path = sys.argv[1]
@@ -26,7 +30,7 @@ def main():
     print(f"Loaded {len(queries)} queries from {path}\n")
 
     summary_rows = []
-    out_path = "batch_results.txt"
+    out_path = "evals/results/batch_results.txt"
 
     with open(out_path, "w", encoding="utf-8") as out:
         for i, query in enumerate(queries, start=1):
