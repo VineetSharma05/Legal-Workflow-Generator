@@ -1,0 +1,336 @@
+
+===== 2026-11-05T12:33:50 evals/eval_baselines.py --mode rag_hybrid --provider gemini --resume --sleep 1
+Using the pipeline's model: models/gemini-3.1-flash-lite
+4888 provisions loaded; 100 queries; as_of=2026-10-15
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+[001/100] (single) what notice must a data fiduciary give before collecting personal data...
+        cited=2 valid=2 hits=0/2 abstained=False 1.76s
+[002/100] (single) how quickly must we report a personal data breach to the Data Protecti...
+        cited=2 valid=2 hits=0/2 abstained=False 1.49s
+[003/100] (single) verifiable parental consent requirements for processing children's per...
+        cited=1 valid=1 hits=0/2 abstained=False 1.17s
+[004/100] (single) registration conditions and obligations of a consent manager...
+        cited=1 valid=1 hits=0/2 abstained=False 1.63s
+[005/100] (single) what reasonable security safeguards are mandatory under the DPDP rules...
+        cited=2 valid=2 hits=0/2 abstained=False 1.59s
+[006/100] (single) can we transfer personal data of Indian users to servers outside India...
+        cited=1 valid=1 hits=1/2 abstained=False 1.54s
+[007/100] (single) mandatory reporting of cyber security incidents to CERT-In within 6 ho...
+        cited=2 valid=2 hits=2/2 abstained=False 1.35s
+[008/100] (single) how long must we retain ICT system logs under the CERT-In directions...
+        cited=1 valid=1 hits=1/2 abstained=False 1.37s
+[009/100] (single) what counts as sensitive personal data or information under the SPDI r...
+        cited=2 valid=2 hits=1/2 abstained=False 1.81s
+[010/100] (single) compensation liability of a body corporate that fails to protect sensi...
+        cited=1 valid=1 hits=1/2 abstained=False 1.46s
+[011/100] (single) minimum number of partners and designated partners required to form an...
+        cited=2 valid=2 hits=2/2 abstained=False 1.53s
+[012/100] (single) how to convert a private limited company into an LLP...
+        cited=3 valid=3 hits=2/2 abstained=False 1.28s
+[013/100] (single) is a non-compete clause in a commercial contract enforceable in India...
+        cited=1 valid=1 hits=0/2 abstained=False 1.41s
+[014/100] (single) damages recoverable for breach of contract when a liquidated damages c...
+        cited=1 valid=1 hits=1/2 abstained=False 1.31s
+[015/100] (single) what is a contract of indemnity and what are the rights of the indemni...
+        cited=2 valid=2 hits=2/2 abstained=False 1.4s
+[016/100] (single) when must a company spend on corporate social responsibility...
+        cited=1 valid=1 hits=1/1 abstained=False 1.66s
+[017/100] (single) process for appointing the auditor of a company at the annual general ...
+Gemini key #1 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+        cited=2 valid=2 hits=1/2 abstained=False 2.4s
+[018/100] (single) issuing new shares to existing shareholders through a rights issue...
+        cited=3 valid=3 hits=1/2 abstained=False 1.87s
+[019/100] (single) who is not eligible to be a resolution applicant under the insolvency ...
+        cited=1 valid=1 hits=1/2 abstained=False 1.62s
+[020/100] (single) unfair trade practices by an e-commerce marketplace towards consumers...
+        cited=4 valid=4 hits=1/2 abstained=False 1.77s
+[021/100] (single) what is not an invention under Indian patent law, are software algorit...
+        cited=1 valid=1 hits=1/1 abstained=False 1.79s
+[022/100] (single) how long does a patent last in India...
+        cited=1 valid=1 hits=1/1 abstained=False 1.36s
+[023/100] (single) who is entitled to apply for a patent, the inventor or the employer...
+        cited=2 valid=2 hits=1/1 abstained=False 1.44s
+[024/100] (single) must a patent assignment be in writing to be valid...
+        cited=1 valid=1 hits=1/1 abstained=False 1.3s
+[025/100] (single) grounds on which a trademark application can be refused...
+        cited=3 valid=3 hits=2/2 abstained=False 2.1s
+[026/100] (single) how long is a trademark registration valid and how do we renew it...
+        cited=1 valid=1 hits=1/1 abstained=False 4.9s
+[027/100] (single) what amounts to infringement of a registered trademark and what relief...
+        cited=5 valid=5 hits=2/2 abstained=False 2.49s
+[028/100] (single) licensing our trademark to a franchisee as a registered user...
+        cited=2 valid=2 hits=1/2 abstained=False 1.99s
+[029/100] (single) what is piracy of a registered design...
+        cited=1 valid=1 hits=1/2 abstained=False 1.51s
+[030/100] (single) legal validity of contracts formed electronically through click-wrap a...
+        cited=4 valid=4 hits=1/2 abstained=False 1.57s
+[031/100] (single) turnover threshold for compulsory GST registration...
+        cited=1 valid=0 hits=0/2 abstained=False 1.36s
+[032/100] (single) conditions for claiming input tax credit under the CGST Act...
+        cited=3 valid=3 hits=1/1 abstained=False 1.62s
+[033/100] (single) can a small startup opt for the GST composition scheme...
+Gemini key #2 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+        cited=3 valid=3 hits=1/1 abstained=False 2.53s
+[034/100] (single) what details must a GST tax invoice contain...
+        cited=1 valid=1 hits=0/1 abstained=False 2.53s
+[035/100] (single) obligation of e-commerce operators to collect tax at source under GST...
+        cited=5 valid=5 hits=1/1 abstained=False 1.99s
+[036/100] (single) advance tax instalments and due dates under the Income Tax Act 2025...
+        cited=1 valid=1 hits=1/2 abstained=False 1.91s
+[037/100] (single) TDS obligations on salary paid to employees...
+        cited=1 valid=1 hits=1/2 abstained=False 1.98s
+[038/100] (single) tax exemptions available to a unit set up in a Special Economic Zone...
+        cited=3 valid=3 hits=1/2 abstained=False 2.17s
+[039/100] (single) consequences of executing a share purchase agreement that is not duly ...
+        cited=3 valid=3 hits=2/2 abstained=False 1.94s
+[040/100] (single) can an Indian startup set up a wholly owned subsidiary abroad under FE...
+        cited=3 valid=3 hits=1/2 abstained=False 1.99s
+[041/100] (single) maternity benefit eligibility and payment under the Code on Social Sec...
+        cited=3 valid=3 hits=1/2 abstained=False 1.48s
+[042/100] (single) is a creche facility mandatory for our office...
+        cited=2 valid=2 hits=1/1 abstained=False 1.53s
+[043/100] (single) gratuity eligibility after five years of continuous service...
+        cited=3 valid=3 hits=1/2 abstained=False 1.89s
+[044/100] (single) social security schemes for gig and platform workers and the aggregato...
+        cited=2 valid=2 hits=1/2 abstained=False 1.69s
+[045/100] (single) conditions precedent for lawful retrenchment of workmen...
+        cited=3 valid=3 hits=2/2 abstained=False 13.06s
+[046/100] (single) minimum and maximum statutory bonus payable to employees...
+        cited=4 valid=4 hits=2/2 abstained=False 1.48s
+[047/100] (single) employer contributions to the Employees Provident Fund...
+        cited=4 valid=4 hits=1/2 abstained=False 1.92s
+[048/100] (single) obligations of employers who engage apprentices...
+        cited=5 valid=5 hits=1/2 abstained=False 1.31s
+[049/100] (single) non-discrimination against persons with disabilities in employment and...
+Gemini key #3 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+        cited=2 valid=2 hits=1/2 abstained=False 2.31s
+[050/100] (single) licence requirements for engaging contract labour through a contractor...
+        cited=7 valid=7 hits=1/2 abstained=False 1.6s
+[051/100] (multi_2) we want to collect biometric attendance data from employees — what con...
+        cited=3 valid=3 hits=0/3 abstained=False 2.13s
+[052/100] (multi_2) our payments app stores card transaction data and charges a fee — data...
+        cited=2 valid=2 hits=1/2 abstained=False 4.9s
+[053/100] (multi_2) are company directors and officers personally liable when the company ...
+        cited=8 valid=8 hits=0/3 abstained=False 1.93s
+[054/100] (multi_2) we license our proprietary database to clients — copyright in the data...
+        cited=4 valid=4 hits=0/3 abstained=False 1.72s
+[055/100] (multi_2) an employee who invented a patentable process is being retrenched — wh...
+        cited=3 valid=3 hits=2/3 abstained=False 1.8s
+[056/100] (multi_2) gratuity payable to a resigning employee and TDS on the final salary s...
+        cited=4 valid=4 hits=1/2 abstained=False 1.81s
+[057/100] (multi_2) Companies Act allotment rules and stamp duty when issuing shares to in...
+        cited=3 valid=3 hits=1/3 abstained=False 1.65s
+[058/100] (multi_2) converting our partnership firm into an LLP and transferring the firm'...
+        cited=2 valid=2 hits=0/2 abstained=False 1.78s
+[059/100] (multi_2) can we enforce a non-compete against a terminated employee and what re...
+        cited=3 valid=3 hits=1/2 abstained=False 1.68s
+[060/100] (multi_2) withholding tax on royalty paid to a foreign company for a software pa...
+        cited=2 valid=2 hits=0/3 abstained=False 1.61s
+[061/100] (multi_2) our e-commerce marketplace shares customer data with sellers — consume...
+        cited=4 valid=4 hits=0/2 abstained=False 1.72s
+[062/100] (multi_2) handling a sexual harassment complaint while keeping the complainant's...
+        cited=6 valid=6 hits=1/3 abstained=False 2.0s
+[063/100] (multi_2) ESI — which employees must be insured and how the principal employer p...
+        cited=3 valid=3 hits=0/3 abstained=False 2.43s
+[064/100] (multi_2) foreign SaaS company serving Indian users — GST on online information ...
+        cited=3 valid=3 hits=1/2 abstained=False 1.61s
+[065/100] (multi_2) our app uses Aadhaar authentication — restrictions on sharing Aadhaar ...
+Gemini key #4 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+        cited=2 valid=2 hits=2/3 abstained=False 2.33s
+[066/100] (multi_2) our company is in liquidation — what happens to unpaid employee wages ...
+        cited=3 valid=3 hits=1/3 abstained=False 1.96s
+[067/100] (multi_2) exporting software from an SEZ unit — zero-rated GST supply and copyri...
+        cited=4 valid=4 hits=1/3 abstained=False 2.97s
+[068/100] (multi_2) what must the annual report disclose about POSH compliance and CSR spe...
+        cited=1 valid=1 hits=1/2 abstained=False 1.17s
+[069/100] (multi_2) how long can we retain customer personal data after the service ends a...
+        cited=5 valid=5 hits=1/2 abstained=False 1.96s
+[070/100] (multi_2) vendor contract for outsourced processing of customer data — indemnity...
+        cited=3 valid=3 hits=0/2 abstained=False 1.68s
+[071/100] (multi_3) setting up a private limited company with 15 employees — incorporation...
+        cited=3 valid=3 hits=1/3 abstained=False 1.68s
+[072/100] (multi_3) launching a consumer mobile app — registering the brand name, getting ...
+        cited=3 valid=3 hits=1/3 abstained=False 3.37s
+[073/100] (multi_3) hiring a freelance developer abroad — who owns the code, withholding t...
+        cited=2 valid=2 hits=0/4 abstained=False 1.72s
+[074/100] (multi_3) an employee leaked customer data — breach reporting, penalty for discl...
+        cited=3 valid=3 hits=1/3 abstained=False 164.61s
+[075/100] (multi_3) selling our startup's patents and trademarks to an acquirer — assignme...
+        cited=3 valid=3 hits=2/3 abstained=False 2.55s
+[076/100] (multi_3) fintech lending app — payment data localisation, GST on processing fee...
+        cited=5 valid=5 hits=2/3 abstained=False 2.83s
+[077/100] (multi_3) our factory — worker safety duties of the employer, CCTV monitoring of...
+        cited=6 valid=6 hits=0/3 abstained=False 2.54s
+[078/100] (multi_3) winding up an LLP — settling employee gratuity and bonus dues, and sta...
+        cited=4 valid=4 hits=0/4 abstained=False 37.07s
+[079/100] (multi_3) hiring persons with disabilities — non-discrimination duties, consent ...
+        cited=2 valid=2 hits=1/3 abstained=False 2.93s
+[080/100] (multi_3) online gaming platform — GST on online services, intermediary safe har...
+        cited=3 valid=3 hits=1/3 abstained=False 2.08s
+[081/100] (multi_3) a co-founder who is also an employee is leaving — assignment of the co...
+        cited=1 valid=1 hits=0/3 abstained=False 95.72s
+[082/100] (multi_3) outsourced payroll — TDS on salaries, ESI contributions and protecting...
+        cited=5 valid=5 hits=0/3 abstained=False 2.0s
+[083/100] (multi_4) we are a 50-person SaaS company with many women employees, we collect ...
+        cited=5 valid=5 hits=0/4 abstained=False 2.05s
+[084/100] (multi_4) edtech startup — incorporating the company, trademarking the brand, GS...
+        cited=3 valid=3 hits=0/4 abstained=False 1.68s
+[085/100] (multi_4) delivery startup using gig workers — platform worker social security, ...
+        cited=3 valid=3 hits=1/4 abstained=False 1.66s
+[086/100] (multi_4) acquiring a smaller startup — transferring employees' gratuity, stamp ...
+        cited=4 valid=4 hits=0/4 abstained=False 33.63s
+[087/100] (multi_4) healthtech clinic chain run as an LLP — security of patient health dat...
+        cited=3 valid=3 hits=0/4 abstained=False 3.57s
+[088/100] (multi_5) complete legal compliance checklist for an Indian AI startup with empl...
+        cited=3 valid=3 hits=0/6 abstained=False 3.55s
+[089/100] (multi_5) we manufacture IoT devices in an SEZ, employ 200 factory workers, coll...
+        cited=7 valid=7 hits=0/5 abstained=False 20.46s
+[090/100] (multi_5) our company is going insolvent — dues to employees, handling customer ...
+        cited=5 valid=5 hits=1/5 abstained=False 3.06s
+[091/100] (edge) what is the penalty under section 999 of the DPDP Act...
+        cited=1 valid=0 hits=0/0 abstained=False 2.87s
+[092/100] (edge) explain section 500 of the Payment of Gratuity Act...
+        cited=1 valid=0 hits=0/0 abstained=False 2.73s
+[093/100] (edge) Delaware franchise tax filing deadline for a US C-corporation...
+        cited=1 valid=0 hits=0/0 abstained=False 3.41s
+[094/100] (edge) GDPR Article 17 obligations for a company established only in the EU...
+        cited=1 valid=0 hits=0/0 abstained=False 11.58s
+[095/100] (edge) what will the GST rate on SaaS subscriptions be in 2035...
+        cited=1 valid=0 hits=0/0 abstained=False 2.44s
+[096/100] (edge) what is the best pizza place in Bangalore...
+        cited=1 valid=0 hits=0/0 abstained=False 2.36s
+[097/100] (edge) how do I improve my startup's Instagram engagement...
+        cited=1 valid=0 hits=0/0 abstained=False 2.6s
+[098/100] (edge) recommend a cloud hosting provider for our backend...
+        cited=6 valid=6 hits=0/0 abstained=False 2.34s
+[099/100] (edge) write me a poem about corporate law...
+        cited=8 valid=8 hits=0/0 abstained=False 1.75s
+[100/100] (edge) what is the capital of Australia...
+        cited=0 valid=0 hits=0/0 abstained=False 1.13s
+
+============================================================
+rag_hybrid: 100/100 done, 0 errors this session
+  overall  n=100 recall=0.355 prec=0.298 valid=0.971 abstain_acc=0.0 wrong_decl=0.0 lat=5.63s
+  single   n= 50 recall=0.573 prec=0.447 valid=0.991 abstain_acc=None wrong_decl=0.0 lat=2.003s
+  multi    n= 40 recall=0.2 prec=0.177 valid=1.0 abstain_acc=None wrong_decl=0.0 lat=10.74s
+  edge     n= 10 recall=None prec=None valid=0.667 abstain_acc=0.0 wrong_decl=None lat=3.321s
+
+100/100 queries have a saved result.
+
+===== 2026-11-05T16:07:17 evals/eval_baselines.py --mode rag_hybrid --provider gemini --resume --sleep 1
+Using the pipeline's model: models/gemini-3.1-flash-lite
+4888 provisions loaded; 100 queries; as_of=2026-10-15
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+============================================================
+rag_hybrid: 100/100 done, 0 errors this session
+  overall  n=100 recall=0.355 prec=0.298 valid=0.971 abstain_acc=0.0 wrong_decl=0.0 lat=5.63s
+  single   n= 50 recall=0.573 prec=0.447 valid=0.991 abstain_acc=None wrong_decl=0.0 lat=2.003s
+  multi    n= 40 recall=0.2 prec=0.177 valid=1.0 abstain_acc=None wrong_decl=0.0 lat=10.74s
+  edge     n= 10 recall=None prec=None valid=0.667 abstain_acc=0.0 wrong_decl=None lat=3.321s
+
+100/100 queries have a saved result.
+
+===== 2026-11-06T09:51:25 evals/eval_baselines.py --mode rag_hybrid --provider gemini --resume --sleep 1
+Using the pipeline's model: models/gemini-3.1-flash-lite
+4888 provisions loaded; 100 queries; as_of=2026-10-15
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+============================================================
+rag_hybrid: 100/100 done, 0 errors this session
+  overall  n=100 recall=0.355 prec=0.298 valid=0.971 abstain_acc=0.0 wrong_decl=0.0 lat=5.63s
+  single   n= 50 recall=0.573 prec=0.447 valid=0.991 abstain_acc=None wrong_decl=0.0 lat=2.003s
+  multi    n= 40 recall=0.2 prec=0.177 valid=1.0 abstain_acc=None wrong_decl=0.0 lat=10.74s
+  edge     n= 10 recall=None prec=None valid=0.667 abstain_acc=0.0 wrong_decl=None lat=3.321s
+
+100/100 queries have a saved result.
+
+===== 2026-11-06T10:07:28 evals/eval_baselines.py --mode rag_hybrid --provider gemini --resume --sleep 1
+Using the pipeline's model: models/gemini-3.1-flash-lite
+4888 provisions loaded; 100 queries; as_of=2026-10-15
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+============================================================
+rag_hybrid: 100/100 done, 0 errors this session
+  overall  n=100 recall=0.355 prec=0.298 valid=0.971 abstain_acc=0.0 wrong_decl=0.0 lat=5.63s
+  single   n= 50 recall=0.573 prec=0.447 valid=0.991 abstain_acc=None wrong_decl=0.0 lat=2.003s
+  multi    n= 40 recall=0.2 prec=0.177 valid=1.0 abstain_acc=None wrong_decl=0.0 lat=10.74s
+  edge     n= 10 recall=None prec=None valid=0.667 abstain_acc=0.0 wrong_decl=None lat=3.321s
+
+100/100 queries have a saved result.
+
+===== 2026-11-06T10:09:05 evals/eval_baselines.py --mode rag_hybrid --provider gemini --resume --sleep 1
+Using the pipeline's model: models/gemini-3.1-flash-lite
+4888 provisions loaded; 100 queries; as_of=2026-10-15
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+============================================================
+rag_hybrid: 100/100 done, 0 errors this session
+  overall  n=100 recall=0.355 prec=0.298 valid=0.971 abstain_acc=0.0 wrong_decl=0.0 lat=5.63s
+  single   n= 50 recall=0.573 prec=0.447 valid=0.991 abstain_acc=None wrong_decl=0.0 lat=2.003s
+  multi    n= 40 recall=0.2 prec=0.177 valid=1.0 abstain_acc=None wrong_decl=0.0 lat=10.74s
+  edge     n= 10 recall=None prec=None valid=0.667 abstain_acc=0.0 wrong_decl=None lat=3.321s
+
+100/100 queries have a saved result.
+
+===== 2026-11-07T16:05:50 evals/eval_baselines.py --mode rag_hybrid --provider gemini --resume --sleep 1
+Using the pipeline's model: models/gemini-3.1-flash-lite
+4888 provisions loaded; 100 queries; as_of=2026-10-15
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+============================================================
+rag_hybrid: 100/100 done, 0 errors this session
+  overall  n=100 recall=0.355 prec=0.298 valid=0.971 abstain_acc=0.0 wrong_decl=0.0 lat=5.63s
+  single   n= 50 recall=0.573 prec=0.447 valid=0.991 abstain_acc=None wrong_decl=0.0 lat=2.003s
+  multi    n= 40 recall=0.2 prec=0.177 valid=1.0 abstain_acc=None wrong_decl=0.0 lat=10.74s
+  edge     n= 10 recall=None prec=None valid=0.667 abstain_acc=0.0 wrong_decl=None lat=3.321s
+
+100/100 queries have a saved result.

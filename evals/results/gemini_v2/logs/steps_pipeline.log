@@ -1,0 +1,16 @@
+
+===== 2026-11-11T11:05:39 evals/eval_entailment.py export --tag pipeline_suggest
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_final.jsonl (100 queries, 699 steps)
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_pre.jsonl (100 queries, 713 steps)
+
+===== 2026-11-12T13:20:40 evals/eval_entailment.py export --tag pipeline_suggest
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_final.jsonl (100 queries, 699 steps)
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_pre.jsonl (100 queries, 713 steps)
+
+===== 2026-11-14T22:42:42 evals/eval_entailment.py export --tag pipeline_suggest
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_final.jsonl (100 queries, 699 steps)
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_pre.jsonl (100 queries, 713 steps)
+
+===== 2026-11-15T00:30:07 evals/eval_entailment.py export --tag pipeline_suggest
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_final.jsonl (100 queries, 699 steps)
+wrote /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/steps_full_pre.jsonl (100 queries, 713 steps)

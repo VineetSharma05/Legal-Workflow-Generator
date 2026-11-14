@@ -1,0 +1,46 @@
+{
+  "tag": "pipeline_suggest_r2",
+  "provider": "gemini",
+  "model": "models/gemini-3.1-flash-lite",
+  "as_of": "2026-10-15",
+  "temperature": "0",
+  "settings": {
+    "top_k": 8,
+    "act_cap": 6,
+    "search_depth": 100,
+    "bm25_candidates": 300,
+    "vector_candidates": 100,
+    "max_domain_retries": 1,
+    "verify_claims": true,
+    "future_provisions": "annotate",
+    "domain_search": "global",
+    "suggest_provisions": true,
+    "suggest_cap": 4
+  },
+  "sessions": [
+    {
+      "started": "2026-11-09T00:25:16",
+      "commit": "d0ede08+dirty"
+    },
+    {
+      "started": "2026-11-11T07:49:46",
+      "commit": "d0ede08+dirty"
+    },
+    {
+      "started": "2026-11-11T10:09:18",
+      "commit": "d0ede08+dirty"
+    },
+    {
+      "started": "2026-11-12T13:20:15",
+      "commit": "d0ede08+dirty"
+    },
+    {
+      "started": "2026-11-14T22:42:16",
+      "commit": "d0ede08+dirty"
+    },
+    {
+      "started": "2026-11-15T00:29:41",
+      "commit": "d0ede08+dirty"
+    }
+  ]
+}
