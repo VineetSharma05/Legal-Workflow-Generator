@@ -315,33 +315,59 @@ DOMAIN_ANCHORS = [
 ]
 
 
-def _full_text(title, text, sub) -> str:
-    """The real statute wording lives in `sub_structure` (one entry per clause); `text` is a header + summary."""
+def _full_text(title, text, sub, raw=None) -> str:
+    """The statute as the LLM steps read it, in statute order: title, opening words / sub-section (1), clauses.
+
+    `raw` is the published wording of the opening part (laws.raw_text). Sub-section (1) usually lives only there,
+    not in `sub_structure`, so it goes first. Without `raw` (database ingested before raw_text existed) this falls
+    back to `text`, the normalised search blob, after the clauses."""
     if isinstance(sub, str):
         try:
             sub = json.loads(sub)
         except Exception:
             sub = {}
     clauses = "\n".join(f"({k}) {v}" for k, v in sub.items()) if isinstance(sub, dict) else ""
+    if raw and str(raw).strip():
+        return f"{title}\n{str(raw).strip()}\n{clauses}".strip()
     return f"{title}\n{clauses}\n{text or ''}".strip()
 
 
 def _rows_to_docs(rows) -> list:
-    return [{"provision_id": r[0], "title": r[1], "text": r[2], "full_text": _full_text(r[1], r[2], r[3]),
+    return [{"provision_id": r[0], "title": r[1], "text": r[2],
+             "full_text": _full_text(r[1], r[2], r[3], r[5] if len(r) > 5 else None),
              "effective_date": r[4]} for r in rows]
+
+
+_HAS_RAW_TEXT = None
+
+
+def _select_laws(where: str, params: tuple) -> list:
+    """SELECT provision_id, title, text, sub_structure, effective_date[, raw_text] FROM laws WHERE <where>.
+    raw_text is left out on a database ingested before that column existed."""
+    global _HAS_RAW_TEXT
+    conn = _connect()
+    try:
+        cur = conn.cursor()
+        if _HAS_RAW_TEXT is None:
+            cur.execute("SELECT 1 FROM information_schema.columns WHERE table_name = 'laws' AND column_name = 'raw_text'")
+            _HAS_RAW_TEXT = cur.fetchone() is not None
+            if not _HAS_RAW_TEXT:
+                logger.warning("laws.raw_text missing: re-run `python main.py ingest complete` so the LLM reads "
+                               "the original statute wording")
+        cols = "provision_id, title, text, sub_structure, effective_date" + (", raw_text" if _HAS_RAW_TEXT else "")
+        cur.execute(f"SELECT {cols} FROM laws WHERE {where}", params)
+        rows = cur.fetchall()
+        cur.close()
+        return rows
+    finally:
+        conn.close()
 
 
 def _fetch_by_ids(ids: list) -> list:
     if not ids:
         return []
     try:
-        conn = _connect()
-        cur = conn.cursor()
-        cur.execute("SELECT provision_id, title, text, sub_structure, effective_date FROM laws "
-                    "WHERE lower(provision_id) = ANY(%s)", ([i.lower() for i in ids],))
-        rows = cur.fetchall()
-        cur.close()
-        conn.close()
+        rows = _select_laws("lower(provision_id) = ANY(%s)", ([i.lower() for i in ids],))
     except Exception as e:
         logger.warning("anchor fetch failed: %s", e)
         return []
@@ -357,13 +383,7 @@ def _hydrate(docs: list) -> list:
     if not need:
         return docs
     try:
-        conn = _connect()
-        cur = conn.cursor()
-        cur.execute("SELECT provision_id, title, text, sub_structure, effective_date FROM laws "
-                    "WHERE provision_id = ANY(%s)", ([d["provision_id"] for d in need],))
-        rows = {r[0]: r for r in cur.fetchall()}
-        cur.close()
-        conn.close()
+        rows = {r[0]: r for r in _select_laws("provision_id = ANY(%s)", ([d["provision_id"] for d in need],))}
     except Exception as e:
         logger.warning("hydrate failed: %s", e)
         return docs
@@ -371,7 +391,8 @@ def _hydrate(docs: list) -> list:
     for d in docs:
         if "full_text" not in d and d.get("provision_id") in rows:
             r = rows[d["provision_id"]]
-            d = {**d, "full_text": _full_text(r[1], r[2], r[3]), "effective_date": r[4]}
+            d = {**d, "full_text": _full_text(r[1], r[2], r[3], r[5] if len(r) > 5 else None),
+                 "effective_date": r[4]}
         out.append(d)
     return out
 
@@ -495,8 +516,45 @@ Example: data_protection, employment"""
     return [d.strip() for d in raw.split(",") if d.strip() in VALID_DOMAINS]
 
 
+_SECTION_REF = re.compile(r"\b(?:section|sec\.?|s\.)\s*(\d+[a-z]*)\b", re.I)
+_YEAR = re.compile(r"\b(20\d\d)\b")
+
+
+def _scope_check(query: str, as_of: datetime.date) -> str:
+    """Deterministic out-of-scope checks that run before any LLM call. Returns a reason, or '' if in scope.
+
+    * the query cites a section number that does not exist in the statute it names (e.g. "section 999 of the
+      DPDP Act"): answering would mean citing a provision that does not exist;
+    * the query asks about the law in a year after as_of + 1: statutes cannot tell what a future law will say.
+      (as_of + 1 stays in scope: phased statutes such as the DPDP Act commence then.)"""
+    refs = _SECTION_REF.findall(query)
+    if refs:
+        named = [p for pattern, prefixes in STATUTE_ALIASES if re.search(pattern, query.lower()) for p in prefixes]
+        if named:
+            ids = {i for d in _catalog().values() for i in d.get("ids", {})}
+            for num in refs:
+                tail = re.compile(rf"_(?:sec|rule|reg|dir)_{re.escape(num.lower())}$")
+                if ids and not any(i.startswith(tuple(named)) and tail.search(i) for i in ids):
+                    return (f"The query refers to section {num} of a statute in which the knowledge base has no "
+                            f"such provision.")
+    years = [int(y) for y in _YEAR.findall(query)]
+    if years and max(years) > as_of.year + 1:
+        return (f"The query asks about the law in {max(years)}. The knowledge base holds statutes as in force on "
+                f"{as_of.isoformat()} and cannot predict future changes to the law.")
+    return ""
+
+
 def classify_query(state: AgentState, config: RunnableConfig = None) -> AgentState:
     s = use_settings(config)
+    scope = _scope_check(state["query"], s.as_of_date)
+    if scope:
+        state.update(intent="unknown", domain="unknown", all_domains=[], tentative_domains=[],
+                     normalized_query=state["query"], keywords=[], confidence=0.0, llm_error="",
+                     scope_error=scope, retry_count_retrieval=0, retry_count_generation=0,
+                     abstain=False, abstain_reason="")
+        state["trace"] = [f"classify → out of scope (no LLM call): {scope}"]
+        return state
+    state["scope_error"] = ""
     normalized = _normalizer.normalize(text=state["query"])
     try:
         intent, confidence = _with_retries(s.provider, lambda: _intent_classifier.classify(
@@ -592,11 +650,76 @@ def _demote_machinery(docs: list, query: str) -> list:
     return keep + [d for d in docs if _MACHINERY_TITLE.search(d.get("title") or "")]
 
 
-def _domain_candidates(rag, query: str, domain: str) -> list:
-    """Search, then keep every provision that belongs to this domain (no cap yet, best first)."""
+# ── named-statute search ─────────────────────────────────────────────────────
+# When a question names a statute ("under the SPDI rules", "FEMA", "Income Tax Act 2025"), the worker also
+# searches inside that statute alone and fuses the result with the open search. A large neighbouring statute
+# otherwise fills the candidate pool (the Income-tax Acts alone hold 1,338 of 4,888 provisions). Patterns match
+# names and standard abbreviations only, never subject words, so a question that names no statute is unaffected.
+STATUTE_ALIASES = [
+    (r"\bdpdp\b|digital personal data protection", ["dpdp_act_2023_", "dpdp_rules_2025_"]),
+    (r"\bdpdp rules\b|data protection rules", ["dpdp_rules_2025_"]),
+    (r"\bspdi\b|sensitive personal data or information", ["spdi_rules_2011_"]),
+    (r"\bcert[- ]?in\b", ["cert_in_directions_2022_"]),
+    (r"\bit act\b|information technology act", ["information_technology_act_2000_", "it_act_2000_"]),
+    (r"intermediary (guidelines|rules)", ["it_intermediary_guidelines_2021_"]),
+    (r"\baadhaar\b", ["aadhaar_act_2016_"]),
+    (r"\bcicra\b|credit information compan", ["cicra_2005_"]),
+    (r"\brti\b|right to information", ["rti_act_2005_"]),
+    (r"telecommunications act|telecom cyber", ["telecommunications_act_2023_", "telecom_cyber_security_rules_2024_"]),
+    (r"companies act", ["ca_2013_"]),
+    (r"\bllp\b|limited liability partnership", ["llp_act_2008_"]),
+    (r"contract act", ["contract_act_1872_"]),
+    (r"\bibc\b|insolvency (and bankruptcy )?code", ["ibc_2016_"]),
+    (r"consumer protection act", ["consumer_protection_act_2019_"]),
+    (r"copyright act", ["copyright_act_1957_"]),
+    (r"patents? act", ["patents_act_1970_"]),
+    (r"designs act", ["designs_act_2000_"]),
+    (r"trade ?marks? act", ["trademarks_act_1999_"]),
+    (r"\bcgst\b|central goods and services tax", ["cgst_act_2017_", "cgst_rules_2017_"]),
+    (r"\bigst\b|integrated goods and services tax", ["igst_act_2017_"]),
+    (r"\bgst\b|goods and services tax", ["cgst_act_2017_", "cgst_rules_2017_", "igst_act_2017_"]),
+    (r"income[- ]tax act,? 2025", ["income_tax_act_2025_"]),
+    (r"income[- ]tax act,? 1961", ["income_tax_act_1961_"]),
+    (r"\bfema\b|foreign exchange management", ["fema_transfer_issue_foreign_security_regulations_2004_"]),
+    (r"\bsez\b|special economic zone", ["sez_act_2005_"]),
+    (r"stamp (act|duty)", ["indian_stamp_act_1899_"]),
+    (r"\bepf\b|provident fund", ["epf_1952_"]),
+    (r"\besi\b|\besic\b|employees'? state insurance", ["esia_1948_", "esi_act_1948_"]),
+    (r"\bposh\b|sexual harassment of women at workplace", ["posh_2013_"]),
+    (r"gratuity act", ["poga_1972_"]),
+    (r"bonus act", ["poba_1965_"]),
+    (r"maternity benefit act", ["mba_1961_"]),
+    (r"apprentices act", ["app_1961_"]),
+    (r"industrial disputes act", ["ida_1947_"]),
+    (r"factories act", ["fa_1948_"]),
+    (r"code on social security", ["css_2020_"]),
+    (r"\boshwc?\b|occupational safety,? health", ["oshwc_2020_"]),
+    (r"\brpwd\b|rights of persons with disabilities", ["rpwd_2016_"]),
+    (r"contract labour act", ["cla_1970_"]),
+    (r"payment of wages act", ["pow_1936_"]),
+]
+
+
+def _named_statutes(text: str, domain: str) -> list:
+    """Provision-id prefixes of statutes the text names that belong to `domain` (empty if none)."""
+    low = text.lower()
+    hits = [p for pattern, prefixes in STATUTE_ALIASES if re.search(pattern, low) for p in prefixes]
+    if not hits:
+        return []
+    own = _catalog().get(domain, {}).get("prefixes", {})
+    return list(dict.fromkeys(p for p in hits if any(cp.startswith(p) for cp in own)))
+
+
+def _domain_candidates(rag, query: str, domain: str, prefixes=None) -> list:
+    """Search, then keep every provision that belongs to this domain (no cap yet, best first).
+    With `prefixes`, the search runs inside those statutes only."""
     s = current_settings()
     hint = DOMAIN_QUERY_HINTS.get(domain, "")
-    docs = _hybrid_search(rag, f"{query} {hint}".strip(), s, domain)
+    if prefixes:
+        docs = rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates,
+                                   vector_candidates=s.vector_candidates, domain=domain, prefixes=prefixes)
+    else:
+        docs = _hybrid_search(rag, f"{query} {hint}".strip(), s, domain)
     docs = [d for d in docs if "_forms_" not in d.get("provision_id", "")
             and _domain_of(d.get("provision_id", "")) == domain]
     return _demote_machinery(docs, query)
@@ -800,8 +923,13 @@ Reply ONLY with JSON: {{"focus": "...", "aspects": ["...", "..."]{suggest_json}}
 RRF_K, RRF_DEPTH = 2, 6
 
 
-def _fused_candidates(rag, queries: list, domain: str) -> list:
+def _fused_candidates(rag, queries: list, domain: str, named_from: str = "") -> list:
+    """`named_from`: text (usually the user's question) scanned for statute names; when it names a statute of
+    this domain, one more list (the first query searched inside that statute) joins the fusion."""
     lists = [_domain_candidates(rag, q, domain) for q in queries]
+    named = _named_statutes(named_from, domain) if current_settings().statute_search and named_from else []
+    if named:
+        lists.append(_domain_candidates(rag, queries[0], domain, prefixes=named))
     if len(lists) == 1:
         return lists[0]
     first, score = {}, {}
@@ -838,6 +966,13 @@ Rules:
 - A provision that only gives the government or a regulator a power (to make rules, appoint or pay members,
   run its own proceedings) is not a duty of the user. Do not turn it into a step.
 - Definitions may be used to say who a duty applies to, but prefer the provisions that state the duties themselves.
+- Cite the provision that itself creates the duty, right, condition or consequence asked about. When rules,
+  regulations or directions given below spell out how to carry out a duty created by an Act section that is also
+  given below, write one step citing the Act section (the duty) and another citing the rule (the procedure,
+  timeline or form). Do not cite only the rule.
+- When one provision states a general rule and another covers the specific situation in the query, cite the
+  specific one, and also the general one if the answer depends on it.
+- If several provisions each answer a different part of the query, write a step for each of them.
 - If the query asks what a law is, base the summary on what the provisions say about its scope and purpose.
 - Provisions marked NOT YET IN FORCE still count: use them when they answer the query, because the user has to
   prepare for them. Do not write commencement dates into the action text; the system adds them to each step.
@@ -938,7 +1073,7 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
 
         for attempt in range(s.max_domain_retries + 1):
             try:
-                cands = _fused_candidates(rag, [q] + aspects, domain)
+                cands = _fused_candidates(rag, [q] + aspects, domain, named_from=user_q)
             except Exception as e:
                 cands, res.reason = [], f"Search failed: {e}"
             # effective_date is only known after hydration; filter on it before cutting to top_k so that
@@ -1155,6 +1290,8 @@ Only grade 'not_grounded' if the answer makes specific legal claims that
 directly contradict or are completely absent from the retrieved context.
 Minor elaborations and reasonable inferences are acceptable.
 Statements saying that no provision was found for a topic are NOT legal claims; ignore them.
+Judge only the claims the answer makes. An answer that leaves part of the question unaddressed is NOT
+'not_grounded' for that reason (coverage is checked separately).
 Text in square brackets starting with 'NOTE:' is a system annotation, not a legal claim; ignore it."""
     user = f"""Answer: {_strip_annotations(state['answer'])[:3000]}
 
@@ -1223,7 +1360,9 @@ def grade_parallel(state: AgentState, config: RunnableConfig = None) -> AgentSta
 # ══════════════════════════════════════════════════════════════════════════════
 def abstain(state: AgentState) -> AgentState:
     state["abstain"] = True
-    if state.get("llm_error"):
+    if state.get("scope_error"):
+        reason = state["scope_error"]
+    elif state.get("llm_error"):
         reason = (f"The language model could not be reached ({state['llm_error']}). "
                   f"This is a service problem, not a problem with your question; please try again later.")
     elif state.get("domain") == "unknown" or state.get("intent") == "unknown":

@@ -634,3 +634,110 @@ def test_machinery_provisions_go_behind_substantive_ones_unless_asked_about():
             {"provision_id": "d", "title": "General obligations of Data Fiduciary"}]
     assert [d["provision_id"] for d in N._demote_machinery(docs, "how do I comply")] == ["b", "d", "a", "c"]
     assert [d["provision_id"] for d in N._demote_machinery(docs, "what rules can the government make")] == ["a", "b", "c", "d"]
+
+
+# ─────────────────────────────── named-statute search ───────────────────────────────
+STATUTE_CATALOG = {d: {"lines": [], "ids": {}, "prefixes": {}} for d in N.VALID_DOMAINS}
+STATUTE_CATALOG["data_protection"]["prefixes"] = {"spdi_rules_2011_sec_": "", "dpdp_act_2023_sec_": "",
+                                                  "dpdp_rules_2025_sec_": ""}
+STATUTE_CATALOG["taxation"]["prefixes"] = {"esi_act_1948_sec_": "", "sez_act_2005_sec_": ""}
+STATUTE_CATALOG["employment"]["prefixes"] = {"esia_1948_sec_": ""}
+
+
+@pytest.mark.parametrize("question, domain, expected", [
+    ("what counts as sensitive personal data under the SPDI rules", "data_protection", ["spdi_rules_2011_"]),
+    ("DPDP consent requirements", "data_protection", ["dpdp_act_2023_", "dpdp_rules_2025_"]),
+    ("ESI contributions for our staff", "employment", ["esia_1948_"]),   # only this domain's prefix
+    ("ESI contributions for our staff", "taxation", ["esi_act_1948_"]),
+    ("tax exemptions for a unit in a special economic zone", "data_protection", []),   # other domain
+    ("how should we handle customer data securely", "data_protection", []),           # names no statute
+])
+def test_named_statutes_match_names_of_this_domain_only(monkeypatch, question, domain, expected):
+    monkeypatch.setattr(N, "_catalog", lambda: STATUTE_CATALOG)
+    assert N._named_statutes(question, domain) == expected
+
+
+def test_question_naming_no_statute_never_loads_the_catalog(monkeypatch):
+    def boom():
+        raise AssertionError("catalog must not be loaded")
+    monkeypatch.setattr(N, "_catalog", boom)
+    assert N._named_statutes("who owns code written by a freelancer", "ip_licensing") == []
+
+
+def test_named_statute_search_joins_the_fusion_and_can_be_switched_off(monkeypatch):
+    from legal_workflow_generator.agent.settings import build_config, use_settings
+    monkeypatch.setattr(N, "_catalog", lambda: STATUTE_CATALOG)
+    seen = []
+
+    def cands(rag, q, dom, prefixes=None):
+        seen.append(prefixes)
+        return [{"provision_id": "spdi_rules_2011_sec_3"}] if prefixes else [{"provision_id": "it_act_sec_43a"}]
+    monkeypatch.setattr(N, "_domain_candidates", cands)
+    q = "what is sensitive personal data under the SPDI rules"
+    use_settings(build_config(statute_search=True))
+    out = [d["provision_id"] for d in N._fused_candidates(None, [q], "data_protection", named_from=q)]
+    assert seen == [None, ["spdi_rules_2011_"]] and "spdi_rules_2011_sec_3" in out
+    seen.clear()
+    use_settings(build_config(statute_search=False))
+    out = [d["provision_id"] for d in N._fused_candidates(None, [q], "data_protection", named_from=q)]
+    assert seen == [None] and out == ["it_act_sec_43a"]
+    use_settings(None)
+
+
+def test_bm25_prefix_filter_ranks_only_that_statute():
+    from legal_workflow_generator.rag.bm25_retriever import BM25Retriever
+    from rank_bm25 import BM25Okapi
+    r = BM25Retriever()
+    r.law_ids = ["income_tax_act_1961_sec_1", "spdi_rules_2011_sec_3", "income_tax_act_1961_sec_2"]
+    r.law_domains = ["taxation", "data_protection", "taxation"]
+    docs = ["sensitive personal data password", "sensitive personal data information", "sensitive data tax"]
+    r.bm25 = BM25Okapi([r._tokenize(d) for d in docs])
+    assert [p for p, _ in r.search("sensitive personal data", top_k=5, prefixes=["spdi_rules_2011_"])] \
+        == ["spdi_rules_2011_sec_3"]
+    assert len(r.search("sensitive personal data", top_k=5)) == 3
+
+
+# ─────────────────────────────── statute text shown to the LLM ───────────────────────────────
+def test_full_text_puts_the_original_opening_clause_before_the_other_clauses():
+    sub = {"2": "petroleum is levied later", "3": "reverse charge"}
+    raw = "(1) there shall be levied a tax on the value determined under section 15"
+    ft = N._full_text("Levy and collection", "levy and collection. there shall be levied ... section and", sub, raw)
+    assert ft.index("(1) there shall be levied") < ft.index("(2) petroleum") < ft.index("(3) reverse")
+    assert "section 15" in ft and "section and" not in ft      # the normalised search blob is not shown
+    assert N._numbers_missing("tax on the value under section 15", ft) == []
+
+
+def test_full_text_without_raw_text_keeps_the_old_layout():
+    ft = N._full_text("T", "blob", {"2": "two"})
+    assert ft == "T\n(2) two\nblob"
+    assert N._full_text("T", "blob", {"2": "two"}, raw="   ") == ft
+
+
+# ─────────────────────────────── deterministic scope check ───────────────────────────────
+SCOPE_CATALOG = {d: {"lines": [], "prefixes": {}, "ids": {}} for d in N.VALID_DOMAINS}
+SCOPE_CATALOG["data_protection"]["ids"] = {"dpdp_act_2023_sec_33": "dpdp_act_2023_sec_33",
+                                           "dpdp_act_2023_sec_8": "dpdp_act_2023_sec_8"}
+SCOPE_CATALOG["employment"]["ids"] = {"poga_1972_sec_4": "poga_1972_sec_4"}
+AS_OF = datetime.date(2026, 10, 15)
+
+
+@pytest.mark.parametrize("query, refused", [
+    ("what is the penalty under section 999 of the DPDP Act", True),
+    ("explain section 500 of the Payment of Gratuity Act", True),
+    ("what does section 8 of the DPDP Act require", False),
+    ("penalty under section 33 of the DPDP Act", False),
+    ("what does section 12 say", False),                          # names no statute: not checked
+    ("what will the GST rate on SaaS subscriptions be in 2035", True),
+    ("DPDP obligations that start in 2027", False),               # as_of + 1 stays in scope
+    ("advance tax instalments under the Income Tax Act 2025", False),
+    ("who owns code written by a freelancer", False),
+])
+def test_scope_check(monkeypatch, query, refused):
+    monkeypatch.setattr(N, "_catalog", lambda: SCOPE_CATALOG)
+    assert bool(N._scope_check(query, AS_OF)) is refused
+
+
+def test_out_of_scope_query_abstains_without_any_llm_call(wired, monkeypatch):
+    monkeypatch.setattr(N, "_catalog", lambda: SCOPE_CATALOG)
+    out = run_workflow("what is the penalty under section 999 of the DPDP Act", as_of="2026-10-15")
+    assert out["abstain"] and "section 999" in out["abstain_reason"] and wired.calls == []

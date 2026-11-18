@@ -27,6 +27,8 @@ Meaning of the options
   suggest_provisions the per-domain planner call also names up to suggest_cap provisions (as corpus ids) that the
                      model expects to answer the question; ids that exist in the domain join the context and
                      are graded, cited and claim-checked like retrieved provisions (no extra LLM call)
+  statute_search     when the question names a statute (STATUTE_ALIASES in nodes.py), also search inside that
+                     statute alone and fuse it with the open search (no LLM call)
   trace_timing       False removes "+1.4s" prefixes so traces are byte-for-byte reproducible
 """
 import contextvars
@@ -55,6 +57,7 @@ class RunSettings:
     domain_search: str = "global"
     suggest_provisions: bool = False
     suggest_cap: int = 4
+    statute_search: bool = True
     trace_timing: bool = True
 
     def __post_init__(self):
@@ -92,7 +95,7 @@ class RunSettings:
         for k in ("suggest_cap", "top_k", "act_cap", "search_depth", "bm25_candidates", "vector_candidates", "max_domain_retries"):
             if k in picked:
                 picked[k] = int(picked[k])
-        for k in ("verify_claims", "trace_timing", "suggest_provisions"):
+        for k in ("verify_claims", "trace_timing", "suggest_provisions", "statute_search"):
             if k in picked and isinstance(picked[k], str):
                 picked[k] = picked[k].strip().lower() in ("1", "true", "yes", "on")
         if "as_of" in picked:
