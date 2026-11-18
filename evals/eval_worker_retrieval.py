@@ -56,7 +56,7 @@ def main():
         found = []
         for dom in t["domains"]:
             gold = [g for g in t["expected_sections"] if domain_of(g) == dom]
-            cands = N._hydrate(N._fused_candidates(rag, [t["query"]], dom))
+            cands = N._hydrate(N._fused_candidates(rag, [t["query"]], dom, named_from=t["query"]))
             if s.future_provisions == "exclude":
                 cands = [d for d in cands if N._in_force(d, s.as_of_date)]
             docs = N._cut(cands, s)
