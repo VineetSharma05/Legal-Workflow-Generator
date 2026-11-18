@@ -50,9 +50,10 @@ class BM25Retriever:
         normalized = normalize_text(text, for_embedding=False)
         return normalized.split()
 
-    def search(self, query: str, top_k: int = 10, domain: str | None = None):
+    def search(self, query: str, top_k: int = 10, domain: str | None = None, prefixes=None):
         """Search using BM25 and return top_k (provision_id, score) tuples.
-        With `domain`, only provisions of that domain are ranked (the scores are unchanged)."""
+        With `domain`, only provisions of that domain are ranked (the scores are unchanged).
+        With `prefixes`, only provisions whose id starts with one of them are ranked (e.g. one statute)."""
         if self.bm25 is None:
             raise ValueError("BM25 index not built. Call build_index() first.")
 
@@ -61,6 +62,9 @@ class BM25Retriever:
 
         scores = self.bm25.get_scores(tokenized_query)
         pool = range(len(scores)) if domain is None else [i for i, d in enumerate(self.law_domains) if d == domain]
+        if prefixes:
+            pre = tuple(prefixes)
+            pool = [i for i in pool if self.law_ids[i].startswith(pre)]
         top_indices = sorted(pool, key=lambda i: scores[i], reverse=True)[:top_k]
         results = [(self.law_ids[i], scores[i]) for i in top_indices]
         return results

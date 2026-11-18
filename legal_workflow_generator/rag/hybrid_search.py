@@ -15,7 +15,7 @@ class HybridSearcher:
         """Build BM25 index"""
         self.bm25_retriever.build_index()
 
-    def search(self, query, top_k=3, bm25_candidates=20, vector_candidates=0, domain=None):
+    def search(self, query, top_k=3, bm25_candidates=20, vector_candidates=0, domain=None, prefixes=None):
         """
         Hybrid search:
         1. BM25 retrieves top `bm25_candidates`
@@ -28,9 +28,11 @@ class HybridSearcher:
         vector_candidates=0 keeps the original behaviour, so existing callers are unaffected.
         domain restricts every stage to provisions of that domain, so a small domain is not crowded out
         of the candidate pool by a large one (the filter is applied before the top_k cut, not after).
+        prefixes restricts every stage to provision ids starting with one of them (e.g. one named statute).
         """
         # Step 1: BM25 retrieval
-        bm25_results = self.bm25_retriever.search(query, top_k=bm25_candidates, domain=domain)
+        bm25_results = self.bm25_retriever.search(query, top_k=bm25_candidates, domain=domain, prefixes=prefixes)
+        like = [p.replace("\\", "\\\\").replace("_", "\\_").replace("%", "\\%") + "%" for p in prefixes or []]
         candidate_ids = [pid for pid, score in bm25_results]
 
         # Step 2: normalise BM25 scores to 0-1
@@ -58,10 +60,12 @@ class HybridSearcher:
                     f"""
                     SELECT provision_id FROM laws
                     WHERE embedding IS NOT NULL {"AND domain = %s" if domain else ""}
+                      {"AND provision_id LIKE ANY(%s)" if like else ""}
                     ORDER BY embedding <=> %s::vector
                     LIMIT %s
                     """,
-                    ([domain] if domain else []) + [query_embedding, int(vector_candidates)],
+                    ([domain] if domain else []) + ([like] if like else [])
+                    + [query_embedding, int(vector_candidates)],
                 )
                 vec_ids = [r[0] for r in cur.fetchall()]
                 candidate_ids = list(dict.fromkeys(candidate_ids + vec_ids))
