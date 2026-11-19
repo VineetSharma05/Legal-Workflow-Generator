@@ -474,7 +474,7 @@ function buildPipelineStages(p, trace) {
         });
     }
 
-    // 5. Citation Verification
+    // 5/6. Citation Verification
     if (p.citation_verification) {
         const cv = p.citation_verification;
         const vCount = (cv.verified || []).length;

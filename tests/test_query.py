@@ -1,32 +1,33 @@
-"""End-to-end test of the query unit (`process_query`) with Gemini mocked.
+"""End-to-end test of the query unit (`process_query`) with the LLM mocked.
 
 Exercises the real wiring of QueryNormalizer -> IntentClassifier ->
-LegalContextResolver; only the two Gemini network calls are faked (intent call
+LegalContextResolver; only the two structured LLM calls are faked (intent call
 first, then the domain call).
 """
 
 import pytest
 
 from legal_workflow_generator import query as query_module
+from legal_workflow_generator.llm.schemas import DomainClassification, IntentClassification
 from legal_workflow_generator.query import process_query
 from legal_workflow_generator.typings.types import QueryIntent
 
 
 @pytest.fixture
-def mock_gemini_pipeline(monkeypatch, fake_gemini_client):
-    """Patch both Gemini clients and stub the keyword classifier's DB load."""
+def mock_gemini_pipeline(monkeypatch, fake_llm):
+    """Patch both structured LLMs and stub the keyword classifier's DB load."""
 
     replies = [
-        "INTENT: workflow\nCONFIDENCE: 0.92\nREASON: asks for steps",
-        "DOMAIN: data_protection\nKEYWORDS: dpdp, consent, data",
+        IntentClassification(reason="asks for steps", intent="workflow", confidence=0.92),
+        DomainClassification(domain="data_protection", keywords=["dpdp", "consent", "data"]),
     ]
-    shared_client = fake_gemini_client(replies)
+    shared_llm = fake_llm(replies)
 
     monkeypatch.setattr(
-        query_module.intent_classifier.genai, "Client", lambda *a, **k: shared_client
+        query_module.intent_classifier, "structured_llm", lambda *a, **k: shared_llm
     )
     monkeypatch.setattr(
-        query_module.context_resolver.genai, "Client", lambda *a, **k: shared_client
+        query_module.context_resolver, "structured_llm", lambda *a, **k: shared_llm
     )
     # No database in unit tests: pretend the keyword index loaded but matched nothing.
     monkeypatch.setattr(
@@ -34,7 +35,7 @@ def mock_gemini_pipeline(monkeypatch, fake_gemini_client):
         "ensure_index",
         lambda self: None,
     )
-    return shared_client
+    return shared_llm
 
 
 def test_process_query_returns_populated_legal_context(mock_gemini_pipeline):

@@ -109,10 +109,27 @@ def chat(req: ChatRequest):
         "provider": cfg.provider, "top_k": cfg.top_k, "as_of": cfg.as_of_date.isoformat(),
         "verify_claims": cfg.verify_claims,
     }
+    workflow = [
+        {
+            "domain": result.get("domain"),
+            "grade": result.get("grade"),
+            "reason": result.get("reason"),
+            "retries": result.get("retries", 0),
+            "summary": result.get("summary", []),
+            "steps": result.get("steps", []),
+            "not_covered": result.get("not_covered", ""),
+            "cited": result.get("cited", []),
+        }
+        for result in domain_results
+    ]
     return {
         "answer": state.get("stitched_answer") or state.get("answer", ""),
         "abstained": bool(state.get("abstain")),
         "settings": settings,
+        "workflow": {
+            "domains": workflow,
+            "gaps": state.get("domain_gaps", []),
+        },
         "pipeline": {
             "settings": settings,
             "classification": {
