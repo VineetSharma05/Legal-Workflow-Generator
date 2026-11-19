@@ -16,6 +16,10 @@ from dotenv import load_dotenv
 load_dotenv(Path(__file__).parents[1] / ".env", override=False)
 os.environ.setdefault("PGPASSWORD", "test-password")
 os.environ.setdefault("GEMINI_API_KEY", "test-gemini-key")
+# Unit tests use fakes; never let the real per-minute limiter slow them down.
+# (LIMITERS are built at import time, so this must run before any project import.)
+os.environ.setdefault("GEMINI_RPM", "100000")
+os.environ.setdefault("GROQ_RPM", "100000")
 
 import pytest
 

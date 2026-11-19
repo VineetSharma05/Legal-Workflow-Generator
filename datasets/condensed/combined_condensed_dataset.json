@@ -934,7 +934,7 @@
       "preliminary"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_2",
@@ -962,7 +962,7 @@
       "personal data breach"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_3",
@@ -986,7 +986,7 @@
       "domestic purpose"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_4",
@@ -1010,7 +1010,7 @@
       "grounds for processing"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_5",
@@ -1035,7 +1035,7 @@
       "complaint mechanism"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_6",
@@ -1060,7 +1060,7 @@
       "data minimization"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_7",
@@ -1084,7 +1084,7 @@
       "medical emergency"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_8",
@@ -1111,7 +1111,7 @@
       "grievance redressal"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_9",
@@ -1135,7 +1135,7 @@
       "behavioral monitoring"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_10",
@@ -1161,7 +1161,7 @@
       "DPIA"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_11",
@@ -1186,7 +1186,7 @@
       "data summary"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_12",
@@ -1210,7 +1210,7 @@
       "data accuracy"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_13",
@@ -1233,7 +1233,7 @@
       "escalation"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_14",
@@ -1256,7 +1256,7 @@
       "delegation of rights"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_15",
@@ -1282,7 +1282,7 @@
       "authentic information"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_16",
@@ -1304,7 +1304,7 @@
       "government restrictions"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_17",
@@ -1330,7 +1330,7 @@
       "investigations"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_18",
@@ -1353,7 +1353,7 @@
       "regulatory authority"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_19",
@@ -1377,7 +1377,7 @@
       "experts"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_20",
@@ -1400,7 +1400,7 @@
       "re-appointment"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_11",
@@ -1425,7 +1425,7 @@
       "data summary"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_12",
@@ -1449,7 +1449,7 @@
       "data accuracy"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_13",
@@ -1472,7 +1472,7 @@
       "escalation"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_14",
@@ -1495,7 +1495,7 @@
       "delegation of rights"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_15",
@@ -1521,7 +1521,7 @@
       "authentic information"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_16",
@@ -1543,7 +1543,7 @@
       "government restrictions"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_17",
@@ -1569,7 +1569,7 @@
       "investigations"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_18",
@@ -1592,7 +1592,7 @@
       "regulatory authority"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_19",
@@ -1616,7 +1616,7 @@
       "experts"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_20",
@@ -1639,7 +1639,7 @@
       "re-appointment"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_31",
@@ -1659,7 +1659,7 @@
       "dispute"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_32",
@@ -1683,7 +1683,7 @@
       "breach of promise"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_33",
@@ -1706,7 +1706,7 @@
       "mitigation"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_34",
@@ -1725,7 +1725,7 @@
       "penalties"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_35",
@@ -1745,7 +1745,7 @@
       "board members"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_36",
@@ -1764,7 +1764,7 @@
       "information request"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_37",
@@ -1789,7 +1789,7 @@
       "website blocking"
     ],
     "penalty_linked": true,
-    "effective_date": "2023-08-11"
+    "effective_date": "2027-05-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_38",
@@ -1809,7 +1809,7 @@
       "prevailing law"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_39",
@@ -1828,7 +1828,7 @@
       "injunctions"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "dpdp_act_2023_sec_40",
@@ -1852,7 +1852,7 @@
       "delegated legislation"
     ],
     "penalty_linked": false,
-    "effective_date": "2023-08-11"
+    "effective_date": "2025-11-13"
   },
   {
     "provision_id": "copyright_act_1957_sec_1",

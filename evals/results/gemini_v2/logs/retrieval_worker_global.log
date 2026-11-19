@@ -1,0 +1,23 @@
+
+===== 2026-11-05T12:32:45 evals/eval_worker_retrieval.py --tag global
+  from pydantic.v1 import BaseModel as BaseModelV1
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Loading embedding model: sentence-transformers/all-mpnet-base-v2
+BM25 index built with 4888 laws
+settings: defaults as_of=2026-10-15 anchors=on
+  all      gold in worker context: 130/214 = 0.607   (mean docs per worker 6.4)
+  single   gold in worker context:  69/ 89 = 0.775   (mean docs per worker 7.0)
+  multi    gold in worker context:  61/125 = 0.488   (mean docs per worker 6.2)
+  multi_2  gold in worker context:  34/ 51 = 0.667   (mean docs per worker 7.1)
+  multi_3  gold in worker context:  18/ 38 = 0.474   (mean docs per worker 5.9)
+  multi_4  gold in worker context:   5/ 20 = 0.25   (mean docs per worker 5.3)
+  multi_5  gold in worker context:   4/ 16 = 0.25   (mean docs per worker 5.7)
+saved /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/worker_retrieval_global.json

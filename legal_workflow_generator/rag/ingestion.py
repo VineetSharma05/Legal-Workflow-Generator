@@ -1,3 +1,4 @@
+import json
 import re
 from typing import List
 import psycopg2
@@ -280,6 +281,31 @@ def combine_fields_for_embedding(law: dict) -> str:
     return ". ".join(parts)
 
 
+# ── Search text (BM25 + embeddings) ──────────────────────────────────────────
+def clauses_text(sub_structure) -> str:
+    """The statute wording kept in `sub_structure` (one entry per sub-section), as one string."""
+    if isinstance(sub_structure, str):
+        try:
+            sub_structure = json.loads(sub_structure)
+        except ValueError:
+            return sub_structure
+    if not isinstance(sub_structure, dict):
+        return ""
+    return " ".join(str(v) for v in sub_structure.values() if v)
+
+
+def searchable_text(text: str, sub_structure) -> str:
+    """What BM25 and the embeddings index: the `text` column plus the clauses in `sub_structure`.
+
+    `text` only holds title, summary, keywords and the first clause; most of a section's duties
+    (e.g. DPDP s.8: security safeguards, breach intimation, erasure, grievances) are in sub_structure.
+    """
+    clauses = clauses_text(sub_structure)
+    if not clauses:
+        return text or ""
+    return f"{text or ''} {normalize_text(clauses, for_embedding=True)}".strip()
+
+
 # ── Ingestion ────────────────────────────────────────────────────────────────
 def ingest(laws: List[T.LawSchema]) -> None:
     if not laws:
@@ -294,6 +320,9 @@ def ingest(laws: List[T.LawSchema]) -> None:
         port=config.DB_PORT,
     )
     cur = conn.cursor()
+    # raw_text = the statute wording as published (the `text` column is a lowercased search blob with section
+    # numbers stripped); the LLM steps read raw_text. Safe on tables created before the column existed.
+    cur.execute("ALTER TABLE laws ADD COLUMN IF NOT EXISTS raw_text TEXT;")
 
     query = """
         INSERT INTO laws (
@@ -305,6 +334,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
             number,
             title,
             text,
+            raw_text,
             sub_structure,
             plain_english_summary,
             keywords,
@@ -321,6 +351,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
             %(number)s,
             %(title)s,
             %(text)s,
+            %(raw_text)s,
             %(sub_structure)s,
             %(plain_english_summary)s,
             %(keywords)s,
@@ -337,6 +368,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
             number = EXCLUDED.number,
             title = EXCLUDED.title,
             text = EXCLUDED.text,
+            raw_text = EXCLUDED.raw_text,
             sub_structure = EXCLUDED.sub_structure,
             plain_english_summary = EXCLUDED.plain_english_summary,
             keywords = EXCLUDED.keywords,
@@ -357,6 +389,7 @@ def ingest(laws: List[T.LawSchema]) -> None:
         normalized_text = normalize_text(combined_text, for_embedding=True)
 
         row["text"] = normalized_text
+        row["raw_text"] = law.get("text") or ""
         row["sub_structure"] = Json(law.get("sub_structure", {}))
         row["keywords"] = law.get("keywords", [])
         row["plain_english_summary"] = law.get("plain_english_summary", "")

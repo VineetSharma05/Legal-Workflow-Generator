@@ -1,0 +1,162 @@
+
+===== 2026-11-11T10:53:21 evals/eval_entailment.py gen --system rag_hybrid --resume --sleep 1
+Generator model: models/gemini-3.1-flash-lite
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Gemini key #1 failed (400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'I); trying next key
+[001/100] single   steps=3 abstained=False
+[002/100] single   steps=2 abstained=False
+[003/100] single   steps=1 abstained=False
+[004/100] single   steps=4 abstained=False
+[005/100] single   steps=3 abstained=False
+[006/100] single   steps=2 abstained=False
+[007/100] single   steps=2 abstained=False
+[008/100] single   steps=1 abstained=False
+[009/100] single   steps=4 abstained=False
+[010/100] single   steps=2 abstained=False
+[011/100] single   steps=3 abstained=False
+[012/100] single   steps=5 abstained=False
+[013/100] single   steps=1 abstained=False
+[014/100] single   steps=2 abstained=False
+[015/100] single   steps=4 abstained=False
+[016/100] single   steps=4 abstained=False
+[017/100] single   steps=3 abstained=False
+[018/100] single   steps=5 abstained=False
+[019/100] single   steps=5 abstained=False
+Gemini key #2 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+[020/100] single   steps=4 abstained=False
+[021/100] single   steps=6 abstained=False
+[022/100] single   steps=1 abstained=False
+[023/100] single   steps=3 abstained=False
+[024/100] single   steps=1 abstained=False
+[025/100] single   steps=7 abstained=False
+[026/100] single   steps=4 abstained=False
+[027/100] single   steps=7 abstained=False
+[028/100] single   steps=6 abstained=False
+[029/100] single   steps=2 abstained=False
+[030/100] single   steps=4 abstained=False
+[031/100] single   steps=1 abstained=False
+[032/100] single   steps=6 abstained=False
+[033/100] single   steps=4 abstained=False
+[034/100] single   steps=11 abstained=False
+[035/100] single   steps=6 abstained=False
+[036/100] single   steps=5 abstained=False
+[037/100] single   steps=5 abstained=False
+Gemini key #3 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+[038/100] single   steps=7 abstained=False
+[039/100] single   steps=4 abstained=False
+[040/100] single   steps=4 abstained=False
+[041/100] single   steps=4 abstained=False
+[042/100] single   steps=4 abstained=False
+[043/100] single   steps=5 abstained=False
+[044/100] single   steps=3 abstained=False
+[045/100] single   steps=4 abstained=False
+[046/100] single   steps=4 abstained=False
+[047/100] single   steps=5 abstained=False
+[048/100] single   steps=7 abstained=False
+[049/100] single   steps=5 abstained=False
+[050/100] single   steps=7 abstained=False
+[051/100] multi_2  steps=6 abstained=False
+[052/100] multi_2  steps=4 abstained=False
+[053/100] multi_2  steps=3 abstained=False
+[054/100] multi_2  steps=5 abstained=False
+[055/100] multi_2  steps=5 abstained=False
+Gemini key #4 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+[056/100] multi_2  steps=5 abstained=False
+[057/100] multi_2  steps=4 abstained=False
+[058/100] multi_2  steps=5 abstained=False
+[059/100] multi_2  steps=0 abstained=False
+[060/100] multi_2  steps=2 abstained=False
+[061/100] multi_2  steps=4 abstained=False
+[062/100] multi_2  steps=7 abstained=False
+[063/100] multi_2  steps=4 abstained=False
+[064/100] multi_2  steps=4 abstained=False
+[065/100] multi_2  steps=7 abstained=False
+[066/100] multi_2  steps=5 abstained=False
+[067/100] multi_2  steps=4 abstained=False
+[068/100] multi_2  steps=1 abstained=False
+[069/100] multi_2  steps=6 abstained=False
+[070/100] multi_2  steps=3 abstained=False
+[071/100] multi_3  steps=4 abstained=False
+Gemini key #5 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #6 failed (403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'The Gemini API free tier is not available for this project. T); trying next key
+[072/100] multi_3  steps=3 abstained=False
+[073/100] multi_3  steps=2 abstained=False
+[074/100] multi_3  steps=3 abstained=False
+[075/100] multi_3  steps=3 abstained=False
+[076/100] multi_3  steps=7 abstained=False
+[077/100] multi_3  steps=8 abstained=False
+[078/100] multi_3  steps=4 abstained=False
+[079/100] multi_3  steps=4 abstained=False
+[080/100] multi_3  steps=4 abstained=False
+[081/100] multi_3  steps=2 abstained=False
+[082/100] multi_3  steps=5 abstained=False
+[083/100] multi_4  steps=5 abstained=False
+[084/100] multi_4  steps=3 abstained=False
+[085/100] multi_4  steps=3 abstained=False
+[086/100] multi_4  steps=4 abstained=False
+[087/100] multi_4  steps=3 abstained=False
+[088/100] multi_5  steps=3 abstained=False
+[089/100] multi_5  steps=7 abstained=False
+[090/100] multi_5  steps=7 abstained=False
+[091/100] edge     steps=1 abstained=False
+[092/100] edge     steps=1 abstained=False
+[093/100] edge     steps=1 abstained=False
+[094/100] edge     steps=1 abstained=False
+[095/100] edge     steps=1 abstained=False
+[096/100] edge     steps=1 abstained=False
+[097/100] edge     steps=1 abstained=False
+[098/100] edge     steps=6 abstained=False
+[099/100] edge     steps=3 abstained=False
+[100/100] edge     steps=0 abstained=False
+
+steps_rag_hybrid: 100/100 saved.
+
+===== 2026-11-12T13:20:17 evals/eval_entailment.py gen --system rag_hybrid --resume --sleep 1
+Generator model: models/gemini-3.1-flash-lite
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+steps_rag_hybrid: 100/100 saved.
+
+===== 2026-11-14T22:42:19 evals/eval_entailment.py gen --system rag_hybrid --resume --sleep 1
+Generator model: models/gemini-3.1-flash-lite
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+steps_rag_hybrid: 100/100 saved.
+
+===== 2026-11-15T00:29:44 evals/eval_entailment.py gen --system rag_hybrid --resume --sleep 1
+Generator model: models/gemini-3.1-flash-lite
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+
+steps_rag_hybrid: 100/100 saved.

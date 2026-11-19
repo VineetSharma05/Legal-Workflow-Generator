@@ -2,6 +2,7 @@
 
 ```
 main.py                     CLI entrypoint for database setup / ingestion / embedding
+app.py                      FastAPI web app (chat UI + API)
 legal_workflow_generator/   library code (query, rag, agent, llm, workflow units)
 scripts/                    runnable helper scripts (agent queries, demos, validation)
 evals/                      evaluation harnesses; evals/results/ holds saved runs
@@ -68,6 +69,7 @@ python main.py ingest complete
 - Generate embeddings
 ```bash
 python main.py embed
+python main.py embed all
 ```
 
 ## LLM Layer (LangChain)

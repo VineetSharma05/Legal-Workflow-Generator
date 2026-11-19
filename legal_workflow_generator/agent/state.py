@@ -6,6 +6,7 @@ class AgentState(TypedDict):
     all_domains: List[str]
 
     domain_detection_method: str  # "retrieval", "llm_fallback", or "primary_only"
+    tentative_domains: List[str]  # suggested only by the LLM; dropped if nothing relevant is retrieved
 
     # Node 1: classify
     intent: str
@@ -13,6 +14,8 @@ class AgentState(TypedDict):
     normalized_query: str
     keywords: List[str]
     confidence: float
+    llm_error: str              # set when the LLM could not be reached during classification
+    scope_error: str            # set by the deterministic scope check (non-existent section, future year)
 
     # Node 2: retrieve
     rewritten_query: Optional[str]
@@ -48,6 +51,13 @@ class AgentState(TypedDict):
     # Terminal
     abstain: bool
     abstain_reason: str
+
+    # Typed per-domain results (DomainResult.to_dict()), date basis, final output
+    domain_results: List[dict]
+    domain_gaps: List[str]
+    gap_domains: List[str]
+    stitched_answer: str
+    as_of: str                  # ISO date the answer is valid on
 
     # Eval logging
     trace: List[str]

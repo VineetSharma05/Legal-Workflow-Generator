@@ -5,7 +5,9 @@ tokenisation behaviour is worth pinning down. No DB is touched.
 """
 
 from legal_workflow_generator.rag.ingestion import (
+    clauses_text,
     expand_query,
+    searchable_text,
     normalize_text,
     remove_stopwords,
     simple_stem,
@@ -72,3 +74,13 @@ def test_normalize_text_for_bm25_stems_and_drops_stopwords():
 def test_normalize_text_is_deterministic():
     q = "How do I register a private limited company?"
     assert normalize_text(q, for_embedding=False) == normalize_text(q, for_embedding=False)
+
+
+def test_searchable_text_adds_sub_structure_clauses():
+    sub = {"5": "A Data Fiduciary shall protect personal data [cite: 198]", "6": "intimation of such breach"}
+    out = searchable_text("general obligations of data fiduciary", sub)
+    assert out.startswith("general obligations of data fiduciary")
+    assert "reasonable" not in out and "protect personal data" in out and "intimation of such breach" in out
+    assert "[cite:" not in out
+    assert searchable_text("only text", {}) == "only text"
+    assert clauses_text('{"1": "a", "2": "b"}') == "a b"          # JSON string from the DB also works

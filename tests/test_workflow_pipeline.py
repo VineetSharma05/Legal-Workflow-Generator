@@ -3,23 +3,21 @@
 from legal_workflow_generator.agent import nodes
 
 
-def _result(domain: str, cited: list[str] | None = None) -> dict:
+def _result(domain: str, cited: list[str] | None = None) -> nodes.DomainResult:
+    """A worker result as `_domain_worker` returns it: a typed DomainResult with Step and Provision objects."""
     cited = cited or [f"{domain}_sec_1"]
-    return {
-        "domain": domain,
-        "docs": [{"provision_id": provision_id, "title": "A provision"} for provision_id in cited],
-        "grade": "sufficient",
-        "reason": "directly relevant",
-        "retries": 0,
-        "summary": [f"Summary for {domain}"],
-        "steps": [{
-            "action": f"Complete {domain} action",
-            "provision_id": cited[0],
-            "applies_to": "private",
-        }],
-        "not_covered": "",
-        "cited": cited,
-    }
+    return nodes.DomainResult(
+        domain=domain,
+        docs=[nodes.Provision.from_dict({"provision_id": provision_id, "title": "A provision"})
+              for provision_id in cited],
+        grade="sufficient",
+        reason="directly relevant",
+        retries=0,
+        summary=[f"Summary for {domain}"],
+        steps=[nodes.Step(action=f"Complete {domain} action", provision_id=cited[0], applies_to="private")],
+        not_covered="",
+        cited=cited,
+    )
 
 
 def test_domain_pipeline_keeps_structured_results_and_stitches_domains(monkeypatch):

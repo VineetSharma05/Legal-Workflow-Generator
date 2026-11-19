@@ -117,18 +117,19 @@ def test_generate_domain_maps_structured_steps(monkeypatch):
         )
 
     seen = _fake_llm(monkeypatch, reply)
-    out = nodes._generate_domain("employment", "POSH steps?", DOCS)
+    summary, steps, not_covered = nodes._generate_domain("employment", "POSH steps?", DOCS)
 
     assert seen[0].__name__ == "DomainWorkflow"
-    assert out["summary"] == ["Constitute an Internal Committee"]
-    assert [s["provision_id"] for s in out["steps"]] == [IDS[0], IDS[1]]  # empty action dropped
-    assert out["cited"] == IDS
-    assert out["not_covered"] == ""
+    assert summary == ["Constitute an Internal Committee"]
+    assert all(isinstance(s, nodes.Step) for s in steps)
+    assert [s.provision_id for s in steps] == [IDS[0], IDS[1]]  # empty action dropped
+    assert list(dict.fromkeys(s.provision_id for s in steps)) == IDS   # what the worker records as `cited`
+    assert not_covered == ""
 
 
 def test_generate_domain_failure_returns_empty(monkeypatch):
     _fake_llm(monkeypatch, StructuredOutputError("bad"))
-    assert nodes._generate_domain("employment", "q", DOCS)["steps"] == []
+    assert nodes._generate_domain("employment", "q", DOCS) == ([], [], "")
 
 
 def _grader_state():

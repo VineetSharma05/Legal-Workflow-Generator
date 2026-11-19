@@ -1,0 +1,459 @@
+
+===== 2026-11-05T12:45:03 evals/eval_complete_multidomain.py --provider gemini --tag pipeline_base --resume --sleep 0 --option suggest_provisions=false
+  from pydantic.v1 import BaseModel as BaseModelV1
+
+======================================================================
+COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — 100 queries (provider=gemini, model=models/gemini-3.1-flash-lite, as_of=2026-10-15, tag=pipeline_base, 0 already done)
+======================================================================
+
+[001/100] (single) what notice must a data fiduciary give before collecting personal data...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Loading embedding model: sentence-transformers/all-mpnet-base-v2
+BM25 index built with 4888 laws
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=1.0 cov=1.0 | 20.22s | 11948 tok
+[002/100] (single) how quickly must we report a personal data breach to the Data Protecti...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=0.5 cov=1.0 | 45.4s | 9835 tok
+[003/100] (single) verifiable parental consent requirements for processing children's per...
+Gemini key #1 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #2 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #3 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #4 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=1.0 cov=1.0 | 37.71s | 9567 tok
+[004/100] (single) registration conditions and obligations of a consent manager...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=1.0 cov=1.0 | 77.01s | 16071 tok
+[005/100] (single) what reasonable security safeguards are mandatory under the DPDP rules...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=0.5 cov=1.0 | 60.04s | 14131 tok
+[006/100] (single) can we transfer personal data of Indian users to servers outside India...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=1.0 cov=1.0 | 101.28s | 10475 tok
+[007/100] (single) mandatory reporting of cyber security incidents to CERT-In within 6 ho...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=0.5 cov=1.0 | 12.59s | 11428 tok
+[008/100] (single) how long must we retain ICT system logs under the CERT-In directions...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=0.5 cov=1.0 | 64.79s | 13826 tok
+[009/100] (single) what counts as sensitive personal data or information under the SPDI r...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=0.5 cov=1.0 | 105.86s | 25212 tok
+[010/100] (single) compensation liability of a body corporate that fails to protect sensi...
+        ANSWER (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=0.5 cov=1.0 | 58.29s | 16334 tok
+[011/100] (single) minimum number of partners and designated partners required to form an...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance'] | cit_recall=1.0 cov=1.0 | 16.12s | 6227 tok
+[012/100] (single) how to convert a private limited company into an LLP...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance', 'taxation'] | cit_recall=1.0 cov=1.0 | 58.98s | 19652 tok
+[013/100] (single) is a non-compete clause in a commercial contract enforceable in India...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance', 'employment', 'ip_licensing', 'taxation'] | cit_recall=0.5 cov=1.0 | 124.08s | 19549 tok
+[014/100] (single) damages recoverable for breach of contract when a liquidated damages c...
+Gemini key #5 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #6 failed (403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'The Gemini API free tier is not available for this project. T); trying next key
+        ABSTAIN (WRONG) | domains exp=['corporate_governance'] got=['corporate_governance', 'employment'] | cit_recall=0.0 cov=0.0 | 121.15s | 20726 tok
+        reason: The answer claims that courts award compensation up to a stipulated limit when a liquidated damages clause exists, but the provided context only addresses general breach of contract damages and does n
+[015/100] (single) what is a contract of indemnity and what are the rights of the indemni...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance', 'employment'] | cit_recall=0.5 cov=1.0 | 79.56s | 13691 tok
+[016/100] (single) when must a company spend on corporate social responsibility...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance', 'employment', 'taxation'] | cit_recall=1.0 cov=1.0 | 64.13s | 23165 tok
+[017/100] (single) process for appointing the auditor of a company at the annual general ...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance'] | cit_recall=0.5 cov=1.0 | 49.72s | 7819 tok
+[018/100] (single) issuing new shares to existing shareholders through a rights issue...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance'] | cit_recall=0.5 cov=1.0 | 60.93s | 13361 tok
+[019/100] (single) who is not eligible to be a resolution applicant under the insolvency ...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance'] | cit_recall=0.5 cov=1.0 | 27.61s | 4762 tok
+[020/100] (single) unfair trade practices by an e-commerce marketplace towards consumers...
+        ANSWER (OK) | domains exp=['corporate_governance'] got=['corporate_governance', 'employment'] | cit_recall=1.0 cov=1.0 | 60.32s | 9132 tok
+[021/100] (single) what is not an invention under Indian patent law, are software algorit...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=1.0 cov=1.0 | 40.67s | 7851 tok
+[022/100] (single) how long does a patent last in India...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=1.0 cov=1.0 | 37.34s | 5528 tok
+[023/100] (single) who is entitled to apply for a patent, the inventor or the employer...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=1.0 cov=1.0 | 41.99s | 10314 tok
+[024/100] (single) must a patent assignment be in writing to be valid...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=1.0 cov=1.0 | 40.43s | 5802 tok
+[025/100] (single) grounds on which a trademark application can be refused...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=1.0 cov=1.0 | 42.88s | 9402 tok
+[026/100] (single) how long is a trademark registration valid and how do we renew it...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=1.0 cov=1.0 | 34.33s | 7203 tok
+[027/100] (single) what amounts to infringement of a registered trademark and what relief...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=1.0 cov=1.0 | 41.92s | 9594 tok
+[028/100] (single) licensing our trademark to a franchisee as a registered user...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=0.5 cov=1.0 | 63.75s | 18281 tok
+[029/100] (single) what is piracy of a registered design...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['ip_licensing'] | cit_recall=0.5 cov=1.0 | 48.24s | 9713 tok
+[030/100] (single) legal validity of contracts formed electronically through click-wrap a...
+        ANSWER (OK) | domains exp=['ip_licensing'] got=['corporate_governance', 'ip_licensing'] | cit_recall=0.5 cov=1.0 | 70.85s | 15335 tok
+[031/100] (single) turnover threshold for compulsory GST registration...
+        ANSWER (OK) | domains exp=['taxation'] got=['taxation'] | cit_recall=1.0 cov=1.0 | 41.49s | 7421 tok
+[032/100] (single) conditions for claiming input tax credit under the CGST Act...
+        ANSWER (OK) | domains exp=['taxation'] got=['taxation'] | cit_recall=1.0 cov=1.0 | 24.31s | 15012 tok
+[033/100] (single) can a small startup opt for the GST composition scheme...
+        ABSTAIN (WRONG) | domains exp=['taxation'] got=['taxation'] | cit_recall=0.0 cov=0.0 | 43.61s | 8695 tok
+        reason: taxation: Every generated step failed verification against the provision it cited.
+[034/100] (single) what details must a GST tax invoice contain...
+        ANSWER (OK) | domains exp=['taxation'] got=['taxation'] | cit_recall=0.0 cov=1.0 | 26.82s | 9676 tok
+[035/100] (single) obligation of e-commerce operators to collect tax at source under GST...
+        ANSWER (OK) | domains exp=['taxation'] got=['taxation'] | cit_recall=1.0 cov=1.0 | 45.73s | 9424 tok
+[036/100] (single) advance tax instalments and due dates under the Income Tax Act 2025...
+
+===== 2026-11-05T16:07:30 evals/eval_complete_multidomain.py --provider gemini --tag pipeline_base --resume --sleep 0 --option suggest_provisions=false
+  from pydantic.v1 import BaseModel as BaseModelV1
+
+======================================================================
+COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — 100 queries (provider=gemini, model=models/gemini-3.1-flash-lite, as_of=2026-10-15, tag=pipeline_base, 35 already done)
+======================================================================
+
+[036/100] (single) advance tax instalments and due dates under the Income Tax Act 2025...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Loading embedding model: sentence-transformers/all-mpnet-base-v2
+BM25 index built with 4888 laws
+        ANSWER (OK) | domains exp=['taxation'] got=['taxation'] | cit_recall=0.5 cov=1.0 | 50.01s | 14423 tok
+[037/100] (single) TDS obligations on salary paid to employees...
+        ANSWER (OK) | domains exp=['taxation'] got=['taxation'] | cit_recall=0.5 cov=1.0 | 103.67s | 16007 tok
+[038/100] (single) tax exemptions available to a unit set up in a Special Economic Zone...
+        ANSWER (OK) | domains exp=['taxation'] got=['taxation'] | cit_recall=0.0 cov=1.0 | 11.32s | 11947 tok
+[039/100] (single) consequences of executing a share purchase agreement that is not duly ...
+        ANSWER (OK) | domains exp=['taxation'] got=['corporate_governance', 'taxation'] | cit_recall=0.5 cov=1.0 | 62.1s | 16607 tok
+[040/100] (single) can an Indian startup set up a wholly owned subsidiary abroad under FE...
+        ABSTAIN (WRONG) | domains exp=['taxation'] got=['corporate_governance', 'taxation'] | cit_recall=0.0 cov=0.0 | 55.41s | 8281 tok
+        reason: corporate_governance: None of the provided provisions address the Foreign Exchange Management Act (FEMA) or the specific regulatory requirements for an Indian startup establishing a wholly owned subsi
+[041/100] (single) maternity benefit eligibility and payment under the Code on Social Sec...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=0.5 cov=1.0 | 56.28s | 9810 tok
+[042/100] (single) is a creche facility mandatory for our office...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=1.0 cov=1.0 | 12.36s | 7826 tok
+[043/100] (single) gratuity eligibility after five years of continuous service...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=0.5 cov=1.0 | 53.04s | 10037 tok
+[044/100] (single) social security schemes for gig and platform workers and the aggregato...
+        ANSWER (OK) | domains exp=['employment'] got=['employment', 'taxation'] | cit_recall=1.0 cov=1.0 | 60.48s | 23444 tok
+[045/100] (single) conditions precedent for lawful retrenchment of workmen...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=1.0 cov=1.0 | 49.47s | 8173 tok
+[046/100] (single) minimum and maximum statutory bonus payable to employees...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=1.0 cov=1.0 | 31.94s | 7946 tok
+[047/100] (single) employer contributions to the Employees Provident Fund...
+        ANSWER (OK) | domains exp=['employment'] got=['employment', 'taxation'] | cit_recall=0.0 cov=1.0 | 60.19s | 17842 tok
+[048/100] (single) obligations of employers who engage apprentices...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=0.5 cov=1.0 | 87.91s | 23389 tok
+[049/100] (single) non-discrimination against persons with disabilities in employment and...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=1.0 cov=1.0 | 60.69s | 9787 tok
+[050/100] (single) licence requirements for engaging contract labour through a contractor...
+        ANSWER (OK) | domains exp=['employment'] got=['employment'] | cit_recall=1.0 cov=1.0 | 173.28s | 11452 tok
+[051/100] (multi_2) we want to collect biometric attendance data from employees — what con...
+        ANSWER (OK) | domains exp=['data_protection', 'employment'] got=['data_protection'] | cit_recall=0.0 cov=0.5 | 52.33s | 14807 tok
+[052/100] (multi_2) our payments app stores card transaction data and charges a fee — data...
+        ANSWER (OK) | domains exp=['data_protection', 'taxation'] got=['data_protection', 'taxation'] | cit_recall=0.5 cov=1.0 | 36.28s | 21921 tok
+[053/100] (multi_2) are company directors and officers personally liable when the company ...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection'] got=['data_protection'] | cit_recall=0.333 cov=0.5 | 43.11s | 14017 tok
+[054/100] (multi_2) we license our proprietary database to clients — copyright in the data...
+        ANSWER (OK) | domains exp=['data_protection', 'ip_licensing'] got=['data_protection', 'ip_licensing'] | cit_recall=0.667 cov=1.0 | 162.43s | 20334 tok
+[055/100] (multi_2) an employee who invented a patentable process is being retrenched — wh...
+        ANSWER (OK) | domains exp=['employment', 'ip_licensing'] got=['employment', 'ip_licensing'] | cit_recall=0.667 cov=1.0 | 82.1s | 16496 tok
+[056/100] (multi_2) gratuity payable to a resigning employee and TDS on the final salary s...
+        ANSWER (OK) | domains exp=['employment', 'taxation'] got=['employment', 'taxation'] | cit_recall=0.5 cov=1.0 | 59.57s | 24498 tok
+[057/100] (multi_2) Companies Act allotment rules and stamp duty when issuing shares to in...
+        ANSWER (OK) | domains exp=['corporate_governance', 'taxation'] got=['corporate_governance', 'taxation'] | cit_recall=0.667 cov=1.0 | 60.8s | 17172 tok
+[058/100] (multi_2) converting our partnership firm into an LLP and transferring the firm'...
+        ANSWER (OK) | domains exp=['corporate_governance', 'ip_licensing'] got=['corporate_governance', 'ip_licensing', 'taxation'] | cit_recall=0.5 cov=1.0 | 110.67s | 26084 tok
+[059/100] (multi_2) can we enforce a non-compete against a terminated employee and what re...
+        ANSWER (OK) | domains exp=['corporate_governance', 'employment'] got=['employment'] | cit_recall=0.5 cov=0.5 | 10.96s | 7835 tok
+[060/100] (multi_2) withholding tax on royalty paid to a foreign company for a software pa...
+        ANSWER (OK) | domains exp=['ip_licensing', 'taxation'] got=['ip_licensing', 'taxation'] | cit_recall=0.333 cov=0.5 | 59.0s | 17626 tok
+[061/100] (multi_2) our e-commerce marketplace shares customer data with sellers — consume...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection'] got=['data_protection'] | cit_recall=0.5 cov=0.5 | 58.37s | 14638 tok
+[062/100] (multi_2) handling a sexual harassment complaint while keeping the complainant's...
+        ANSWER (OK) | domains exp=['data_protection', 'employment'] got=['data_protection', 'employment'] | cit_recall=0.333 cov=1.0 | 64.93s | 19989 tok
+[063/100] (multi_2) ESI — which employees must be insured and how the principal employer p...
+        ANSWER (OK) | domains exp=['employment', 'taxation'] got=['employment', 'taxation'] | cit_recall=0.333 cov=1.0 | 60.77s | 16035 tok
+[064/100] (multi_2) foreign SaaS company serving Indian users — GST on online information ...
+        ANSWER (OK) | domains exp=['data_protection', 'taxation'] got=['data_protection', 'ip_licensing', 'taxation'] | cit_recall=0.5 cov=1.0 | 63.61s | 31148 tok
+[065/100] (multi_2) our app uses Aadhaar authentication — restrictions on sharing Aadhaar ...
+        ANSWER (OK) | domains exp=['data_protection', 'ip_licensing'] got=['data_protection', 'ip_licensing'] | cit_recall=0.667 cov=1.0 | 86.51s | 17551 tok
+[066/100] (multi_2) our company is in liquidation — what happens to unpaid employee wages ...
+        ANSWER (OK) | domains exp=['corporate_governance', 'employment'] got=['corporate_governance', 'employment'] | cit_recall=0.333 cov=1.0 | 68.3s | 12235 tok
+[067/100] (multi_2) exporting software from an SEZ unit — zero-rated GST supply and copyri...
+        ANSWER (OK) | domains exp=['ip_licensing', 'taxation'] got=['taxation'] | cit_recall=0.333 cov=0.5 | 62.02s | 17846 tok
+[068/100] (multi_2) what must the annual report disclose about POSH compliance and CSR spe...
+        ANSWER (OK) | domains exp=['corporate_governance', 'employment'] got=['corporate_governance', 'employment'] | cit_recall=1.0 cov=1.0 | 61.1s | 13349 tok
+[069/100] (multi_2) how long can we retain customer personal data after the service ends a...
+        ANSWER (OK) | domains exp=['data_protection', 'taxation'] got=['data_protection', 'taxation'] | cit_recall=0.5 cov=1.0 | 63.28s | 20108 tok
+[070/100] (multi_2) vendor contract for outsourced processing of customer data — indemnity...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection'] got=['corporate_governance', 'data_protection'] | cit_recall=1.0 cov=1.0 | 58.58s | 15790 tok
+[071/100] (multi_3) setting up a private limited company with 15 employees — incorporation...
+        ANSWER (OK) | domains exp=['corporate_governance', 'employment', 'taxation'] got=['corporate_governance', 'employment', 'taxation'] | cit_recall=0.0 cov=0.667 | 65.7s | 21389 tok
+[072/100] (multi_3) launching a consumer mobile app — registering the brand name, getting ...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'ip_licensing'] got=['corporate_governance', 'data_protection', 'ip_licensing'] | cit_recall=1.0 cov=1.0 | 67.83s | 27302 tok
+[073/100] (multi_3) hiring a freelance developer abroad — who owns the code, withholding t...
+        ANSWER (OK) | domains exp=['employment', 'ip_licensing', 'taxation'] got=['employment', 'ip_licensing', 'taxation'] | cit_recall=1.0 cov=1.0 | 84.49s | 27207 tok
+[074/100] (multi_3) an employee leaked customer data — breach reporting, penalty for discl...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'employment'] got=['data_protection', 'employment'] | cit_recall=0.667 cov=0.667 | 83.84s | 23135 tok
+[075/100] (multi_3) selling our startup's patents and trademarks to an acquirer — assignme...
+        ANSWER (OK) | domains exp=['corporate_governance', 'ip_licensing', 'taxation'] got=['ip_licensing', 'taxation'] | cit_recall=0.667 cov=0.333 | 66.17s | 14049 tok
+[076/100] (multi_3) fintech lending app — payment data localisation, GST on processing fee...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'taxation'] got=['corporate_governance', 'data_protection', 'taxation'] | cit_recall=0.667 cov=1.0 | 65.95s | 30429 tok
+[077/100] (multi_3) our factory — worker safety duties of the employer, CCTV monitoring of...
+        ANSWER (OK) | domains exp=['data_protection', 'employment', 'ip_licensing'] got=['data_protection', 'employment', 'ip_licensing'] | cit_recall=0.0 cov=0.667 | 84.25s | 22213 tok
+[078/100] (multi_3) winding up an LLP — settling employee gratuity and bonus dues, and sta...
+Gemini key #1 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+        ANSWER (OK) | domains exp=['corporate_governance', 'employment', 'taxation'] got=['corporate_governance', 'employment'] | cit_recall=0.0 cov=0.333 | 84.51s | 20594 tok
+[079/100] (multi_3) hiring persons with disabilities — non-discrimination duties, consent ...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'employment'] got=['data_protection', 'employment'] | cit_recall=0.333 cov=0.667 | 64.41s | 17841 tok
+[080/100] (multi_3) online gaming platform — GST on online services, intermediary safe har...
+        ANSWER (OK) | domains exp=['data_protection', 'ip_licensing', 'taxation'] got=['data_protection', 'ip_licensing', 'taxation'] | cit_recall=0.667 cov=1.0 | 66.85s | 34942 tok
+[081/100] (multi_3) a co-founder who is also an employee is leaving — assignment of the co...
+        ANSWER (OK) | domains exp=['corporate_governance', 'employment', 'ip_licensing'] got=['corporate_governance', 'employment', 'ip_licensing'] | cit_recall=1.0 cov=0.667 | 105.54s | 16459 tok
+[082/100] (multi_3) outsourced payroll — TDS on salaries, ESI contributions and protecting...
+        ANSWER (OK) | domains exp=['data_protection', 'employment', 'taxation'] got=['data_protection', 'employment', 'taxation'] | cit_recall=0.0 cov=1.0 | 72.42s | 31869 tok
+[083/100] (multi_4) we are a 50-person SaaS company with many women employees, we collect ...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'employment', 'taxation'] got=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] | cit_recall=0.25 cov=1.0 | 117.57s | 44624 tok
+[084/100] (multi_4) edtech startup — incorporating the company, trademarking the brand, GS...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'ip_licensing', 'taxation'] got=['corporate_governance', 'data_protection', 'ip_licensing', 'taxation'] | cit_recall=0.75 cov=1.0 | 111.98s | 36089 tok
+[085/100] (multi_4) delivery startup using gig workers — platform worker social security, ...
+        ANSWER (OK) | domains exp=['data_protection', 'employment', 'ip_licensing', 'taxation'] got=['data_protection', 'employment', 'ip_licensing', 'taxation'] | cit_recall=1.0 cov=1.0 | 127.14s | 42662 tok
+[086/100] (multi_4) acquiring a smaller startup — transferring employees' gratuity, stamp ...
+        ANSWER (OK) | domains exp=['corporate_governance', 'employment', 'ip_licensing', 'taxation'] got=['corporate_governance', 'ip_licensing', 'taxation'] | cit_recall=0.5 cov=0.5 | 143.5s | 28815 tok
+[087/100] (multi_4) healthtech clinic chain run as an LLP — security of patient health dat...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'employment', 'taxation'] got=['corporate_governance', 'data_protection', 'employment', 'taxation'] | cit_recall=0.25 cov=0.5 | 74.28s | 27413 tok
+[088/100] (multi_5) complete legal compliance checklist for an Indian AI startup with empl...
+
+===== 2026-11-06T09:51:37 evals/eval_complete_multidomain.py --provider gemini --tag pipeline_base --resume --sleep 0 --option suggest_provisions=false
+  from pydantic.v1 import BaseModel as BaseModelV1
+
+======================================================================
+COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — 100 queries (provider=gemini, model=models/gemini-3.1-flash-lite, as_of=2026-10-15, tag=pipeline_base, 87 already done)
+======================================================================
+
+[088/100] (multi_5) complete legal compliance checklist for an Indian AI startup with empl...
+Gemini key #1 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1mMPNetModel LOAD REPORT[0m from: sentence-transformers/all-mpnet-base-v2
+Key                     | Status     |  | 
+------------------------+------------+--+-
+embeddings.position_ids | UNEXPECTED |  | 
+
+[3mNotes:
+- UNEXPECTED[3m	:can be ignored when loading from different task/architecture; not ok if you expect identical arch.[0m
+Loading embedding model: sentence-transformers/all-mpnet-base-v2
+BM25 index built with 4888 laws
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] got=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] | cit_recall=0.167 cov=1.0 | 100.61s | 48719 tok
+[089/100] (multi_5) we manufacture IoT devices in an SEZ, employ 200 factory workers, coll...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] got=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] | cit_recall=0.4 cov=1.0 | 112.41s | 48457 tok
+[090/100] (multi_5) our company is going insolvent — dues to employees, handling customer ...
+        ANSWER (OK) | domains exp=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] got=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] | cit_recall=0.8 cov=1.0 | 118.51s | 39615 tok
+[091/100] (edge) what is the penalty under section 999 of the DPDP Act...
+        ABSTAIN (OK) | domains exp=['data_protection'] got=['data_protection'] | cit_recall=None cov=0.0 | 39.42s | 6057 tok
+        reason: data_protection: The DPDP Act does not contain a section 999, and the provided provisions do not reference such a section.
+[092/100] (edge) explain section 500 of the Payment of Gratuity Act...
+        ABSTAIN (OK) | domains exp=['employment'] got=['employment'] | cit_recall=None cov=0.0 | 23.85s | 5103 tok
+        reason: employment: The provided provisions do not contain a section 500 of the Payment of Gratuity Act, as the Act does not contain that many sections.
+[093/100] (edge) Delaware franchise tax filing deadline for a US C-corporation...
+        ABSTAIN (OK) | domains exp=[] got=['corporate_governance', 'employment', 'ip_licensing'] | cit_recall=None cov=None | 97.35s | 14921 tok
+        reason: corporate_governance: The retrieved provisions pertain exclusively to Indian corporate law (LLP Act and Companies Act) and do not address the Delaware franchise tax filing deadline for a US C-corporat
+[094/100] (edge) GDPR Article 17 obligations for a company established only in the EU...
+        ABSTAIN (OK) | domains exp=[] got=['data_protection'] | cit_recall=None cov=None | 20.79s | 6844 tok
+        reason: data_protection: The retrieved provisions pertain exclusively to the Indian Digital Personal Data Protection Act and related Indian regulations, which do not address the obligations under the EU's GDP
+[095/100] (edge) what will the GST rate on SaaS subscriptions be in 2035...
+        ANSWER (WRONG) | domains exp=['taxation'] got=['ip_licensing', 'taxation'] | cit_recall=None cov=0.0 | 66.16s | 15026 tok
+[096/100] (edge) what is the best pizza place in Bangalore...
+        ABSTAIN (OK) | domains exp=[] got=['taxation'] | cit_recall=None cov=None | 2.36s | 300 tok
+        reason: Could not determine the legal domain of your query.
+[097/100] (edge) how do I improve my startup's Instagram engagement...
+        ABSTAIN (OK) | domains exp=[] got=['employment', 'ip_licensing', 'taxation'] | cit_recall=None cov=None | 20.03s | 304 tok
+        reason: Could not determine the legal domain of your query.
+[098/100] (edge) recommend a cloud hosting provider for our backend...
+        ABSTAIN (OK) | domains exp=[] got=['corporate_governance', 'data_protection', 'employment', 'ip_licensing', 'taxation'] | cit_recall=None cov=None | 9.04s | 315 tok
+        reason: Could not determine the legal domain of your query.
+[099/100] (edge) write me a poem about corporate law...
+        ABSTAIN (OK) | domains exp=[] got=['corporate_governance', 'employment', 'taxation'] | cit_recall=None cov=None | 3.72s | 307 tok
+        reason: Could not determine the legal domain of your query.
+[100/100] (edge) what is the capital of Australia...
+        ABSTAIN (OK) | domains exp=[] got=['corporate_governance', 'taxation'] | cit_recall=None cov=None | 29.67s | 291 tok
+        reason: Could not determine the legal domain of your query.
+
+======================================================================
+SUMMARY
+======================================================================
+Scored queries            : 100 of 100 (0 errored)
+answered_pct              : 88.0
+domain_recall             : 0.955
+domain_precision          : 0.925
+domain_exact_match        : 0.733
+primary_domain_accuracy   : 0.956
+citation_recall           : 0.565
+citation_domain_coverage  : 0.889
+false_abstain_rate        : 0.033
+abstain_accuracy          : 0.9
+avg_elapsed_seconds       : 62.734
+
+By category (domain_recall / exact / citation_recall / coverage / abstain_acc):
+  edge       n= 10  None / None / None / None / 0.9
+  multi_2    n= 20  0.875 / 0.65 / 0.49 / 0.85 / None
+  multi_3    n= 12  0.889 / 0.667 / 0.5 / 0.75 / None
+  multi_4    n=  5  0.95 / 0.6 / 0.55 / 0.8 / None
+  multi_5    n=  3  1.0 / 1.0 / 0.438 / 1.0 / None
+  multi_all  n= 40  0.898 / 0.675 / 0.496 / 0.825 / None
+  single     n= 50  1.0 / 0.78 / 0.663 / 0.94 / None
+
+Per domain (detection_recall / cited_recall / false_positives):
+  data_protection        n= 34  1.0 / 1.0 / 0
+  corporate_governance   n= 33  0.818 / 0.727 / 3
+  ip_licensing           n= 28  0.964 / 0.929 / 3
+  taxation               n= 33  0.97 / 0.818 / 6
+  employment             n= 33  0.939 / 0.848 / 5
+======================================================================
+
+Results saved to:
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.jsonl
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base_summary.json
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.csv
+
+100/100 queries have a saved result.
+
+===== 2026-11-06T10:07:39 evals/eval_complete_multidomain.py --provider gemini --tag pipeline_base --resume --sleep 0 --option suggest_provisions=false
+  from pydantic.v1 import BaseModel as BaseModelV1
+
+======================================================================
+COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — 100 queries (provider=gemini, model=models/gemini-3.1-flash-lite, as_of=2026-10-15, tag=pipeline_base, 100 already done)
+======================================================================
+
+
+======================================================================
+SUMMARY
+======================================================================
+Scored queries            : 100 of 100 (0 errored)
+answered_pct              : 88.0
+domain_recall             : 0.955
+domain_precision          : 0.925
+domain_exact_match        : 0.733
+primary_domain_accuracy   : 0.956
+citation_recall           : 0.565
+citation_domain_coverage  : 0.889
+false_abstain_rate        : 0.033
+abstain_accuracy          : 0.9
+avg_elapsed_seconds       : 62.734
+
+By category (domain_recall / exact / citation_recall / coverage / abstain_acc):
+  edge       n= 10  None / None / None / None / 0.9
+  multi_2    n= 20  0.875 / 0.65 / 0.49 / 0.85 / None
+  multi_3    n= 12  0.889 / 0.667 / 0.5 / 0.75 / None
+  multi_4    n=  5  0.95 / 0.6 / 0.55 / 0.8 / None
+  multi_5    n=  3  1.0 / 1.0 / 0.438 / 1.0 / None
+  multi_all  n= 40  0.898 / 0.675 / 0.496 / 0.825 / None
+  single     n= 50  1.0 / 0.78 / 0.663 / 0.94 / None
+
+Per domain (detection_recall / cited_recall / false_positives):
+  data_protection        n= 34  1.0 / 1.0 / 0
+  corporate_governance   n= 33  0.818 / 0.727 / 3
+  ip_licensing           n= 28  0.964 / 0.929 / 3
+  taxation               n= 33  0.97 / 0.818 / 6
+  employment             n= 33  0.939 / 0.848 / 5
+======================================================================
+
+Results saved to:
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.jsonl
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base_summary.json
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.csv
+
+100/100 queries have a saved result.
+
+===== 2026-11-06T10:09:20 evals/eval_complete_multidomain.py --provider gemini --tag pipeline_base --resume --sleep 0 --option suggest_provisions=false
+  from pydantic.v1 import BaseModel as BaseModelV1
+
+======================================================================
+COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — 100 queries (provider=gemini, model=models/gemini-3.1-flash-lite, as_of=2026-10-15, tag=pipeline_base, 100 already done)
+======================================================================
+
+
+======================================================================
+SUMMARY
+======================================================================
+Scored queries            : 100 of 100 (0 errored)
+answered_pct              : 88.0
+domain_recall             : 0.955
+domain_precision          : 0.925
+domain_exact_match        : 0.733
+primary_domain_accuracy   : 0.956
+citation_recall           : 0.565
+citation_domain_coverage  : 0.889
+false_abstain_rate        : 0.033
+abstain_accuracy          : 0.9
+avg_elapsed_seconds       : 62.734
+
+By category (domain_recall / exact / citation_recall / coverage / abstain_acc):
+  edge       n= 10  None / None / None / None / 0.9
+  multi_2    n= 20  0.875 / 0.65 / 0.49 / 0.85 / None
+  multi_3    n= 12  0.889 / 0.667 / 0.5 / 0.75 / None
+  multi_4    n=  5  0.95 / 0.6 / 0.55 / 0.8 / None
+  multi_5    n=  3  1.0 / 1.0 / 0.438 / 1.0 / None
+  multi_all  n= 40  0.898 / 0.675 / 0.496 / 0.825 / None
+  single     n= 50  1.0 / 0.78 / 0.663 / 0.94 / None
+
+Per domain (detection_recall / cited_recall / false_positives):
+  data_protection        n= 34  1.0 / 1.0 / 0
+  corporate_governance   n= 33  0.818 / 0.727 / 3
+  ip_licensing           n= 28  0.964 / 0.929 / 3
+  taxation               n= 33  0.97 / 0.818 / 6
+  employment             n= 33  0.939 / 0.848 / 5
+======================================================================
+
+Results saved to:
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.jsonl
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base_summary.json
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.csv
+
+100/100 queries have a saved result.
+
+===== 2026-11-07T16:06:00 evals/eval_complete_multidomain.py --provider gemini --tag pipeline_base --resume --sleep 0 --option suggest_provisions=false
+  from pydantic.v1 import BaseModel as BaseModelV1
+
+======================================================================
+COMPLETE-DATASET MULTI-DOMAIN AGENT EVALUATION — 100 queries (provider=gemini, model=models/gemini-3.1-flash-lite, as_of=2026-10-15, tag=pipeline_base, 100 already done)
+======================================================================
+
+
+======================================================================
+SUMMARY
+======================================================================
+Scored queries            : 100 of 100 (0 errored)
+answered_pct              : 88.0
+domain_recall             : 0.955
+domain_precision          : 0.925
+domain_exact_match        : 0.733
+primary_domain_accuracy   : 0.956
+citation_recall           : 0.565
+citation_domain_coverage  : 0.889
+false_abstain_rate        : 0.033
+abstain_accuracy          : 0.9
+avg_elapsed_seconds       : 62.734
+
+By category (domain_recall / exact / citation_recall / coverage / abstain_acc):
+  edge       n= 10  None / None / None / None / 0.9
+  multi_2    n= 20  0.875 / 0.65 / 0.49 / 0.85 / None
+  multi_3    n= 12  0.889 / 0.667 / 0.5 / 0.75 / None
+  multi_4    n=  5  0.95 / 0.6 / 0.55 / 0.8 / None
+  multi_5    n=  3  1.0 / 1.0 / 0.438 / 1.0 / None
+  multi_all  n= 40  0.898 / 0.675 / 0.496 / 0.825 / None
+  single     n= 50  1.0 / 0.78 / 0.663 / 0.94 / None
+
+Per domain (detection_recall / cited_recall / false_positives):
+  data_protection        n= 34  1.0 / 1.0 / 0
+  corporate_governance   n= 33  0.818 / 0.727 / 3
+  ip_licensing           n= 28  0.964 / 0.929 / 3
+  taxation               n= 33  0.97 / 0.818 / 6
+  employment             n= 33  0.939 / 0.848 / 5
+======================================================================
+
+Results saved to:
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.jsonl
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base_summary.json
+  /home/nishant/Academics/engineering/capstone/Legal-Workflow-Generator/evals/results/gemini_v2/eval_pipeline_base.csv
+
+100/100 queries have a saved result.

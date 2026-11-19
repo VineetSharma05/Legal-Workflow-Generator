@@ -1,0 +1,101 @@
+query,category,expected_domains,predicted_domains,primary_domain,domain_recall,domain_precision,domain_exact_match,citation_recall,citation_domain_coverage,abstained,abstain_correct,retry_count_retrieval,retry_count_generation,elapsed_seconds
+what notice must a data fiduciary give before collecting personal data,single,data_protection,data_protection,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,17.14
+how quickly must we report a personal data breach to the Data Protection Board and affected users,single,data_protection,data_protection,data_protection,1.0,1.0,True,0.5,1.0,False,True,0,0,45.43
+verifiable parental consent requirements for processing children's personal data,single,data_protection,data_protection,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,17.79
+registration conditions and obligations of a consent manager,single,data_protection,data_protection,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,61.44
+what reasonable security safeguards are mandatory under the DPDP rules,single,data_protection,data_protection,data_protection,1.0,1.0,True,0.5,1.0,False,True,0,0,109.87
+can we transfer personal data of Indian users to servers outside India,single,data_protection,data_protection,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,101.47
+mandatory reporting of cyber security incidents to CERT-In within 6 hours,single,data_protection,data_protection,data_protection,1.0,1.0,True,0.5,1.0,False,True,0,0,30.87
+how long must we retain ICT system logs under the CERT-In directions,single,data_protection,data_protection,data_protection,1.0,1.0,True,0.5,1.0,False,True,0,0,247.3
+what counts as sensitive personal data or information under the SPDI rules,single,data_protection,data_protection,data_protection,1.0,1.0,True,0.5,1.0,False,True,0,0,57.28
+compensation liability of a body corporate that fails to protect sensitive personal data,single,data_protection,data_protection,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,60.94
+minimum number of partners and designated partners required to form an LLP,single,corporate_governance,corporate_governance,corporate_governance,1.0,1.0,True,1.0,1.0,False,True,0,0,91.0
+how to convert a private limited company into an LLP,single,corporate_governance,corporate_governance|taxation,corporate_governance,1.0,0.5,False,1.0,1.0,False,True,0,0,43.86
+is a non-compete clause in a commercial contract enforceable in India,single,corporate_governance,corporate_governance|employment|ip_licensing|taxation,employment,1.0,0.25,False,0.5,1.0,False,True,1,0,179.32
+damages recoverable for breach of contract when a liquidated damages clause exists,single,corporate_governance,corporate_governance|employment,corporate_governance,1.0,0.5,False,0.5,1.0,False,True,1,0,86.07
+what is a contract of indemnity and what are the rights of the indemnity holder,single,corporate_governance,corporate_governance|employment,corporate_governance,1.0,0.5,False,0.5,1.0,False,True,0,0,76.86
+when must a company spend on corporate social responsibility,single,corporate_governance,corporate_governance|employment|taxation,corporate_governance,1.0,0.333,False,1.0,1.0,False,True,1,0,106.3
+process for appointing the auditor of a company at the annual general meeting,single,corporate_governance,corporate_governance,corporate_governance,1.0,1.0,True,0.5,1.0,False,True,0,0,53.04
+issuing new shares to existing shareholders through a rights issue,single,corporate_governance,corporate_governance|taxation,corporate_governance,1.0,0.5,False,0.5,1.0,False,True,0,0,53.74
+who is not eligible to be a resolution applicant under the insolvency code,single,corporate_governance,corporate_governance,corporate_governance,1.0,1.0,True,0.5,1.0,False,True,0,0,25.43
+unfair trade practices by an e-commerce marketplace towards consumers,single,corporate_governance,corporate_governance|employment,corporate_governance,1.0,0.5,False,0.5,1.0,False,True,1,0,77.63
+"what is not an invention under Indian patent law, are software algorithms excluded",single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,1.0,1.0,False,True,0,0,89.96
+how long does a patent last in India,single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,1.0,1.0,False,True,0,0,51.5
+"who is entitled to apply for a patent, the inventor or the employer",single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,1.0,1.0,False,True,0,0,42.45
+must a patent assignment be in writing to be valid,single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,1.0,1.0,False,True,0,0,39.6
+grounds on which a trademark application can be refused,single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,1.0,1.0,False,True,0,0,45.06
+how long is a trademark registration valid and how do we renew it,single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,1.0,1.0,False,True,0,0,25.27
+what amounts to infringement of a registered trademark and what relief is available,single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,1.0,1.0,False,True,0,0,45.38
+licensing our trademark to a franchisee as a registered user,single,ip_licensing,ip_licensing|taxation,ip_licensing,1.0,0.5,False,0.5,1.0,False,True,0,0,90.89
+what is piracy of a registered design,single,ip_licensing,ip_licensing,ip_licensing,1.0,1.0,True,0.5,1.0,False,True,0,0,32.71
+legal validity of contracts formed electronically through click-wrap acceptance,single,ip_licensing,corporate_governance|ip_licensing,corporate_governance,1.0,0.5,False,1.0,1.0,False,True,0,0,142.07
+turnover threshold for compulsory GST registration,single,taxation,taxation,taxation,1.0,1.0,True,1.0,1.0,False,True,0,0,52.44
+conditions for claiming input tax credit under the CGST Act,single,taxation,taxation,taxation,1.0,1.0,True,1.0,1.0,False,True,0,0,128.9
+can a small startup opt for the GST composition scheme,single,taxation,taxation,taxation,1.0,1.0,True,0.0,0.0,True,False,0,1,207.96
+what details must a GST tax invoice contain,single,taxation,taxation,taxation,1.0,1.0,True,1.0,1.0,False,True,0,0,26.05
+obligation of e-commerce operators to collect tax at source under GST,single,taxation,taxation,taxation,1.0,1.0,True,1.0,1.0,False,True,0,0,36.43
+advance tax instalments and due dates under the Income Tax Act 2025,single,taxation,taxation,taxation,1.0,1.0,True,0.5,1.0,False,True,0,0,309.94
+TDS obligations on salary paid to employees,single,taxation,taxation,taxation,1.0,1.0,True,0.5,1.0,False,True,0,0,30.76
+tax exemptions available to a unit set up in a Special Economic Zone,single,taxation,taxation,taxation,1.0,1.0,True,0.0,1.0,False,True,0,0,75.33
+consequences of executing a share purchase agreement that is not duly stamped,single,taxation,corporate_governance|taxation,corporate_governance,1.0,0.5,False,1.0,1.0,False,True,0,0,57.14
+can an Indian startup set up a wholly owned subsidiary abroad under FEMA,single,taxation,corporate_governance|taxation,corporate_governance,1.0,0.5,False,0.0,1.0,False,True,1,0,64.22
+maternity benefit eligibility and payment under the Code on Social Security,single,employment,employment,employment,1.0,1.0,True,1.0,1.0,False,True,0,0,49.33
+is a creche facility mandatory for our office,single,employment,employment,employment,1.0,1.0,True,1.0,1.0,False,True,0,0,67.14
+gratuity eligibility after five years of continuous service,single,employment,employment,employment,1.0,1.0,True,0.5,1.0,False,True,0,0,44.04
+social security schemes for gig and platform workers and the aggregator contribution,single,employment,employment,employment,1.0,1.0,True,1.0,1.0,False,True,0,0,45.03
+conditions precedent for lawful retrenchment of workmen,single,employment,employment,employment,1.0,1.0,True,1.0,1.0,False,True,0,0,37.11
+minimum and maximum statutory bonus payable to employees,single,employment,employment,employment,1.0,1.0,True,1.0,1.0,False,True,0,0,84.04
+employer contributions to the Employees Provident Fund,single,employment,employment|taxation,employment,1.0,0.5,False,0.0,1.0,False,True,0,0,24.63
+obligations of employers who engage apprentices,single,employment,employment,employment,1.0,1.0,True,0.5,1.0,False,True,0,0,61.48
+non-discrimination against persons with disabilities in employment and equal opportunity policy,single,employment,employment,employment,1.0,1.0,True,0.5,1.0,False,True,0,0,86.03
+licence requirements for engaging contract labour through a contractor,single,employment,employment,employment,1.0,1.0,True,1.0,1.0,False,True,0,0,99.48
+we want to collect biometric attendance data from employees — what consent and employer duties apply,multi_2,data_protection|employment,data_protection,data_protection,0.5,1.0,False,0.0,0.5,False,True,0,0,54.59
+our payments app stores card transaction data and charges a fee — data localisation and GST obligations,multi_2,data_protection|taxation,data_protection|taxation,taxation,1.0,1.0,True,0.5,1.0,False,True,0,0,84.42
+are company directors and officers personally liable when the company suffers a data breach,multi_2,corporate_governance|data_protection,data_protection,data_protection,0.5,1.0,False,0.333,0.5,False,True,0,0,230.47
+we license our proprietary database to clients — copyright in the database and duties for the personal data inside it,multi_2,data_protection|ip_licensing,data_protection|ip_licensing,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,59.79
+an employee who invented a patentable process is being retrenched — who can apply for the patent and what retrenchment conditions apply,multi_2,employment|ip_licensing,employment|ip_licensing,ip_licensing,1.0,1.0,True,0.667,1.0,False,True,0,0,57.62
+gratuity payable to a resigning employee and TDS on the final salary settlement,multi_2,employment|taxation,employment|taxation,taxation,1.0,1.0,True,0.0,1.0,False,True,0,0,66.65
+Companies Act allotment rules and stamp duty when issuing shares to investors,multi_2,corporate_governance|taxation,corporate_governance|taxation,corporate_governance,1.0,1.0,True,0.333,1.0,False,True,0,0,59.56
+converting our partnership firm into an LLP and transferring the firm's registered trademark to it,multi_2,corporate_governance|ip_licensing,corporate_governance|ip_licensing|taxation,corporate_governance,1.0,0.667,False,0.5,1.0,False,True,0,0,64.18
+can we enforce a non-compete against a terminated employee and what retrenchment compensation is due,multi_2,corporate_governance|employment,employment,employment,0.5,1.0,False,0.0,0.0,True,False,1,0,51.16
+withholding tax on royalty paid to a foreign company for a software patent licence,multi_2,ip_licensing|taxation,ip_licensing|taxation,ip_licensing,1.0,1.0,True,0.333,1.0,False,True,0,0,14.61
+our e-commerce marketplace shares customer data with sellers — consumer protection and data protection obligations,multi_2,corporate_governance|data_protection,data_protection,data_protection,0.5,1.0,False,0.5,0.5,False,True,0,0,81.56
+handling a sexual harassment complaint while keeping the complainant's personal data confidential,multi_2,data_protection|employment,data_protection|employment,data_protection,1.0,1.0,True,0.667,1.0,False,True,0,0,88.84
+ESI — which employees must be insured and how the principal employer pays contributions,multi_2,employment|taxation,employment|taxation,employment,1.0,1.0,True,0.667,1.0,False,True,0,0,64.34
+foreign SaaS company serving Indian users — GST on online information services and transferring user data out of India,multi_2,data_protection|taxation,data_protection|ip_licensing|taxation,taxation,1.0,0.667,False,1.0,1.0,False,True,1,0,73.22
+our app uses Aadhaar authentication — restrictions on sharing Aadhaar data and copyright protection for the app code,multi_2,data_protection|ip_licensing,data_protection|ip_licensing,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,58.17
+our company is in liquidation — what happens to unpaid employee wages and provident fund dues,multi_2,corporate_governance|employment,corporate_governance|employment,corporate_governance,1.0,1.0,True,0.667,1.0,False,True,0,0,70.08
+exporting software from an SEZ unit — zero-rated GST supply and copyright protection for the software,multi_2,ip_licensing|taxation,ip_licensing|taxation,taxation,1.0,1.0,True,0.333,1.0,False,True,0,0,47.95
+what must the annual report disclose about POSH compliance and CSR spending,multi_2,corporate_governance|employment,corporate_governance|employment,corporate_governance,1.0,1.0,True,0.5,0.5,False,True,1,0,55.62
+how long can we retain customer personal data after the service ends and what tax invoices must we issue,multi_2,data_protection|taxation,data_protection|taxation,data_protection,1.0,1.0,True,0.5,1.0,False,True,0,0,68.14
+vendor contract for outsourced processing of customer data — indemnity clause and data fiduciary obligations,multi_2,corporate_governance|data_protection,data_protection,data_protection,0.5,1.0,False,0.5,0.5,False,True,0,0,66.71
+"setting up a private limited company with 15 employees — incorporation, GST registration and provident fund obligations",multi_3,corporate_governance|employment|taxation,corporate_governance|employment|taxation,taxation,1.0,1.0,True,0.667,1.0,False,True,0,0,69.29
+"launching a consumer mobile app — registering the brand name, getting user consent and incorporating the company",multi_3,corporate_governance|data_protection|ip_licensing,corporate_governance|data_protection|ip_licensing,corporate_governance,1.0,1.0,True,1.0,1.0,False,True,0,0,70.74
+"hiring a freelance developer abroad — who owns the code, withholding tax on payments to a non-resident, and is he a workman",multi_3,employment|ip_licensing|taxation,employment|ip_licensing|taxation,employment,1.0,1.0,True,0.75,1.0,False,True,0,0,147.93
+"an employee leaked customer data — breach reporting, penalty for disclosure, and liability of the company's officers",multi_3,corporate_governance|data_protection|employment,data_protection|employment,data_protection,0.667,1.0,False,0.667,0.667,False,True,0,0,63.89
+selling our startup's patents and trademarks to an acquirer — assignment formalities and stamp duty,multi_3,corporate_governance|ip_licensing|taxation,corporate_governance|ip_licensing|taxation,ip_licensing,1.0,1.0,True,0.667,0.667,False,True,1,0,126.21
+"fintech lending app — payment data localisation, GST on processing fees and liability for misleading advertisements",multi_3,corporate_governance|data_protection|taxation,corporate_governance|data_protection|taxation,taxation,1.0,1.0,True,0.667,1.0,False,True,0,0,63.09
+"our factory — worker safety duties of the employer, CCTV monitoring of workers and protecting our product design",multi_3,data_protection|employment|ip_licensing,data_protection|employment|ip_licensing,employment,1.0,1.0,True,0.0,0.667,False,True,1,0,63.87
+"winding up an LLP — settling employee gratuity and bonus dues, and stamp duty on the deed transferring its assets",multi_3,corporate_governance|employment|taxation,corporate_governance|employment,corporate_governance,0.667,1.0,False,0.25,0.667,False,True,0,0,107.28
+"hiring persons with disabilities — non-discrimination duties, consent for processing their data, and counting it towards CSR",multi_3,corporate_governance|data_protection|employment,data_protection|employment,data_protection,0.667,1.0,False,0.333,0.667,False,True,0,0,67.65
+"online gaming platform — GST on online services, intermediary safe harbour and copyright in game content",multi_3,data_protection|ip_licensing|taxation,data_protection|ip_licensing|taxation,taxation,1.0,1.0,True,0.667,1.0,False,True,0,0,140.03
+a co-founder who is also an employee is leaving — assignment of the code he wrote and enforceability of his non-compete,multi_3,corporate_governance|employment|ip_licensing,corporate_governance|employment|ip_licensing,employment,1.0,1.0,True,1.0,0.667,False,True,1,0,72.92
+"outsourced payroll — TDS on salaries, ESI contributions and protecting employees' financial data",multi_3,data_protection|employment|taxation,data_protection|employment|taxation,data_protection,1.0,1.0,True,0.0,1.0,False,True,0,0,89.01
+"we are a 50-person SaaS company with many women employees, we collect user data and bill overseas clients — what are all our compliance obligations",multi_4,corporate_governance|data_protection|employment|taxation,corporate_governance|data_protection|employment|ip_licensing|taxation,data_protection,1.0,0.8,False,0.75,1.0,False,True,0,0,269.52
+"edtech startup — incorporating the company, trademarking the brand, GST on online courses and consent for children's data",multi_4,corporate_governance|data_protection|ip_licensing|taxation,corporate_governance|data_protection|ip_licensing|taxation,taxation,1.0,1.0,True,0.75,1.0,False,True,0,0,93.56
+"delivery startup using gig workers — platform worker social security, location data consent, GST TCS on marketplace sales and our app trademark",multi_4,data_protection|employment|ip_licensing|taxation,data_protection|employment|ip_licensing|taxation,taxation,1.0,1.0,True,1.0,1.0,False,True,0,0,133.45
+"acquiring a smaller startup — transferring employees' gratuity, stamp duty on the share transfer, assigning their patents and issuing our shares as consideration",multi_4,corporate_governance|employment|ip_licensing|taxation,corporate_governance|employment|ip_licensing|taxation,ip_licensing,1.0,1.0,True,0.5,0.75,False,True,1,0,77.91
+"healthtech clinic chain run as an LLP — security of patient health data, nurses' maternity benefits and GST on services",multi_4,corporate_governance|data_protection|employment|taxation,corporate_governance|data_protection|employment|taxation,corporate_governance,1.0,1.0,True,0.5,0.5,False,True,1,0,106.16
+"complete legal compliance checklist for an Indian AI startup with employees, user data, proprietary model code, GST billing and outside investors",multi_5,corporate_governance|data_protection|employment|ip_licensing|taxation,corporate_governance|data_protection|employment|ip_licensing|taxation,taxation,1.0,1.0,True,0.167,1.0,False,True,0,0,367.26
+"we manufacture IoT devices in an SEZ, employ 200 factory workers, collect device telemetry, hold design registrations and are issuing new shares — what laws apply",multi_5,corporate_governance|data_protection|employment|ip_licensing|taxation,corporate_governance|data_protection|employment|ip_licensing|taxation,taxation,1.0,1.0,True,0.4,1.0,False,True,0,0,233.45
+"our company is going insolvent — dues to employees, handling customer data during liquidation, selling our patents, pending tax dues and creditor priority",multi_5,corporate_governance|data_protection|employment|ip_licensing|taxation,corporate_governance|data_protection|employment|ip_licensing|taxation,corporate_governance,1.0,1.0,True,1.0,1.0,False,True,0,0,142.06
+what is the penalty under section 999 of the DPDP Act,edge,data_protection,data_protection,data_protection,1.0,1.0,True,,1.0,False,False,1,0,88.22
+explain section 500 of the Payment of Gratuity Act,edge,employment,employment,employment,1.0,1.0,True,,0.0,True,True,1,0,16.45
+Delaware franchise tax filing deadline for a US C-corporation,edge,,corporate_governance|employment|ip_licensing,employment,,0.0,False,,,True,True,1,0,76.68
+GDPR Article 17 obligations for a company established only in the EU,edge,,data_protection,data_protection,,0.0,False,,,True,True,1,0,50.19
+what will the GST rate on SaaS subscriptions be in 2035,edge,taxation,ip_licensing|taxation,taxation,1.0,0.5,False,,0.0,False,False,1,0,48.46
+what is the best pizza place in Bangalore,edge,,taxation,unknown,,0.0,False,,,True,True,0,0,15.84
+how do I improve my startup's Instagram engagement,edge,,employment|ip_licensing|taxation,unknown,,0.0,False,,,True,True,0,0,5.35
+recommend a cloud hosting provider for our backend,edge,,corporate_governance|data_protection|employment|ip_licensing|taxation,unknown,,0.0,False,,,True,True,0,0,9.08
+write me a poem about corporate law,edge,,corporate_governance|employment|taxation,unknown,,0.0,False,,,True,True,0,0,6.83
+what is the capital of Australia,edge,,corporate_governance|taxation,unknown,,0.0,False,,,True,True,0,0,11.2
