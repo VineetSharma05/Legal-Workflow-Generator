@@ -181,37 +181,41 @@ class LLMUnavailable(RuntimeError):
     """The LLM could not be reached (quota / overload) after retries. Distinct from 'no provisions found'."""
 
 
-def _call_gemini(system: str, user: str) -> str:
+def _call_gemini(system: str, user: str, schema: type[T] | None = None):
+    if schema is not None:
+        return invoke_structured(structured_llm(schema, provider="gemini"), system, user)
     response = _gemini_client.models.generate_content(model=GEMINI_MODEL, contents=f"{system}\n\n{user}")
     return response.text.strip()
 
 
-def _call_groq(system: str, user: str) -> str:
+def _call_groq(system: str, user: str, schema: type[T] | None = None):
+    if schema is not None:
+        return invoke_structured(structured_llm(schema, provider="groq"), system, user)
     return groq_client.complete(system, user)
 
 
+# provider -> call(system, user, schema=None): a schema instance when `schema` is given, else plain text.
 _PROVIDERS = {"gemini": _call_gemini, "groq": _call_groq}
 _RETRYABLE = ("429", "500", "503", "UNAVAILABLE", "RESOURCE_EXHAUSTED", "overloaded", "rate_limit")
 
 
 def _llm(schema: type[T] | str, system: str, user: str | None = None, grader: bool = False,
          max_retries: int = 5) -> T | str:
-    """One LLM boundary. Structured schemas use LangChain; legacy string callers retain provider/rate-limit support."""
-    if isinstance(schema, str):
-        provider = current_settings().provider
-        call, limiter = _PROVIDERS[provider], LIMITERS[provider]
+    """The one LLM boundary: routed to the run's provider, rate limited, retried on 429/5xx.
 
-        def once():
-            with limiter.slot():
-                return call(schema, system)
-        return _with_retries(provider, once, max_retries)
-
+    Structured:  _llm(Schema, system, user) -> Schema instance (raises StructuredOutputError on a bad reply).
+    Plain text:  _llm(system, user)         -> str (query planning and the claim verifier still parse JSON).
+    """
+    if isinstance(schema, str):                       # plain-text form: shift the arguments
+        schema, system, user = None, schema, system
     provider = current_settings().provider
-    limiter = LIMITERS[provider]
+    call, limiter = _PROVIDERS[provider], LIMITERS[provider]
 
     def once():
         with limiter.slot():
-            return invoke_structured(structured_llm(schema), system, user or "")
+            if schema is None:
+                return call(system, user or "")
+            return call(system, user or "", schema=schema)
     return _with_retries(provider, once, max_retries)
 
 
@@ -580,8 +584,10 @@ def classify_query(state: AgentState, config: RunnableConfig = None) -> AgentSta
     state["scope_error"] = ""
     normalized = _normalizer.normalize(text=state["query"])
     try:
-        intent, confidence = _with_retries(s.provider, lambda: _intent_classifier.classify(normalized))
-        context = _with_retries(s.provider, lambda: _context_resolver.resolve(normalized, intent, confidence))
+        intent, confidence = _with_retries(s.provider, lambda: _intent_classifier.classify(
+            normalized, provider=s.provider, raise_errors=True))
+        context = _with_retries(s.provider, lambda: _context_resolver.resolve(
+            normalized, intent, confidence, provider=s.provider, raise_errors=True))
     except Exception as e:  # noqa  (LLMUnavailable, bad model name, missing key, ...)
         # The LLM could not be reached: say so instead of abstaining with "please rephrase".
         state.update(intent="unknown", domain="unknown", all_domains=[], tentative_domains=[],
@@ -1019,9 +1025,10 @@ Provisions:
     except Exception as e:
         logger.warning("generate[%s] structured generation failed: %s", domain, e)
         return [], [], ""
+    # The schema's provision_id enum already rejects unknown ids; check again in case a provider skips validation.
     steps = [
-        Step(action=s.action.strip(), provision_id=s.provision_id, applies_to=s.applies_to)
-        for s in p.steps if s.action.strip()
+        Step(action=s.action.strip(), provision_id=valid_ids[str(s.provision_id).lower()], applies_to=s.applies_to)
+        for s in p.steps if s.action.strip() and str(s.provision_id).lower() in valid_ids
     ]
     return [str(x) for x in p.summary if str(x).strip()][:3], steps, str(p.not_covered or "").strip()
 

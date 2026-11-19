@@ -51,9 +51,13 @@ def groq_chat_model(temperature: float = 0.0) -> ChatGroq:
     )
 
 
-def structured_llm(schema: type[T], temperature: float | None = None) -> Runnable:
-    """Runnable that returns {"raw", "parsed", "parsing_error"} for `schema`."""
-    return chat_model(temperature).with_structured_output(schema, method="json_schema", include_raw=True)
+def structured_llm(schema: type[T], temperature: float | None = None, provider: str = "gemini") -> Runnable:
+    """Runnable that returns {"raw", "parsed", "parsing_error"} for `schema`, on "gemini" or "groq"."""
+    if provider == "groq":
+        model = groq_chat_model(0.0 if temperature is None else temperature)
+    else:
+        model = chat_model(temperature)
+    return model.with_structured_output(schema, method="json_schema", include_raw=True)
 
 
 def invoke_structured(llm: Runnable, system: str, user: str) -> BaseModel:
