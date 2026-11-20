@@ -1,16 +1,18 @@
 import logging
+import re
+from typing import get_args
 from collections import Counter
-from google import genai
-from google.genai import types as genai_types
 from legal_workflow_generator.config.values import (
-    GEMINI_API_KEY,
-    GEMINI_MODEL,
     SELF_CONSISTENCY_ENABLED,
     SELF_CONSISTENCY_SAMPLES,
     DOMAIN_CLASSIFICATION_STRATEGY,
     DOMAIN_KEYWORD_MATCH_THRESHOLD,
     DOMAIN_KEYWORD_STRONG_MATCH_THRESHOLD,
 )
+from legal_workflow_generator.agent import groq_client
+from legal_workflow_generator.agent import llm_limits
+from legal_workflow_generator.llm import invoke_structured, structured_llm
+from legal_workflow_generator.llm.schemas import DomainClassification, DomainOrUnknown
 from legal_workflow_generator.query.keyword_domain_classifier import KeywordDomainClassifier
 from legal_workflow_generator.typings.types import (
     NormalizedQuery,
@@ -19,17 +21,12 @@ from legal_workflow_generator.typings.types import (
 )
 
 logger = logging.getLogger(__name__)
+_DOMAINS = set(get_args(DomainOrUnknown))
 
 # Sampling temperature used only for self-consistency votes — the single-shot
 # call keeps the API default (near-deterministic) so behavior is unchanged
 # when self-consistency is off.
 SELF_CONSISTENCY_TEMPERATURE = 0.7
-
-VALID_DOMAINS = [
-    "data_protection", "corporate_governance", "ip_licensing",
-    "taxation", "employment",
-]
-
 
 class LegalContextResolver:
     """
@@ -56,7 +53,8 @@ class LegalContextResolver:
         keyword_match_threshold: float | None = None,
         keyword_strong_match_threshold: float | None = None,
     ):
-        self.client = genai.Client(api_key=GEMINI_API_KEY)
+        self.llm = structured_llm(DomainClassification)
+        self.sampling_llm = structured_llm(DomainClassification, temperature=SELF_CONSISTENCY_TEMPERATURE)
         self._keyword_classifier = KeywordDomainClassifier()
 
         # Config defaults can be overridden per-instance (e.g. for eval
@@ -91,7 +89,11 @@ class LegalContextResolver:
         normalized_query: NormalizedQuery,
         intent: QueryIntent,
         confidence: float,
+        provider: str = "gemini",
+        raise_errors: bool = False,
     ) -> LegalContext:
+        """provider picks the LLM ("gemini" or "groq"). With raise_errors, an LLM API error is re-raised
+        instead of being treated as "no LLM domain", so the agent can report an outage."""
         query_text = normalized_query["normalized"]
 
         if intent == QueryIntent.UNKNOWN and confidence >= 0.8:
@@ -122,9 +124,11 @@ class LegalContextResolver:
 
         if call_llm:
             if self.self_consistency:
-                llm_domain, llm_keywords, domain_confidence = self._resolve_with_self_consistency(query_text)
+                llm_domain, llm_keywords, domain_confidence = self._resolve_with_self_consistency(
+                    query_text, provider, raise_errors)
             else:
-                llm_domain, llm_keywords = self._resolve_with_gemini(query_text)
+                llm_domain, llm_keywords = self._resolve_with_llm(query_text, provider=provider,
+                                                                 raise_errors=raise_errors)
 
         if not keyword_matched:
             # Nothing for the keyword classifier to contribute — LLM decides alone.
@@ -172,7 +176,8 @@ class LegalContextResolver:
             domain_source=domain_source,
         )
 
-    def _resolve_with_self_consistency(self, query: str) -> tuple[str, list[str], float]:
+    def _resolve_with_self_consistency(self, query: str, provider: str = "gemini",
+                                       raise_errors: bool = False) -> tuple[str, list[str], float]:
         """
         Sample the domain classification prompt N times at temperature>0 and
         majority-vote the domain. The winning share (e.g. 2/3) is returned as
@@ -183,7 +188,8 @@ class LegalContextResolver:
         keywords_by_domain: dict[str, list[str]] = {}
 
         for _ in range(self.self_consistency_samples):
-            domain, keywords = self._resolve_with_gemini(query, temperature=SELF_CONSISTENCY_TEMPERATURE)
+            domain, keywords = self._resolve_with_llm(query, sample=True, provider=provider,
+                                                    raise_errors=raise_errors)
             if not domain:
                 continue
             domains.append(domain)
@@ -204,41 +210,47 @@ class LegalContextResolver:
 
         return majority_domain, keywords_by_domain.get(majority_domain, []), agreement_ratio
 
-    def _resolve_with_gemini(self, query: str, temperature: float | None = None) -> tuple[str, list[str]]:
+    def _resolve_with_llm(self, query: str, sample: bool = False, provider: str = "gemini",
+                          raise_errors: bool = False) -> tuple[str, list[str]]:
+        """gemini: structured output. groq: plain-text call through groq_client, parsed from labelled lines.
+        Each call holds a slot of the shared limiter (looked up at call time)."""
+        system = (
+            "You are a legal domain classifier for Indian startup compliance. Given a query, identify "
+            "the single legal domain it belongs to (or unknown) and up to 5 important legal keywords from it."
+        )
         try:
-            kwargs = {}
-            if temperature is not None:
-                kwargs["config"] = genai_types.GenerateContentConfig(temperature=temperature)
-
-            response = self.client.models.generate_content(
-                model=GEMINI_MODEL,
-                contents=f"""You are a legal domain classifier for Indian startup compliance. Given a query, identify:
-1. The legal domain (exactly one of: data_protection, corporate_governance, ip_licensing, taxation, employment, unknown)
-2. Up to 5 important legal keywords from the query
-
+            with llm_limits.LIMITERS[provider].slot():
+                if provider == "groq":
+                    text = groq_client.complete("", f"""{system}
+Domain must be exactly one of: data_protection, corporate_governance, ip_licensing, taxation, employment, unknown.
 Respond in this exact format and nothing else:
 DOMAIN: <domain>
 KEYWORDS: <keyword1>, <keyword2>, <keyword3>
 
-Query: {query}""",
-                **kwargs,
-            )
-            return self._parse_response(response.text)
+Query: {query}""", temperature=SELF_CONSISTENCY_TEMPERATURE if sample else None)
+                    return self._parse_response(text)
+                result = invoke_structured(self.sampling_llm if sample else self.llm, system, f"Query: {query}")
         except Exception as e:
-            logger.error(f"Gemini resolution error: {e}")
+            logger.error(f"Domain classification failed ({provider}): {e}")
+            if raise_errors:
+                raise
             return "", []
+        return result.domain, [k.strip() for k in result.keywords if k.strip()]
 
-    def _parse_response(self, response_text: str) -> tuple[str, list[str]]:
-        try:
-            lines = response_text.strip().split("\n")
-            domain_line = next(l for l in lines if l.startswith("DOMAIN:"))
-            domain = domain_line.split(":")[1].strip().lower()
-            keywords_line = next(l for l in lines if l.startswith("KEYWORDS:"))
-            keywords = [k.strip() for k in keywords_line.split(":")[1].split(",")]
-            if domain not in VALID_DOMAINS and domain != "unknown":
-                logger.warning(f"Invalid domain: {domain}, defaulting to unknown")
-                domain = "unknown"
-            return domain, keywords
-        except Exception as e:
-            logger.error(f"Failed to parse Gemini response: {e}")
+    # kept for callers that use the old name
+    def _resolve_with_gemini(self, query: str, sample: bool = False) -> tuple[str, list[str]]:
+        return self._resolve_with_llm(query, sample=sample)
+
+    @staticmethod
+    def _parse_response(text: str) -> tuple[str, list[str]]:
+        clean = (text or "").replace("**", "")
+        m_dom = re.search(r"^\s*DOMAIN\s*:\s*([a-z_]+)", clean, re.I | re.M)
+        if not m_dom:
+            logger.error(f"Failed to parse domain response: {text!r}")
             return "", []
+        domain = m_dom.group(1).lower()
+        if domain not in _DOMAINS:
+            domain = "unknown"
+        m_kw = re.search(r"^\s*KEYWORDS\s*:\s*(.*)$", clean, re.I | re.M)
+        keywords = [k.strip() for k in (m_kw.group(1).split(",") if m_kw else []) if k.strip()][:5]
+        return domain, keywords

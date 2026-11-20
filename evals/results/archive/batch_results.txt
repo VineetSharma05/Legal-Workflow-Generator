@@ -1,0 +1,472 @@
+====================================================================================================
+QUERY 1: If a customer's personal data is breached, what are our notification obligations to both the user and the government?
+====================================================================================================
+
+--- ANSWER ---
+I was unable to provide a reliable answer to your question: 'If a customer's personal data is breached, what are our notification obligations to both the user and the government?'
+
+Reason: corporate_governance: The retrieved provisions relate exclusively to director identification numbers and independent director appointments, whereas the query pertains to data breach notification obligations.; data_protection: While the retrieved provisions mention that a penalty exists for failing to notify a personal data breach, they do not outline the actual notification obligations or procedures for users and the government.
+
+Please consult a qualified legal professional or refer directly to the relevant Act.
+
+--- ABSTAINED ---
+True
+
+--- VERIFIED CITATIONS ---
+[]
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.WORKFLOW domain=data_protection all_domains=['data_protection', 'corporate_governance'] method=retrieval(1)+llm(2)
+ → +14.2s [corporate_governance] focus → 'data breach notification corporate governance obligations'
+ → +14.6s [corporate_governance] retrieve (try 1) → 4 docs
+ → +20.2s [corporate_governance] grade → insufficient: The retrieved provisions relate exclusively to the appointment and identification of directors and do not address data breach notification obligations.
+ → +34.3s [corporate_governance] rewrite → 'data breach notification requirements for companies under In'
+ → +34.7s [corporate_governance] retrieve (try 2) → 4 docs
+ → +40.4s [corporate_governance] grade → insufficient: The retrieved provisions relate exclusively to director identification numbers and independent director appointments, whereas the query pertains to data breach notification obligations.
+ → + 6.7s [data_protection] focus → 'personal data breach notification obligations user government'
+ → + 7.1s [data_protection] retrieve (try 1) → 6 docs
+ → +30.1s [data_protection] grade → insufficient: While the retrieved provisions mention a penalty for failing to notify a personal data breach, they do not specify the actual notification obligations or procedures required for users and the government.
+ → +54.3s [data_protection] rewrite → 'personal data breach notification requirements to data subje'
+ → +54.6s [data_protection] retrieve (try 2) → 6 docs
+ → +70.2s [data_protection] grade → insufficient: While the retrieved provisions mention that a penalty exists for failing to notify a personal data breach, they do not outline the actual notification obligations or procedures for users and the government.
+ → domain_pipeline → 0/2 domains answered (none) in 70.3s wall-clock (parallel)
+ → abstain → triggered: corporate_governance: The retrieved provisions relate exclusively to director identification numbers and independent director appointments, whereas the query pertains to data breach notification obligations.; data_protection: While the retrieved provisions mention that a penalty exists for failing to notify a personal data breach, they do not outline the actual notification obligations or procedures for users and the government.
+
+
+====================================================================================================
+QUERY 2: What tax benefits exist for a startup that provides ESOPs to employees, and what are our reporting obligations to tax authorities?
+====================================================================================================
+
+--- ANSWER ---
+I was unable to provide a reliable answer to your question: 'What tax benefits exist for a startup that provides ESOPs to employees, and what are our reporting obligations to tax authorities?'
+
+Reason: taxation: The retrieved provisions relate to GST procedural and administrative rules and do not address the tax benefits or reporting obligations associated with Employee Stock Ownership Plans (ESOPs).; employment: The provided text discusses the calculation of notional direct tax for a bonus formula rather than tax benefits or reporting obligations related to ESOPs.
+
+Please consult a qualified legal professional or refer directly to the relevant Act.
+
+--- ABSTAINED ---
+True
+
+--- VERIFIED CITATIONS ---
+[]
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=taxation all_domains=['employment', 'taxation'] method=retrieval(1)+llm(2)
+ → +10.8s [taxation] focus → 'Tax benefits and reporting obligations for startup ESOPs under Income '
+ → +11.2s [taxation] retrieve (try 1) → 6 docs
+ → +18.1s [taxation] grade → insufficient: None of the provided GST rules relate to tax benefits for ESOPs or the associated reporting obligations for startups.
+ → +24.7s [taxation] rewrite → 'income tax benefits for employee stock option plan ESOP star'
+ → +25.0s [taxation] retrieve (try 2) → 6 docs
+ → +27.7s [taxation] grade → insufficient: The retrieved provisions relate to GST procedural and administrative rules and do not address the tax benefits or reporting obligations associated with Employee Stock Ownership Plans (ESOPs).
+ → +11.4s [employment] focus → 'tax benefits and reporting obligations for employee stock ownership pl'
+ → +11.6s [employment] retrieve (try 1) → 4 docs
+ → +27.8s [employment] grade → insufficient: The retrieved provisions relate to social security, insurance, and provident fund obligations, whereas the query pertains to tax benefits and reporting requirements for Employee Stock Ownership Plans (ESOPs).
+ → +31.4s [employment] rewrite → 'tax treatment of employee stock ownership plans ESOPs for st'
+ → +31.7s [employment] retrieve (try 2) → 1 docs
+ → +39.7s [employment] grade → insufficient: The provided text discusses the calculation of notional direct tax for a bonus formula rather than tax benefits or reporting obligations related to ESOPs.
+ → domain_pipeline → 0/2 domains answered (none) in 39.7s wall-clock (parallel)
+ → abstain → triggered: taxation: The retrieved provisions relate to GST procedural and administrative rules and do not address the tax benefits or reporting obligations associated with Employee Stock Ownership Plans (ESOPs).; employment: The provided text discusses the calculation of notional direct tax for a bonus formula rather than tax benefits or reporting obligations related to ESOPs.
+
+
+====================================================================================================
+QUERY 3: What are the penalties under both the DPDP Act and IT Act for failing to secure customer data stored on our servers?
+====================================================================================================
+
+--- ANSWER ---
+LEGAL COMPLIANCE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Query: What are the penalties under both the DPDP Act and IT Act for failing to secure customer data stored on our servers?
+
+SUMMARY
+- Data Protection: Failing to secure data triggers potential penalties under the IT Act, including imprisonment or fines.
+- Data Protection: The DPDP Act establishes a framework for data protection, though specific penalty amounts for security failures under the DPDP Act are not provided in the source text.
+- Data Protection (not addressed by retrieved provisions): The provided text does not define the specific monetary penalties or imprisonment terms for failing to secure data under the DPDP Act 2023.
+
+ACTION CHECKLIST
+**Data Protection**
+Step 1: Ensure compliance with CERT-In directions under the IT Act to avoid punitive action, including imprisonment up to one year or a fine up to one lakh. — [cert_in_directions_2022_preamble] (applies to: both)
+Step 2: Implement reasonable security practices to avoid liability for uncapped compensation for wrongful loss or gain resulting from negligent data protection, per the IT Act. — [information_technology_act_2000_sec_43A] (applies to: private)
+
+SOURCES
+- [cert_in_directions_2022_preamble] | Legal basis, applicability and consequences of non-compliance
+- [information_technology_act_2000_sec_43A] | Compensation for failure to protect data
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠ This is informational guidance, not legal advice.
+Consult a qualified legal professional for your specific situation.
+
+--- ABSTAINED ---
+False
+
+--- VERIFIED CITATIONS ---
+['cert_in_directions_2022_preamble', 'information_technology_act_2000_sec_43A']
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=data_protection all_domains=['data_protection', 'corporate_governance'] method=retrieval(1)+llm(2)
+ → +14.8s [corporate_governance] focus → 'Corporate governance penalties DPDP Act IT Act customer data security '
+ → +15.1s [corporate_governance] retrieve (try 1) → 0 docs
+ → +29.2s [corporate_governance] rewrite → 'Digital Personal Data Protection Act compliance requirements'
+ → +29.5s [corporate_governance] retrieve (try 2) → 0 docs
+ → + 9.0s [data_protection] focus → 'DPDP Act penalties for failing to secure customer data stored on serve'
+ → + 9.7s [data_protection] retrieve (try 1) → 6 docs
+ → +16.0s [data_protection] grade → sufficient: The retrieved provisions identify Section 43A of the IT Act regarding compensation for failure to protect data, and the DPDP Act provisions are referenced in the context of the evolving regulatory framework for data breaches.
+ → +29.2s [data_protection] generate → 2 steps, 2 citations
+ → domain_pipeline → 1/2 domains answered (data_protection) in 29.5s wall-clock (parallel)
+ → verify_citations → verified=['cert_in_directions_2022_preamble', 'information_technology_act_2000_sec_43A'] failed=[]
+ → grade_answerability → answers
+ → grade_groundedness → grounded
+ → stitch → 1 gap(s) flagged: ['corporate_governance']
+
+
+====================================================================================================
+QUERY 4: What are our PF and ESI contribution obligations when hiring full-time employees, and are these tax-deductible business expenses?
+====================================================================================================
+
+--- ANSWER ---
+LEGAL COMPLIANCE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Query: What are our PF and ESI contribution obligations when hiring full-time employees, and are these tax-deductible business expenses?
+
+SUMMARY
+- Employment & Workplace: Employers must contribute 10% of wages to the Provident Fund, matched by an equal employee contribution.
+- Employment & Workplace: Employers are prohibited from reducing employee wages or existing benefits to offset their contribution liabilities.
+- Employment & Workplace (not addressed by retrieved provisions): The provisions do not specify the exact ESI contribution percentage for employers, nor do they address whether these contributions are tax-deductible business expenses.
+
+ACTION CHECKLIST
+**Employment & Workplace**
+Step 1: Contribute 10% of employee wages to the Provident Fund, matching the employee's equal contribution. — [css_2020_sec_16]
+Step 2: Ensure that the liability for Provident Fund or insurance contributions does not result in a reduction of an employee's wages or other entitled benefits. — [epf_1952_sec_12]
+
+SOURCES
+- [css_2020_sec_16] | Funds under the Scheme (Provident Fund, Pension Fund, Insurance Fund)
+- [epf_1952_sec_12] | Employer not to reduce wages, etc.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠ This is informational guidance, not legal advice.
+Consult a qualified legal professional for your specific situation.
+
+--- ABSTAINED ---
+False
+
+--- VERIFIED CITATIONS ---
+['css_2020_sec_16', 'epf_1952_sec_12']
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=taxation all_domains=['employment', 'taxation'] method=retrieval(1)+llm(2)
+ → +10.8s [taxation] focus → 'Are PF and ESI contributions tax-deductible business expenses?'
+ → +11.0s [taxation] retrieve (try 1) → 6 docs
+ → +21.1s [taxation] grade → insufficient: The retrieved provisions relate exclusively to GST procedural rules and do not address Provident Fund (PF), ESI contributions, or their status as tax-deductible business expenses.
+ → +23.7s [taxation] rewrite → 'employer contribution provident fund ESI tax deduction eligi'
+ → +23.9s [taxation] retrieve (try 2) → 6 docs
+ → +39.0s [taxation] grade → insufficient: The retrieved provisions relate exclusively to GST registration, compliance, and refund procedures, none of which address PF, ESI, or the tax deductibility of payroll expenses.
+ → + 7.3s [employment] focus → 'PF and ESI contribution obligations for full-time employees'
+ → + 7.5s [employment] retrieve (try 1) → 4 docs
+ → +13.1s [employment] grade → insufficient: While the provisions address the ESI contribution obligations, none of the retrieved text provides information regarding PF contribution obligations or the tax-deductibility of these expenses.
+ → +23.3s [employment] rewrite → 'employer contribution obligations Provident Fund Employees S'
+ → +23.7s [employment] retrieve (try 2) → 4 docs
+ → +32.3s [employment] grade → sufficient: The retrieved provisions cover the statutory contribution obligations for PF and ESI as requested, although they do not address the tax-deductibility aspect of the query.
+ → +42.1s [employment] generate → 2 steps, 2 citations
+ → domain_pipeline → 1/2 domains answered (employment) in 42.1s wall-clock (parallel)
+ → verify_citations → verified=['css_2020_sec_16', 'epf_1952_sec_12'] failed=[]
+ → grade_groundedness → grounded
+ → grade_answerability → answers
+ → stitch → 1 gap(s) flagged: ['taxation']
+
+
+====================================================================================================
+QUERY 5: As a private limited company handling user data, what compliance obligations do we have under both the Companies Act and the DPDP Act?
+====================================================================================================
+
+--- ANSWER ---
+LEGAL COMPLIANCE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Query: As a private limited company handling user data, what compliance obligations do we have under both the Companies Act and the DPDP Act?
+
+SUMMARY
+- Data Protection: As a data fiduciary under the DPDP Act, your startup must ensure lawful, purpose-limited data processing and adhere to specified security obligations.
+- Data Protection: The SPDI Rules currently impose additional requirements for sensitive personal data collection and grievance redressal, though their continued applicability is contingent upon legislative notifications.
+- Data Protection (not addressed by retrieved provisions): The Companies Act, 2013, was not addressed in the provided provisions, and therefore no compliance obligations under that Act are listed.
+
+ACTION CHECKLIST
+**Data Protection**
+Step 1: Ensure that the processing of digital personal data within India or processing outside India related to offering goods or services to individuals in India complies with the DPDP Act. — [dpdp_act_2023_sec_3] (applies to: both)
+Step 2: Obtain written consent for collecting sensitive personal data, inform users of collection purposes/recipients, provide options to review, correct, or withdraw consent, and appoint a grievance officer to resolve complaints within one month. — [spdi_rules_2011_sec_5]
+
+SOURCES
+- [dpdp_act_2023_sec_3] | Application of Act
+- [spdi_rules_2011_sec_5] | Collection of information
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠ This is informational guidance, not legal advice.
+Consult a qualified legal professional for your specific situation.
+
+--- ABSTAINED ---
+False
+
+--- VERIFIED CITATIONS ---
+['dpdp_act_2023_sec_3', 'spdi_rules_2011_sec_5']
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=data_protection all_domains=['data_protection', 'corporate_governance'] method=retrieval(1)+llm(2)
+ → + 2.7s [corporate_governance] focus → 'compliance obligations for private limited companies under the Compani'
+ → + 4.1s [corporate_governance] retrieve (try 1) → 4 docs
+ → + 8.9s [corporate_governance] grade → insufficient: The retrieved provisions focus exclusively on company conversion processes and formation types rather than corporate governance obligations related to data compliance or the DPDP Act.
+ → +12.8s [corporate_governance] rewrite → 'compliance obligations for private limited companies regardi'
+ → +13.4s [corporate_governance] retrieve (try 2) → 0 docs
+ → + 2.5s [data_protection] focus → 'private limited company DPDP Act compliance obligations user data'
+ → + 3.7s [data_protection] retrieve (try 1) → 6 docs
+ → +13.2s [data_protection] grade → sufficient: The retrieved provisions cover the key definitions and application of the DPDP Act, which form the foundational legal obligations for a data fiduciary.
+ → +31.6s [data_protection] generate → 2 steps, 2 citations
+ → domain_pipeline → 1/2 domains answered (data_protection) in 31.6s wall-clock (parallel)
+ → verify_citations → verified=['dpdp_act_2023_sec_3', 'spdi_rules_2011_sec_5'] failed=[]
+ → grade_groundedness → grounded
+ → grade_answerability → answers
+ → stitch → 1 gap(s) flagged: ['corporate_governance']
+
+
+====================================================================================================
+QUERY 6: What are our obligations around reasonable accommodation for employees with disabilities, and do we get any incentives for retaining them?
+====================================================================================================
+
+--- ANSWER ---
+LEGAL COMPLIANCE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Query: What are our obligations around reasonable accommodation for employees with disabilities, and do we get any incentives for retaining them?
+
+SUMMARY
+- Employment & Workplace: Government establishments are required to provide reasonable accommodation and ensure non-discrimination in employment.
+- Employment & Workplace: Private sector employers may receive government incentives for maintaining a workforce where at least 5% are persons with benchmark disabilities.
+- Employment & Workplace (not addressed by retrieved provisions): The provisions do not specify obligations for reasonable accommodation for private sector employers, as Section 20 only addresses government establishments.
+
+ACTION CHECKLIST
+**Employment & Workplace**
+Step 1: Provide reasonable accommodation to employees with disabilities (applies to government establishments). — [rpwd_2016_sec_20] (applies to: government)
+Step 2: Ensure non-discrimination in any matter relating to employment (applies to government establishments). — [rpwd_2016_sec_20] (applies to: government)
+Step 3: Receive incentives from the appropriate government or local authorities if at least 5% of the workforce is composed of persons with benchmark disabilities. — [rpwd_2016_sec_35] (applies to: private)
+
+SOURCES
+- [rpwd_2016_sec_20] | Non-discrimination in employment
+- [rpwd_2016_sec_35] | Incentives to employers in private sector
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠ This is informational guidance, not legal advice.
+Consult a qualified legal professional for your specific situation.
+
+--- ABSTAINED ---
+False
+
+--- VERIFIED CITATIONS ---
+['rpwd_2016_sec_20', 'rpwd_2016_sec_35']
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=employment all_domains=['employment', 'taxation'] method=retrieval(1)+llm(2)
+ → + 1.4s [taxation] focus → 'tax incentives for retaining disabled employees and expenses for acces'
+ → + 2.0s [taxation] retrieve (try 1) → 6 docs
+ → + 3.5s [taxation] grade → insufficient: The retrieved provisions relate exclusively to GST procedural rules such as assessments, registration amendments, and appeals, and do not address employment law or tax incentives for retaining employees with disabilities.
+ → + 4.3s [taxation] rewrite → 'tax incentives for hiring employees with disabilities Indian'
+ → + 4.8s [taxation] retrieve (try 2) → 6 docs
+ → + 5.8s [taxation] grade → insufficient: None of the provided CGST rules contain information regarding reasonable accommodation for employees with disabilities or tax incentives for their retention.
+ → + 1.1s [employment] focus → 'reasonable accommodation obligations and tax incentives for disabled e'
+ → + 1.7s [employment] retrieve (try 1) → 4 docs
+ → + 2.6s [employment] grade → sufficient: The retrieved provisions address both reasonable accommodation obligations under RPWD Act Section 20 and employer incentives under RPWD Act Section 35.
+ → + 6.4s [employment] generate → 3 steps, 2 citations
+ → domain_pipeline → 1/2 domains answered (employment) in 6.4s wall-clock (parallel)
+ → verify_citations → verified=['rpwd_2016_sec_20', 'rpwd_2016_sec_35'] failed=[]
+ → grade_answerability → answers
+ → grade_groundedness → grounded
+ → stitch → 1 gap(s) flagged: ['taxation']
+
+
+====================================================================================================
+QUERY 7: If we issue refunds to customers, how does this affect our GST input tax credit, and what consumer protection rules apply to the refund process?
+====================================================================================================
+
+--- ANSWER ---
+I was unable to provide a reliable answer to your question: 'If we issue refunds to customers, how does this affect our GST input tax credit, and what consumer protection rules apply to the refund process?'
+
+Reason: corporate_governance: No documents retrieved; taxation: The retrieved provisions cover the procedural application and sanctioning of tax refunds but do not explain the impact of customer refunds on input tax credits or the specific consumer protection rules governing the refund process.
+
+Please consult a qualified legal professional or refer directly to the relevant Act.
+
+--- ABSTAINED ---
+True
+
+--- VERIFIED CITATIONS ---
+[]
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=taxation all_domains=['taxation', 'corporate_governance'] method=retrieval(1)+llm(2)
+ → + 1.2s [corporate_governance] focus → 'Corporate governance requirements for GST input tax credit refund poli'
+ → + 1.8s [corporate_governance] retrieve (try 1) → 0 docs
+ → +18.6s [corporate_governance] rewrite → 'If we issue refunds to customers, how does this affect our G'
+ → +19.5s [corporate_governance] retrieve (try 2) → 0 docs
+ → + 1.2s [taxation] focus → 'impact of customer refunds on GST input tax credit'
+ → + 1.7s [taxation] retrieve (try 1) → 6 docs
+ → +18.7s [taxation] grade → insufficient: Could not parse grader response
+ → +31.7s [taxation] rewrite → 'GST input tax credit reversal on sales returns and refund of'
+ → +32.2s [taxation] retrieve (try 2) → 6 docs
+ → +38.3s [taxation] grade → insufficient: The retrieved provisions cover the procedural application and sanctioning of tax refunds but do not explain the impact of customer refunds on input tax credits or the specific consumer protection rules governing the refund process.
+ → domain_pipeline → 0/2 domains answered (none) in 38.3s wall-clock (parallel)
+ → abstain → triggered: corporate_governance: No documents retrieved; taxation: The retrieved provisions cover the procedural application and sanctioning of tax refunds but do not explain the impact of customer refunds on input tax credits or the specific consumer protection rules governing the refund process.
+
+
+====================================================================================================
+QUERY 8: Can we monitor employee emails and internet usage on company devices, and what does the IT Act say about this versus labor law protections?
+====================================================================================================
+
+--- ANSWER ---
+I was unable to provide a reliable answer to your question: 'Can we monitor employee emails and internet usage on company devices, and what does the IT Act say about this versus labor law protections?'
+
+Reason: data_protection: None of the provided provisions address the legal requirements or employer obligations regarding the monitoring of employee communications and internet usage on company devices.; employment: The retrieved provisions focus on occupational safety, health, and sexual harassment prevention, none of which address employee privacy, email monitoring, or internet usage policies.
+
+Please consult a qualified legal professional or refer directly to the relevant Act.
+
+--- ABSTAINED ---
+True
+
+--- VERIFIED CITATIONS ---
+[]
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=employment all_domains=['data_protection', 'employment'] method=retrieval(2)+llm(2)
+ → + 1.1s [data_protection] focus → 'employee email and internet monitoring data protection compliance'
+ → + 1.6s [data_protection] retrieve (try 1) → 6 docs
+ → +11.4s [data_protection] grade → insufficient: The provided provisions define data protection terminology and cyber incident reporting obligations but do not address the legal permissibility of employee monitoring or the intersection of IT regulations with labor law protections.
+ → +18.2s [data_protection] rewrite → 'employee monitoring and surveillance rights India IT Act lab'
+ → +18.6s [data_protection] retrieve (try 2) → 6 docs
+ → +20.2s [data_protection] grade → insufficient: None of the provided provisions address the legal requirements or employer obligations regarding the monitoring of employee communications and internet usage on company devices.
+ → + 2.1s [employment] focus → 'employee privacy rights monitoring emails and internet usage company d'
+ → + 2.6s [employment] retrieve (try 1) → 4 docs
+ → + 3.9s [employment] grade → insufficient: None of the provided provisions address employee privacy, digital monitoring, or internet usage policies within the workplace.
+ → + 5.7s [employment] rewrite → 'employee privacy workplace digital monitoring company device'
+ → + 6.2s [employment] retrieve (try 2) → 4 docs
+ → + 9.2s [employment] grade → insufficient: The retrieved provisions focus on occupational safety, health, and sexual harassment prevention, none of which address employee privacy, email monitoring, or internet usage policies.
+ → domain_pipeline → 0/2 domains answered (none) in 20.2s wall-clock (parallel)
+ → abstain → triggered: data_protection: None of the provided provisions address the legal requirements or employer obligations regarding the monitoring of employee communications and internet usage on company devices.; employment: The retrieved provisions focus on occupational safety, health, and sexual harassment prevention, none of which address employee privacy, email monitoring, or internet usage policies.
+
+
+====================================================================================================
+QUERY 9: What are the rules under the DPDP Act and IT Act for transferring Indian users' personal data to servers outside India?
+====================================================================================================
+
+--- ANSWER ---
+LEGAL COMPLIANCE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Query: What are the rules under the DPDP Act and IT Act for transferring Indian users' personal data to servers outside India?
+
+SUMMARY
+- Data Protection: Cross-border transfer of sensitive personal data is permitted if the recipient ensures an equal level of data protection and the transfer is necessary for a contract or consented to by the user.
+- Data Protection: The Central Government retains the power to issue further rules regarding data transfers under the DPDP Act.
+- Data Protection (not addressed by retrieved provisions): The provisions do not specify the current legal status or enforceability of the SPDI Rules versus the DPDP Act, nor do they detail specific compliance thresholds for different startup sizes.
+
+ACTION CHECKLIST
+**Data Protection**
+Step 1: Ensure the recipient of sensitive personal data outside India maintains the same level of data protection as required by the SPDI Rules. — [spdi_rules_2011_sec_7] (applies to: private)
+Step 2: Obtain user consent or establish that the transfer is necessary for the performance of a lawful contract with the user. — [spdi_rules_2011_sec_7] (applies to: private)
+Step 3: Monitor for new notifications from the Central Government, which has the authority to make specific rules regarding the transfer of personal data. — [dpdp_act_2023_sec_40] (applies to: government)
+
+SOURCES
+- [spdi_rules_2011_sec_7] | Transfer of information
+- [dpdp_act_2023_sec_40] | Power to make rules
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠ This is informational guidance, not legal advice.
+Consult a qualified legal professional for your specific situation.
+
+--- ABSTAINED ---
+False
+
+--- VERIFIED CITATIONS ---
+['spdi_rules_2011_sec_7', 'dpdp_act_2023_sec_40']
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=data_protection all_domains=['data_protection'] method=retrieval(1)+llm(1)
+ → + 0.5s [data_protection] retrieve (try 1) → 6 docs
+ → + 1.3s [data_protection] grade → sufficient: The retrieved provisions include SPDI Rules 2011 Section 7, which explicitly addresses the conditions for transferring sensitive personal data to servers outside India.
+ → +23.3s [data_protection] generate → 3 steps, 2 citations
+ → domain_pipeline → 1/1 domains answered (data_protection) in 23.3s wall-clock (parallel)
+ → verify_citations → verified=['spdi_rules_2011_sec_7', 'dpdp_act_2023_sec_40'] failed=[]
+ → grade_answerability → answers
+ → grade_groundedness → grounded
+ → stitch → no gaps, answer passed through
+
+
+====================================================================================================
+QUERY 10: If we need to lay off employees due to funding issues, what notice periods and compensation are required under labor law and the Industrial Disputes Act?
+====================================================================================================
+
+--- ANSWER ---
+LEGAL COMPLIANCE WORKFLOW
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Query: If we need to lay off employees due to funding issues, what notice periods and compensation are required under labor law and the Industrial Disputes Act?
+
+SUMMARY
+- Employment & Workplace: Workmen with at least one year of service are entitled to 50% wages during a temporary lay-off, while closure of the undertaking triggers retrenchment-style compensation.
+- Employment & Workplace: Permanent employees are entitled to notice of termination (or payment in lieu) and final wages within two working days.
+- Employment & Workplace (not addressed by retrieved provisions): The provided text does not specify the numerical threshold of employees (company size) required to trigger specific sections of the Industrial Disputes Act, nor does it define the specific notice period duration for non-journalist employees beyond general '1 month or 2 weeks' for permanent workmen.
+
+ACTION CHECKLIST
+**Employment & Workplace**
+Step 1: Pay 50% of basic wages and dearness allowance to non-badli/non-casual workmen with at least one year of service for each day of lay-off (excluding weekly holidays). — [ida_1947_sec_25C]
+Step 2: Provide notice of termination (1 month or 2 weeks based on pay cycle) to permanent workmen and pay final wages within two working days of termination. — [ieso_rules_1946_I_13]
+Step 3: Provide retrenchment-style notice and compensation for closure of the undertaking; financial difficulties do not qualify as 'unavoidable circumstances' to cap compensation at 3 months. — [ida_1947_sec_25FFF]
+Step 4: Extend the retrenchment notice period to six months for working journalists with three or more years of service. — [wj_1955_sec_3]
+
+SOURCES
+- [ida_1947_sec_25C] | Right of workmen laid-off for compensation
+- [ieso_rules_1946_I_13] | Termination of employment
+- [ida_1947_sec_25FFF] | Compensation to workmen in case of closing down of undertakings
+- [wj_1955_sec_3] | Act 14 of 1947 to apply to working journalists
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠ This is informational guidance, not legal advice.
+Consult a qualified legal professional for your specific situation.
+
+--- ABSTAINED ---
+False
+
+--- VERIFIED CITATIONS ---
+['ida_1947_sec_25C', 'ieso_rules_1946_I_13', 'ida_1947_sec_25FFF', 'wj_1955_sec_3']
+
+--- FAILED CITATIONS ---
+[]
+
+--- TRACE ---
+ → classify → intent=QueryIntent.QA domain=employment all_domains=['employment'] method=retrieval(1)+llm(1)
+ → + 0.5s [employment] retrieve (try 1) → 6 docs
+ → + 1.9s [employment] grade → sufficient: The retrieved provisions cover compensation and notice requirements for retrenchment, lay-offs, and closures under the Industrial Disputes Act and relevant standing orders.
+ → +14.5s [employment] generate → 4 steps, 4 citations
+ → domain_pipeline → 1/1 domains answered (employment) in 14.5s wall-clock (parallel)
+ → verify_citations → verified=['ida_1947_sec_25C', 'ieso_rules_1946_I_13', 'ida_1947_sec_25FFF', 'wj_1955_sec_3'] failed=[]
+ → grade_groundedness → grounded
+ → grade_answerability → answers
+ → stitch → no gaps, answer passed through
+
+

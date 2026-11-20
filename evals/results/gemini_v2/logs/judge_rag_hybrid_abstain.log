@@ -1,0 +1,114 @@
+
+===== 2026-11-14T23:05:37 evals/eval_entailment.py judge --system rag_hybrid_abstain --resume --sleep 1
+Judge model: models/gemini-3.5-flash
+Gemini key #1 failed (400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'I); trying next key
+[001/100] 1 pairs
+[002/100] 0 pairs
+[003/100] 0 pairs
+[004/100] 0 pairs
+[005/100] 0 pairs
+[006/100] 2 pairs
+[007/100] 4 pairs
+[008/100] 1 pairs
+[009/100] 2 pairs
+[010/100] 2 pairs
+[011/100] 2 pairs
+[012/100] 5 pairs
+[013/100] 0 pairs
+[014/100] 2 pairs
+Gemini key #2 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+[015/100] 4 pairs
+[016/100] 2 pairs
+[017/100] 2 pairs
+[018/100] 3 pairs
+[019/100] 5 pairs
+[020/100] 4 pairs
+[021/100] 6 pairs
+[022/100] 1 pairs
+[023/100] 3 pairs
+[024/100] 1 pairs
+Gemini key #3 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #4 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+[025/100] 3 pairs
+[026/100] 4 pairs
+[027/100] 6 pairs
+[028/100] 4 pairs
+[029/100] 1 pairs
+[030/100] 2 pairs
+[031/100] 0 pairs
+[032/100] 6 pairs
+[033/100] 3 pairs
+[034/100] 11 pairs
+[035/100] 5 pairs
+[036/100] 5 pairs
+[037/100] 5 pairs
+[038/100] 6 pairs
+[039/100] 3 pairs
+[040/100] 2 pairs
+[041/100] 4 pairs
+[042/100] 3 pairs
+Gemini key #5 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #6 failed (403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'The Gemini API free tier is not available for this project. T); trying next key
+[043/100] 3 pairs
+[044/100] 2 pairs
+[045/100] 5 pairs
+[046/100] 3 pairs
+[047/100] 2 pairs
+[048/100] 7 pairs
+[049/100] 5 pairs
+[050/100] 4 pairs
+[051/100] 5 pairs
+[052/100] 4 pairs
+[053/100] 0 pairs
+[054/100] 6 pairs
+[055/100] 4 pairs
+[056/100] 4 pairs
+[057/100] 4 pairs
+[058/100] 5 pairs
+[059/100] 0 pairs
+[060/100] 0 pairs
+[061/100] 3 pairs
+[062/100] 5 pairs
+[063/100] 4 pairs
+[064/100] 3 pairs
+[065/100] 4 pairs
+Gemini key #7 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #1 failed (400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'I); trying next key
+Gemini key #2 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+[066/100] 4 pairs
+[067/100] 3 pairs
+Gemini key #3 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+[068/100] 1 pairs
+[069/100] 6 pairs
+Gemini key #4 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #5 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #6 failed (403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'The Gemini API free tier is not available for this project. T); trying next key
+Gemini key #7 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #1 failed (400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'I); trying next key
+Gemini key #2 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #3 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+
+judged_rag_hybrid_abstain: 69/100 saved.
+STOPPED: DailyQuota: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://aistudio.g
+Progress is saved; run the same command with --resume later.
+
+===== 2026-11-15T00:30:10 evals/eval_entailment.py judge --system rag_hybrid_abstain --resume --sleep 1
+Judge model: models/gemini-3.5-flash
+Gemini key #1 failed (400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'I); trying next key
+Gemini key #2 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #3 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #4 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #5 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #6 failed (403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'The Gemini API free tier is not available for this project. T); trying next key
+Gemini key #7 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #2 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #3 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #4 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #5 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key
+Gemini key #7 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #1 failed (400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'I); trying next key
+Gemini key #6 failed (403 PERMISSION_DENIED. {'error': {'code': 403, 'message': 'The Gemini API free tier is not available for this project. T); trying next key
+Gemini key #4 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #5 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #2 failed (429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and ); trying next key
+Gemini key #3 failed (503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand ); trying next key

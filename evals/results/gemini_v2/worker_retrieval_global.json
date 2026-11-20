@@ -1,0 +1,1115 @@
+{
+  "settings": {},
+  "as_of": "2026-10-15",
+  "anchors": true,
+  "summary": {
+    "all": {
+      "hits": 130,
+      "gold": 214,
+      "docs": 1038,
+      "workers": 161,
+      "recall": 0.607
+    },
+    "single": {
+      "hits": 69,
+      "gold": 89,
+      "docs": 348,
+      "workers": 50,
+      "recall": 0.775
+    },
+    "multi": {
+      "hits": 61,
+      "gold": 125,
+      "docs": 690,
+      "workers": 111,
+      "recall": 0.488
+    },
+    "multi_2": {
+      "hits": 34,
+      "gold": 51,
+      "docs": 284,
+      "workers": 40,
+      "recall": 0.667
+    },
+    "multi_3": {
+      "hits": 18,
+      "gold": 38,
+      "docs": 214,
+      "workers": 36,
+      "recall": 0.474
+    },
+    "multi_4": {
+      "hits": 5,
+      "gold": 20,
+      "docs": 107,
+      "workers": 20,
+      "recall": 0.25
+    },
+    "multi_5": {
+      "hits": 4,
+      "gold": 16,
+      "docs": 85,
+      "workers": 15,
+      "recall": 0.25
+    }
+  },
+  "rows": [
+    {
+      "query": "what notice must a data fiduciary give before collecting personal data",
+      "category": "single",
+      "gold": [
+        "dpdp_act_2023_sec_5",
+        "dpdp_rules_2025_sec_3"
+      ],
+      "in_context": [
+        "dpdp_act_2023_sec_5",
+        "dpdp_rules_2025_sec_3"
+      ]
+    },
+    {
+      "query": "how quickly must we report a personal data breach to the Data Protection Board and affected users",
+      "category": "single",
+      "gold": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_rules_2025_sec_7"
+      ],
+      "in_context": [
+        "dpdp_act_2023_sec_8",
+        "dpdp_rules_2025_sec_7"
+      ]
+    },
+    {
+      "query": "verifiable parental consent requirements for processing children's personal data",
+      "category": "single",
+      "gold": [
+        "dpdp_act_2023_sec_9",
+        "dpdp_rules_2025_sec_10"
+      ],
+      "in_context": [
+        "dpdp_act_2023_sec_9",
+        "dpdp_rules_2025_sec_10"
+      ]
+    },
+    {
+      "query": "registration conditions and obligations of a consent manager",
+      "category": "single",
+      "gold": [
+        "dpdp_rules_2025_sec_4",
+        "dpdp_rules_2025_sch_1"
+      ],
+      "in_context": [
+        "dpdp_rules_2025_sec_4",
+        "dpdp_rules_2025_sch_1"
+      ]
+    },
+    {
+      "query": "what reasonable security safeguards are mandatory under the DPDP rules",
+      "category": "single",
+      "gold": [
+        "dpdp_rules_2025_sec_6",
+        "dpdp_act_2023_sec_8"
+      ],
+      "in_context": []
+    },
+    {
+      "query": "can we transfer personal data of Indian users to servers outside India",
+      "category": "single",
+      "gold": [
+        "dpdp_rules_2025_sec_15",
+        "spdi_rules_2011_sec_7"
+      ],
+      "in_context": [
+        "dpdp_rules_2025_sec_15",
+        "spdi_rules_2011_sec_7"
+      ]
+    },
+    {
+      "query": "mandatory reporting of cyber security incidents to CERT-In within 6 hours",
+      "category": "single",
+      "gold": [
+        "cert_in_directions_2022_dir_2",
+        "cert_in_directions_2022_annex_1"
+      ],
+      "in_context": [
+        "cert_in_directions_2022_dir_2",
+        "cert_in_directions_2022_annex_1"
+      ]
+    },
+    {
+      "query": "how long must we retain ICT system logs under the CERT-In directions",
+      "category": "single",
+      "gold": [
+        "cert_in_directions_2022_dir_4",
+        "cert_in_directions_2022_preamble"
+      ],
+      "in_context": [
+        "cert_in_directions_2022_dir_4"
+      ]
+    },
+    {
+      "query": "what counts as sensitive personal data or information under the SPDI rules",
+      "category": "single",
+      "gold": [
+        "spdi_rules_2011_sec_3",
+        "spdi_rules_2011_sec_2"
+      ],
+      "in_context": [
+        "spdi_rules_2011_sec_3"
+      ]
+    },
+    {
+      "query": "compensation liability of a body corporate that fails to protect sensitive personal data",
+      "category": "single",
+      "gold": [
+        "information_technology_act_2000_sec_43A",
+        "spdi_rules_2011_sec_8"
+      ],
+      "in_context": [
+        "information_technology_act_2000_sec_43A"
+      ]
+    },
+    {
+      "query": "minimum number of partners and designated partners required to form an LLP",
+      "category": "single",
+      "gold": [
+        "llp_act_2008_sec_6",
+        "llp_act_2008_sec_7"
+      ],
+      "in_context": [
+        "llp_act_2008_sec_6",
+        "llp_act_2008_sec_7"
+      ]
+    },
+    {
+      "query": "how to convert a private limited company into an LLP",
+      "category": "single",
+      "gold": [
+        "llp_act_2008_sec_56",
+        "llp_act_2008_schedule_3"
+      ],
+      "in_context": [
+        "llp_act_2008_sec_56",
+        "llp_act_2008_schedule_3"
+      ]
+    },
+    {
+      "query": "is a non-compete clause in a commercial contract enforceable in India",
+      "category": "single",
+      "gold": [
+        "contract_act_1872_sec_27",
+        "contract_act_1872_sec_23"
+      ],
+      "in_context": [
+        "contract_act_1872_sec_27"
+      ]
+    },
+    {
+      "query": "damages recoverable for breach of contract when a liquidated damages clause exists",
+      "category": "single",
+      "gold": [
+        "contract_act_1872_sec_74",
+        "contract_act_1872_sec_73"
+      ],
+      "in_context": [
+        "contract_act_1872_sec_74",
+        "contract_act_1872_sec_73"
+      ]
+    },
+    {
+      "query": "what is a contract of indemnity and what are the rights of the indemnity holder",
+      "category": "single",
+      "gold": [
+        "contract_act_1872_sec_124",
+        "contract_act_1872_sec_125"
+      ],
+      "in_context": [
+        "contract_act_1872_sec_124",
+        "contract_act_1872_sec_125"
+      ]
+    },
+    {
+      "query": "when must a company spend on corporate social responsibility",
+      "category": "single",
+      "gold": [
+        "ca_2013_sec_135"
+      ],
+      "in_context": [
+        "ca_2013_sec_135"
+      ]
+    },
+    {
+      "query": "process for appointing the auditor of a company at the annual general meeting",
+      "category": "single",
+      "gold": [
+        "ca_2013_sec_139",
+        "ca_2013_sec_96"
+      ],
+      "in_context": [
+        "ca_2013_sec_139",
+        "ca_2013_sec_96"
+      ]
+    },
+    {
+      "query": "issuing new shares to existing shareholders through a rights issue",
+      "category": "single",
+      "gold": [
+        "ca_2013_sec_62",
+        "ca_2013_sec_39"
+      ],
+      "in_context": [
+        "ca_2013_sec_62"
+      ]
+    },
+    {
+      "query": "who is not eligible to be a resolution applicant under the insolvency code",
+      "category": "single",
+      "gold": [
+        "ibc_2016_sec_29A",
+        "ibc_2016_sec_30"
+      ],
+      "in_context": [
+        "ibc_2016_sec_29A",
+        "ibc_2016_sec_30"
+      ]
+    },
+    {
+      "query": "unfair trade practices by an e-commerce marketplace towards consumers",
+      "category": "single",
+      "gold": [
+        "consumer_protection_act_2019_sec_93",
+        "consumer_protection_act_2019_sec_2"
+      ],
+      "in_context": [
+        "consumer_protection_act_2019_sec_93",
+        "consumer_protection_act_2019_sec_2"
+      ]
+    },
+    {
+      "query": "what is not an invention under Indian patent law, are software algorithms excluded",
+      "category": "single",
+      "gold": [
+        "patents_act_1970_sec_3"
+      ],
+      "in_context": [
+        "patents_act_1970_sec_3"
+      ]
+    },
+    {
+      "query": "how long does a patent last in India",
+      "category": "single",
+      "gold": [
+        "patents_act_1970_sec_53"
+      ],
+      "in_context": [
+        "patents_act_1970_sec_53"
+      ]
+    },
+    {
+      "query": "who is entitled to apply for a patent, the inventor or the employer",
+      "category": "single",
+      "gold": [
+        "patents_act_1970_sec_6"
+      ],
+      "in_context": [
+        "patents_act_1970_sec_6"
+      ]
+    },
+    {
+      "query": "must a patent assignment be in writing to be valid",
+      "category": "single",
+      "gold": [
+        "patents_act_1970_sec_68"
+      ],
+      "in_context": [
+        "patents_act_1970_sec_68"
+      ]
+    },
+    {
+      "query": "grounds on which a trademark application can be refused",
+      "category": "single",
+      "gold": [
+        "trademarks_act_1999_sec_9",
+        "trademarks_act_1999_sec_11"
+      ],
+      "in_context": [
+        "trademarks_act_1999_sec_11"
+      ]
+    },
+    {
+      "query": "how long is a trademark registration valid and how do we renew it",
+      "category": "single",
+      "gold": [
+        "trademarks_act_1999_sec_25"
+      ],
+      "in_context": [
+        "trademarks_act_1999_sec_25"
+      ]
+    },
+    {
+      "query": "what amounts to infringement of a registered trademark and what relief is available",
+      "category": "single",
+      "gold": [
+        "trademarks_act_1999_sec_29",
+        "trademarks_act_1999_sec_135"
+      ],
+      "in_context": [
+        "trademarks_act_1999_sec_29",
+        "trademarks_act_1999_sec_135"
+      ]
+    },
+    {
+      "query": "licensing our trademark to a franchisee as a registered user",
+      "category": "single",
+      "gold": [
+        "trademarks_act_1999_sec_48",
+        "trademarks_act_1999_sec_49"
+      ],
+      "in_context": [
+        "trademarks_act_1999_sec_48",
+        "trademarks_act_1999_sec_49"
+      ]
+    },
+    {
+      "query": "what is piracy of a registered design",
+      "category": "single",
+      "gold": [
+        "designs_act_2000_sec_22",
+        "designs_act_2000_sec_2"
+      ],
+      "in_context": [
+        "designs_act_2000_sec_22"
+      ]
+    },
+    {
+      "query": "legal validity of contracts formed electronically through click-wrap acceptance",
+      "category": "single",
+      "gold": [
+        "it_act_2000_sec_10A",
+        "it_act_2000_sec_4"
+      ],
+      "in_context": [
+        "it_act_2000_sec_10A"
+      ]
+    },
+    {
+      "query": "turnover threshold for compulsory GST registration",
+      "category": "single",
+      "gold": [
+        "cgst_act_2017_sec_22",
+        "cgst_act_2017_sec_24"
+      ],
+      "in_context": [
+        "cgst_act_2017_sec_22"
+      ]
+    },
+    {
+      "query": "conditions for claiming input tax credit under the CGST Act",
+      "category": "single",
+      "gold": [
+        "cgst_act_2017_sec_16"
+      ],
+      "in_context": [
+        "cgst_act_2017_sec_16"
+      ]
+    },
+    {
+      "query": "can a small startup opt for the GST composition scheme",
+      "category": "single",
+      "gold": [
+        "cgst_act_2017_sec_10"
+      ],
+      "in_context": [
+        "cgst_act_2017_sec_10"
+      ]
+    },
+    {
+      "query": "what details must a GST tax invoice contain",
+      "category": "single",
+      "gold": [
+        "cgst_act_2017_sec_31"
+      ],
+      "in_context": [
+        "cgst_act_2017_sec_31"
+      ]
+    },
+    {
+      "query": "obligation of e-commerce operators to collect tax at source under GST",
+      "category": "single",
+      "gold": [
+        "cgst_act_2017_sec_52"
+      ],
+      "in_context": [
+        "cgst_act_2017_sec_52"
+      ]
+    },
+    {
+      "query": "advance tax instalments and due dates under the Income Tax Act 2025",
+      "category": "single",
+      "gold": [
+        "income_tax_act_2025_sec_408",
+        "income_tax_act_2025_sec_404"
+      ],
+      "in_context": [
+        "income_tax_act_2025_sec_408"
+      ]
+    },
+    {
+      "query": "TDS obligations on salary paid to employees",
+      "category": "single",
+      "gold": [
+        "income_tax_act_1961_sec_192",
+        "income_tax_act_2025_sec_392"
+      ],
+      "in_context": [
+        "income_tax_act_2025_sec_392"
+      ]
+    },
+    {
+      "query": "tax exemptions available to a unit set up in a Special Economic Zone",
+      "category": "single",
+      "gold": [
+        "sez_act_2005_sec_7",
+        "sez_act_2005_sec_15"
+      ],
+      "in_context": [
+        "sez_act_2005_sec_7"
+      ]
+    },
+    {
+      "query": "consequences of executing a share purchase agreement that is not duly stamped",
+      "category": "single",
+      "gold": [
+        "indian_stamp_act_1899_sec_35",
+        "indian_stamp_act_1899_sec_62"
+      ],
+      "in_context": [
+        "indian_stamp_act_1899_sec_35",
+        "indian_stamp_act_1899_sec_62"
+      ]
+    },
+    {
+      "query": "can an Indian startup set up a wholly owned subsidiary abroad under FEMA",
+      "category": "single",
+      "gold": [
+        "fema_transfer_issue_foreign_security_regulations_2004_reg_6",
+        "fema_transfer_issue_foreign_security_regulations_2004_reg_15"
+      ],
+      "in_context": [
+        "fema_transfer_issue_foreign_security_regulations_2004_reg_6"
+      ]
+    },
+    {
+      "query": "maternity benefit eligibility and payment under the Code on Social Security",
+      "category": "single",
+      "gold": [
+        "css_2020_sec_60",
+        "mba_1961_sec_5"
+      ],
+      "in_context": [
+        "mba_1961_sec_5"
+      ]
+    },
+    {
+      "query": "is a creche facility mandatory for our office",
+      "category": "single",
+      "gold": [
+        "mba_1961_sec_11A"
+      ],
+      "in_context": [
+        "mba_1961_sec_11A"
+      ]
+    },
+    {
+      "query": "gratuity eligibility after five years of continuous service",
+      "category": "single",
+      "gold": [
+        "poga_1972_sec_4",
+        "css_2020_sec_54"
+      ],
+      "in_context": [
+        "poga_1972_sec_4",
+        "css_2020_sec_54"
+      ]
+    },
+    {
+      "query": "social security schemes for gig and platform workers and the aggregator contribution",
+      "category": "single",
+      "gold": [
+        "css_2020_sec_114",
+        "css_2020_sec_113"
+      ],
+      "in_context": [
+        "css_2020_sec_114",
+        "css_2020_sec_113"
+      ]
+    },
+    {
+      "query": "conditions precedent for lawful retrenchment of workmen",
+      "category": "single",
+      "gold": [
+        "ida_1947_sec_25F",
+        "ida_1947_sec_25N"
+      ],
+      "in_context": [
+        "ida_1947_sec_25F",
+        "ida_1947_sec_25N"
+      ]
+    },
+    {
+      "query": "minimum and maximum statutory bonus payable to employees",
+      "category": "single",
+      "gold": [
+        "poba_1965_sec_10",
+        "poba_1965_sec_11"
+      ],
+      "in_context": [
+        "poba_1965_sec_10",
+        "poba_1965_sec_11"
+      ]
+    },
+    {
+      "query": "employer contributions to the Employees Provident Fund",
+      "category": "single",
+      "gold": [
+        "epf_1952_sec_6",
+        "epf_1952_sec_5"
+      ],
+      "in_context": []
+    },
+    {
+      "query": "obligations of employers who engage apprentices",
+      "category": "single",
+      "gold": [
+        "app_1961_sec_11",
+        "app_1961_sec_4"
+      ],
+      "in_context": [
+        "app_1961_sec_11"
+      ]
+    },
+    {
+      "query": "non-discrimination against persons with disabilities in employment and equal opportunity policy",
+      "category": "single",
+      "gold": [
+        "rpwd_2016_sec_20",
+        "rpwd_2016_sec_21"
+      ],
+      "in_context": [
+        "rpwd_2016_sec_20",
+        "rpwd_2016_sec_21"
+      ]
+    },
+    {
+      "query": "licence requirements for engaging contract labour through a contractor",
+      "category": "single",
+      "gold": [
+        "cla_1970_sec_12",
+        "cla_1970_sec_7"
+      ],
+      "in_context": [
+        "cla_1970_sec_12"
+      ]
+    },
+    {
+      "query": "we want to collect biometric attendance data from employees \u2014 what consent and employer duties apply",
+      "category": "multi_2",
+      "gold": [
+        "dpdp_act_2023_sec_6",
+        "spdi_rules_2011_sec_3",
+        "oshwc_2020_sec_6"
+      ],
+      "in_context": [
+        "oshwc_2020_sec_6"
+      ]
+    },
+    {
+      "query": "our payments app stores card transaction data and charges a fee \u2014 data localisation and GST obligations",
+      "category": "multi_2",
+      "gold": [
+        "rbi_payment_data_storage_2018_dir_1",
+        "cgst_act_2017_sec_9"
+      ],
+      "in_context": [
+        "rbi_payment_data_storage_2018_dir_1"
+      ]
+    },
+    {
+      "query": "are company directors and officers personally liable when the company suffers a data breach",
+      "category": "multi_2",
+      "gold": [
+        "information_technology_act_2000_sec_85",
+        "dpdp_act_2023_sec_33",
+        "ca_2013_sec_2"
+      ],
+      "in_context": [
+        "information_technology_act_2000_sec_85"
+      ]
+    },
+    {
+      "query": "we license our proprietary database to clients \u2014 copyright in the database and duties for the personal data inside it",
+      "category": "multi_2",
+      "gold": [
+        "copyright_act_1957_sec_13",
+        "copyright_act_1957_sec_2",
+        "dpdp_act_2023_sec_8"
+      ],
+      "in_context": [
+        "dpdp_act_2023_sec_8",
+        "copyright_act_1957_sec_2"
+      ]
+    },
+    {
+      "query": "an employee who invented a patentable process is being retrenched \u2014 who can apply for the patent and what retrenchment conditions apply",
+      "category": "multi_2",
+      "gold": [
+        "patents_act_1970_sec_6",
+        "patents_act_1970_sec_68",
+        "ida_1947_sec_25F"
+      ],
+      "in_context": [
+        "patents_act_1970_sec_6",
+        "ida_1947_sec_25F"
+      ]
+    },
+    {
+      "query": "gratuity payable to a resigning employee and TDS on the final salary settlement",
+      "category": "multi_2",
+      "gold": [
+        "poga_1972_sec_4",
+        "income_tax_act_1961_sec_192"
+      ],
+      "in_context": [
+        "poga_1972_sec_4"
+      ]
+    },
+    {
+      "query": "Companies Act allotment rules and stamp duty when issuing shares to investors",
+      "category": "multi_2",
+      "gold": [
+        "ca_2013_sec_39",
+        "ca_2013_sec_62",
+        "indian_stamp_act_1899_sec_35"
+      ],
+      "in_context": [
+        "ca_2013_sec_39",
+        "ca_2013_sec_62"
+      ]
+    },
+    {
+      "query": "converting our partnership firm into an LLP and transferring the firm's registered trademark to it",
+      "category": "multi_2",
+      "gold": [
+        "llp_act_2008_sec_55",
+        "trademarks_act_1999_sec_45"
+      ],
+      "in_context": [
+        "llp_act_2008_sec_55"
+      ]
+    },
+    {
+      "query": "can we enforce a non-compete against a terminated employee and what retrenchment compensation is due",
+      "category": "multi_2",
+      "gold": [
+        "contract_act_1872_sec_27",
+        "ida_1947_sec_25F"
+      ],
+      "in_context": [
+        "contract_act_1872_sec_27",
+        "ida_1947_sec_25F"
+      ]
+    },
+    {
+      "query": "withholding tax on royalty paid to a foreign company for a software patent licence",
+      "category": "multi_2",
+      "gold": [
+        "income_tax_act_1961_sec_195",
+        "income_tax_act_1961_sec_9",
+        "patents_act_1970_sec_48"
+      ],
+      "in_context": [
+        "income_tax_act_1961_sec_195",
+        "income_tax_act_1961_sec_9"
+      ]
+    },
+    {
+      "query": "our e-commerce marketplace shares customer data with sellers \u2014 consumer protection and data protection obligations",
+      "category": "multi_2",
+      "gold": [
+        "consumer_protection_act_2019_sec_93",
+        "dpdp_act_2023_sec_8"
+      ],
+      "in_context": [
+        "dpdp_act_2023_sec_8",
+        "consumer_protection_act_2019_sec_93"
+      ]
+    },
+    {
+      "query": "handling a sexual harassment complaint while keeping the complainant's personal data confidential",
+      "category": "multi_2",
+      "gold": [
+        "posh_2013_sec_9",
+        "posh_2013_sec_16",
+        "dpdp_act_2023_sec_8"
+      ],
+      "in_context": [
+        "posh_2013_sec_9",
+        "posh_2013_sec_16"
+      ]
+    },
+    {
+      "query": "ESI \u2014 which employees must be insured and how the principal employer pays contributions",
+      "category": "multi_2",
+      "gold": [
+        "esia_1948_sec_38",
+        "esia_1948_sec_39",
+        "esi_act_1948_sec_40"
+      ],
+      "in_context": [
+        "esia_1948_sec_38",
+        "esi_act_1948_sec_40"
+      ]
+    },
+    {
+      "query": "foreign SaaS company serving Indian users \u2014 GST on online information services and transferring user data out of India",
+      "category": "multi_2",
+      "gold": [
+        "igst_act_2017_sec_14",
+        "dpdp_rules_2025_sec_15"
+      ],
+      "in_context": [
+        "igst_act_2017_sec_14"
+      ]
+    },
+    {
+      "query": "our app uses Aadhaar authentication \u2014 restrictions on sharing Aadhaar data and copyright protection for the app code",
+      "category": "multi_2",
+      "gold": [
+        "aadhaar_act_2016_sec_8",
+        "aadhaar_act_2016_sec_29",
+        "copyright_act_1957_sec_13"
+      ],
+      "in_context": [
+        "aadhaar_act_2016_sec_8",
+        "aadhaar_act_2016_sec_29"
+      ]
+    },
+    {
+      "query": "our company is in liquidation \u2014 what happens to unpaid employee wages and provident fund dues",
+      "category": "multi_2",
+      "gold": [
+        "ibc_2016_sec_53",
+        "ibc_2016_sec_36",
+        "pow_1936_sec_3"
+      ],
+      "in_context": [
+        "ibc_2016_sec_53",
+        "ibc_2016_sec_36"
+      ]
+    },
+    {
+      "query": "exporting software from an SEZ unit \u2014 zero-rated GST supply and copyright protection for the software",
+      "category": "multi_2",
+      "gold": [
+        "igst_act_2017_sec_16",
+        "sez_act_2005_sec_7",
+        "copyright_act_1957_sec_13"
+      ],
+      "in_context": [
+        "igst_act_2017_sec_16",
+        "sez_act_2005_sec_7"
+      ]
+    },
+    {
+      "query": "what must the annual report disclose about POSH compliance and CSR spending",
+      "category": "multi_2",
+      "gold": [
+        "posh_2013_sec_22",
+        "ca_2013_sec_135"
+      ],
+      "in_context": [
+        "posh_2013_sec_22",
+        "ca_2013_sec_135"
+      ]
+    },
+    {
+      "query": "how long can we retain customer personal data after the service ends and what tax invoices must we issue",
+      "category": "multi_2",
+      "gold": [
+        "dpdp_rules_2025_sec_8",
+        "cgst_act_2017_sec_31"
+      ],
+      "in_context": [
+        "dpdp_rules_2025_sec_8",
+        "cgst_act_2017_sec_31"
+      ]
+    },
+    {
+      "query": "vendor contract for outsourced processing of customer data \u2014 indemnity clause and data fiduciary obligations",
+      "category": "multi_2",
+      "gold": [
+        "contract_act_1872_sec_124",
+        "dpdp_act_2023_sec_8"
+      ],
+      "in_context": [
+        "contract_act_1872_sec_124",
+        "dpdp_act_2023_sec_8"
+      ]
+    },
+    {
+      "query": "setting up a private limited company with 15 employees \u2014 incorporation, GST registration and provident fund obligations",
+      "category": "multi_3",
+      "gold": [
+        "ca_2013_sec_7",
+        "cgst_act_2017_sec_22",
+        "epf_1952_sec_6"
+      ],
+      "in_context": [
+        "ca_2013_sec_7"
+      ]
+    },
+    {
+      "query": "launching a consumer mobile app \u2014 registering the brand name, getting user consent and incorporating the company",
+      "category": "multi_3",
+      "gold": [
+        "trademarks_act_1999_sec_18",
+        "dpdp_act_2023_sec_6",
+        "ca_2013_sec_7"
+      ],
+      "in_context": [
+        "dpdp_act_2023_sec_6",
+        "ca_2013_sec_7"
+      ]
+    },
+    {
+      "query": "hiring a freelance developer abroad \u2014 who owns the code, withholding tax on payments to a non-resident, and is he a workman",
+      "category": "multi_3",
+      "gold": [
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_18",
+        "income_tax_act_1961_sec_195",
+        "ida_1947_sec_2"
+      ],
+      "in_context": [
+        "copyright_act_1957_sec_17",
+        "income_tax_act_1961_sec_195",
+        "ida_1947_sec_2"
+      ]
+    },
+    {
+      "query": "an employee leaked customer data \u2014 breach reporting, penalty for disclosure, and liability of the company's officers",
+      "category": "multi_3",
+      "gold": [
+        "dpdp_rules_2025_sec_7",
+        "information_technology_act_2000_sec_72A",
+        "information_technology_act_2000_sec_85"
+      ],
+      "in_context": [
+        "dpdp_rules_2025_sec_7",
+        "information_technology_act_2000_sec_72A"
+      ]
+    },
+    {
+      "query": "selling our startup's patents and trademarks to an acquirer \u2014 assignment formalities and stamp duty",
+      "category": "multi_3",
+      "gold": [
+        "patents_act_1970_sec_68",
+        "trademarks_act_1999_sec_45",
+        "indian_stamp_act_1899_sec_35"
+      ],
+      "in_context": [
+        "patents_act_1970_sec_68",
+        "trademarks_act_1999_sec_45"
+      ]
+    },
+    {
+      "query": "fintech lending app \u2014 payment data localisation, GST on processing fees and liability for misleading advertisements",
+      "category": "multi_3",
+      "gold": [
+        "rbi_payment_data_storage_2018_dir_1",
+        "cgst_act_2017_sec_9",
+        "consumer_protection_act_2019_sec_89"
+      ],
+      "in_context": [
+        "rbi_payment_data_storage_2018_dir_1"
+      ]
+    },
+    {
+      "query": "our factory \u2014 worker safety duties of the employer, CCTV monitoring of workers and protecting our product design",
+      "category": "multi_3",
+      "gold": [
+        "oshwc_2020_sec_6",
+        "dpdp_act_2023_sec_6",
+        "designs_act_2000_sec_22"
+      ],
+      "in_context": []
+    },
+    {
+      "query": "winding up an LLP \u2014 settling employee gratuity and bonus dues, and stamp duty on the deed transferring its assets",
+      "category": "multi_3",
+      "gold": [
+        "llp_act_2008_sec_64",
+        "poga_1972_sec_4",
+        "poba_1965_sec_8",
+        "indian_stamp_act_1899_sec_35"
+      ],
+      "in_context": []
+    },
+    {
+      "query": "hiring persons with disabilities \u2014 non-discrimination duties, consent for processing their data, and counting it towards CSR",
+      "category": "multi_3",
+      "gold": [
+        "rpwd_2016_sec_20",
+        "dpdp_rules_2025_sec_11",
+        "ca_2013_sec_135"
+      ],
+      "in_context": [
+        "rpwd_2016_sec_20",
+        "dpdp_rules_2025_sec_11",
+        "ca_2013_sec_135"
+      ]
+    },
+    {
+      "query": "online gaming platform \u2014 GST on online services, intermediary safe harbour and copyright in game content",
+      "category": "multi_3",
+      "gold": [
+        "igst_act_2017_sec_14",
+        "information_technology_act_2000_sec_79",
+        "copyright_act_1957_sec_14"
+      ],
+      "in_context": [
+        "igst_act_2017_sec_14",
+        "information_technology_act_2000_sec_79"
+      ]
+    },
+    {
+      "query": "a co-founder who is also an employee is leaving \u2014 assignment of the code he wrote and enforceability of his non-compete",
+      "category": "multi_3",
+      "gold": [
+        "copyright_act_1957_sec_17",
+        "copyright_act_1957_sec_19",
+        "contract_act_1872_sec_27"
+      ],
+      "in_context": [
+        "contract_act_1872_sec_27",
+        "copyright_act_1957_sec_17"
+      ]
+    },
+    {
+      "query": "outsourced payroll \u2014 TDS on salaries, ESI contributions and protecting employees' financial data",
+      "category": "multi_3",
+      "gold": [
+        "income_tax_act_1961_sec_192",
+        "esia_1948_sec_39",
+        "spdi_rules_2011_sec_3"
+      ],
+      "in_context": []
+    },
+    {
+      "query": "we are a 50-person SaaS company with many women employees, we collect user data and bill overseas clients \u2014 what are all our compliance obligations",
+      "category": "multi_4",
+      "gold": [
+        "posh_2013_sec_4",
+        "dpdp_act_2023_sec_8",
+        "igst_act_2017_sec_16",
+        "ca_2013_sec_92"
+      ],
+      "in_context": [
+        "dpdp_act_2023_sec_8"
+      ]
+    },
+    {
+      "query": "edtech startup \u2014 incorporating the company, trademarking the brand, GST on online courses and consent for children's data",
+      "category": "multi_4",
+      "gold": [
+        "ca_2013_sec_7",
+        "trademarks_act_1999_sec_18",
+        "cgst_act_2017_sec_9",
+        "dpdp_act_2023_sec_9"
+      ],
+      "in_context": [
+        "trademarks_act_1999_sec_18",
+        "dpdp_act_2023_sec_9"
+      ]
+    },
+    {
+      "query": "delivery startup using gig workers \u2014 platform worker social security, location data consent, GST TCS on marketplace sales and our app trademark",
+      "category": "multi_4",
+      "gold": [
+        "css_2020_sec_114",
+        "dpdp_act_2023_sec_6",
+        "cgst_act_2017_sec_52",
+        "trademarks_act_1999_sec_18"
+      ],
+      "in_context": [
+        "css_2020_sec_114"
+      ]
+    },
+    {
+      "query": "acquiring a smaller startup \u2014 transferring employees' gratuity, stamp duty on the share transfer, assigning their patents and issuing our shares as consideration",
+      "category": "multi_4",
+      "gold": [
+        "poga_1972_sec_4",
+        "indian_stamp_act_1899_sec_35",
+        "patents_act_1970_sec_68",
+        "ca_2013_sec_62"
+      ],
+      "in_context": [
+        "patents_act_1970_sec_68"
+      ]
+    },
+    {
+      "query": "healthtech clinic chain run as an LLP \u2014 security of patient health data, nurses' maternity benefits and GST on services",
+      "category": "multi_4",
+      "gold": [
+        "dpdp_rules_2025_sec_6",
+        "mba_1961_sec_5",
+        "llp_act_2008_sec_7",
+        "cgst_act_2017_sec_9"
+      ],
+      "in_context": []
+    },
+    {
+      "query": "complete legal compliance checklist for an Indian AI startup with employees, user data, proprietary model code, GST billing and outside investors",
+      "category": "multi_5",
+      "gold": [
+        "ca_2013_sec_7",
+        "ca_2013_sec_62",
+        "posh_2013_sec_4",
+        "dpdp_act_2023_sec_8",
+        "copyright_act_1957_sec_13",
+        "cgst_act_2017_sec_22"
+      ],
+      "in_context": []
+    },
+    {
+      "query": "we manufacture IoT devices in an SEZ, employ 200 factory workers, collect device telemetry, hold design registrations and are issuing new shares \u2014 what laws apply",
+      "category": "multi_5",
+      "gold": [
+        "sez_act_2005_sec_15",
+        "oshwc_2020_sec_6",
+        "dpdp_act_2023_sec_8",
+        "designs_act_2000_sec_22",
+        "ca_2013_sec_62"
+      ],
+      "in_context": [
+        "ca_2013_sec_62"
+      ]
+    },
+    {
+      "query": "our company is going insolvent \u2014 dues to employees, handling customer data during liquidation, selling our patents, pending tax dues and creditor priority",
+      "category": "multi_5",
+      "gold": [
+        "ibc_2016_sec_53",
+        "ibc_2016_sec_36",
+        "esia_1948_sec_94",
+        "dpdp_act_2023_sec_8",
+        "patents_act_1970_sec_68"
+      ],
+      "in_context": [
+        "ibc_2016_sec_53",
+        "ibc_2016_sec_36",
+        "esia_1948_sec_94"
+      ]
+    }
+  ]
+}

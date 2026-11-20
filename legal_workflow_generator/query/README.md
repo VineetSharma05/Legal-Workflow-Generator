@@ -30,7 +30,11 @@ legal_workflow_generator/
 │   ├── __init__.py           # Single entry point — process_query()
 │   ├── normalizer.py         # QueryNormalizer class
 │   ├── intent_classifier.py  # IntentClassifier class
-│   └── context_resolver.py   # LegalContextResolver class
+│   ├── context_resolver.py   # LegalContextResolver class
+│   └── keyword_domain_classifier.py  # rule-based (TF-IDF keyword) domain classifier
+├── llm/
+│   ├── __init__.py           # shared LangChain chat models + invoke_structured()
+│   └── schemas.py            # IntentClassification, DomainClassification, ...
 └── typings/
     └── types.py              # NormalizedQuery, QueryIntent, LegalContext
 ```
@@ -71,13 +75,19 @@ uv sync
 
 ### 4. Set up environment variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root (or copy `.env.example`):
 
 ```
-GROQ_API_KEY=your_groq_api_key_here
+PGPASSWORD=your_postgres_password
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-> Get a free Groq API key at [console.groq.com](https://console.groq.com)
+Both are required — the config module raises `MissingEnvironmentVariable` at
+import time if either is missing. The query unit's LLM calls use Gemini only;
+`GROQ_API_KEY` is optional and only needed for the `--provider groq` RAG answer
+generator.
+
+> Get a Gemini API key at [aistudio.google.com](https://aistudio.google.com/apikey)
 
 > ⚠️ Never commit your `.env` file — it is already in `.gitignore`
 
@@ -201,16 +211,29 @@ Queries longer than 500 words are automatically truncated with a warning logged.
 
 ## Design Decisions
 
-### Why Groq (llama-3.3-70b) for classification?
-- Free tier is generous enough for a capstone project
-- Constrained to fixed output format — hallucination risk is near zero
+### Why Gemini with LangChain structured output for classification?
+- Both LLM calls go through `ChatGoogleGenerativeAI` with `with_structured_output`,
+  so the reply is validated against a Pydantic schema instead of being parsed
+  from text:
+  - `IntentClassifier` → `IntentClassification` (`reason`, `intent`, `confidence` in 0–1)
+  - `LegalContextResolver` → `DomainClassification` (`domain`, up to 5 `keywords`)
+- `intent` and `domain` are `Literal` enums, so the model cannot return a label
+  outside the fixed set
 - Understands legal context far better than keyword matching
-- `temperature=0.1` keeps responses deterministic
+- The single-shot call uses the model's default temperature; self-consistency
+  votes sample at `temperature=0.7`
+- A reply that fails validation, or an API error, degrades safely: the intent
+  becomes `UNKNOWN` with confidence `0.0`, and the LLM domain is treated as
+  missing
 
-### Why rule-based fallback in context resolver?
-- If Groq API is unavailable, the system still works
-- Domain detection falls back to keyword counting
-- Never crashes the pipeline
+### Why a rule-based keyword classifier in the context resolver?
+- `KeywordDomainClassifier` (TF-IDF terms extracted from the corpus) runs first
+  on every query — deterministic and free
+- With the default `llm_fallback` strategy, Gemini is only called when keywords
+  find no match; with `combine`, both run and are cross-checked
+  (`domain_agreement`)
+- If the Gemini call fails, a keyword match still resolves the domain, so the
+  pipeline doesn't crash
 
 ### Why pdfplumber over pypdf?
 - Better at handling structured/table-heavy legal documents
@@ -218,7 +241,7 @@ Queries longer than 500 words are automatically truncated with a warning logged.
 
 ### Why remove spell correction?
 - Generic spell checkers mangle legal terms (`"esops"` → `"sops"`)
-- Groq handles minor typos intelligently anyway
+- The LLM classifiers handle minor typos intelligently anyway
 - Simpler = more reliable
 
 ---
@@ -226,7 +249,8 @@ Queries longer than 500 words are automatically truncated with a warning logged.
 ## Running Tests
 
 The query-unit tests are part of the pytest suite at the repo root and run
-fully offline (Gemini is mocked):
+fully offline — the structured LLM runnables are replaced by a fake that returns
+parsed schema objects (`FakeStructuredLLM` in `tests/conftest.py`):
 
 ```bash
 # Normalizer, intent classifier, context resolver, and process_query wiring
@@ -255,6 +279,8 @@ result = normalizer.normalize(text="...", pdf_path="...")
 classifier = IntentClassifier()
 intent, confidence = classifier.classify(normalized_query)
 # Returns tuple: (QueryIntent, float)
+# confidence < 0.5 is overridden to QueryIntent.UNKNOWN
+# classifier.llm is the structured_llm(IntentClassification) runnable
 ```
 
 ### `LegalContextResolver`
@@ -263,6 +289,8 @@ intent, confidence = classifier.classify(normalized_query)
 resolver = LegalContextResolver()
 context = resolver.resolve(normalized_query, intent, confidence)
 # Returns LegalContext object
+# resolver.llm / resolver.sampling_llm are structured_llm(DomainClassification)
+# runnables (default temperature / 0.7 for self-consistency votes)
 ```
 
 ---
@@ -270,7 +298,7 @@ context = resolver.resolve(normalized_query, intent, confidence)
 ## Known Limitations
 
 - Single domain detection only — multi-domain queries (e.g. "ESOP tax implications for employees") are mapped to the most relevant domain
-- Hindi-only queries pass through normalization unchanged and are typically classified as `UNKNOWN` or mapped to the closest intent by Groq
+- Hindi-only queries pass through normalization unchanged and are typically classified as `UNKNOWN` or mapped to the closest intent by the LLM
 - Very long PDFs (500+ words after normalization) are truncated
 
 ---
@@ -279,7 +307,8 @@ context = resolver.resolve(normalized_query, intent, confidence)
 
 | Package | Purpose |
 |---|---|
-| `groq` | LLM API for intent classification and context resolution |
+| `langchain-google-genai` | Gemini chat model (structured output) for intent classification and context resolution |
+| `pydantic` | Output schemas for the structured LLM calls (`llm/schemas.py`) |
 | `pdfplumber` | PDF text extraction |
 | `python-dotenv` | Loading `.env` file |
 

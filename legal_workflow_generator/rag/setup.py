@@ -74,6 +74,10 @@ def run():
     cur.execute("ALTER TABLE laws ADD COLUMN IF NOT EXISTS domain TEXT;")
     print("step 10b: Column 'laws.domain' is ready")
 
+    # Original statute wording (the `text` column holds the normalised search text).
+    cur.execute("ALTER TABLE laws ADD COLUMN IF NOT EXISTS raw_text TEXT;")
+    print("step 10c: Column 'laws.raw_text' is ready")
+
     cur.execute("""
         CREATE INDEX IF NOT EXISTS laws_embedding_idx
         ON laws

@@ -1,5 +1,8 @@
 """Offline API contract tests with external pipelines mocked."""
 
+from pathlib import Path
+
+import pytest
 from fastapi import HTTPException
 
 import app
@@ -8,12 +11,13 @@ import app
 def test_index_serves_frontend():
     response = app.index()
 
-    assert response.path.endswith("presentation\\static\\index.html")
+    assert Path(response.path).parts[-3:] == ("presentation", "static", "index.html")
 
 
 def test_chat_returns_pipeline_sections(monkeypatch):
     state = {
         "answer": "Use a consent notice.",
+        "stitched_answer": "LEGAL COMPLIANCE WORKFLOW\nUse a consent notice.",
         "intent": "workflow",
         "domain": "data_protection",
         "all_domains": ["data_protection"],
@@ -27,19 +31,32 @@ def test_chat_returns_pipeline_sections(monkeypatch):
         }],
         "citations": ["dpdp_act_2023_sec_5"],
         "verified_citations": ["dpdp_act_2023_sec_5"],
+        "domain_results": [{
+            "domain": "data_protection",
+            "grade": "sufficient",
+            "reason": "directly relevant",
+            "retries": 0,
+            "summary": ["Give a notice"],
+            "steps": [{
+                "action": "Give a notice",
+                "provision_id": "dpdp_act_2023_sec_5",
+                "applies_to": "private",
+            }],
+            "not_covered": "",
+            "cited": ["dpdp_act_2023_sec_5"],
+        }],
+        "domain_gaps": [],
         "trace": ["done"],
     }
 
-    class FakeGraph:
-        def invoke(self, payload):
-            assert payload == {"query": "How do I comply?"}
-            return state
+    monkeypatch.setattr(app, "run_workflow", lambda query, **options: state)
 
-    monkeypatch.setattr(app, "graph", FakeGraph())
+    result = app.chat(app.ChatRequest(query="How do I comply?", provider="gemini", top_k=4))
 
-    result = app.chat(app.ChatRequest(query="How do I comply?"))
-
-    assert result["answer"] == state["answer"]
+    assert result["answer"] == state["stitched_answer"]
+    assert result["workflow"]["domains"][0]["steps"][0]["provision_id"] == (
+        "dpdp_act_2023_sec_5"
+    )
     assert result["pipeline"]["classification"]["domain"] == "data_protection"
     assert result["pipeline"]["retrieval"]["docs"][0]["provision_id"] == (
         "dpdp_act_2023_sec_5"
@@ -49,11 +66,10 @@ def test_chat_returns_pipeline_sections(monkeypatch):
 
 
 def test_chat_converts_pipeline_errors_to_http_error(monkeypatch):
-    class FailingGraph:
-        def invoke(self, payload):
-            raise RuntimeError("database unavailable")
+    def failing(query, **options):
+        raise RuntimeError("database unavailable")
 
-    monkeypatch.setattr(app, "graph", FailingGraph())
+    monkeypatch.setattr(app, "run_workflow", failing)
 
     try:
         app.chat(app.ChatRequest(query="What is required?"))
@@ -68,7 +84,7 @@ def test_query_route_returns_classifier_state(monkeypatch):
     monkeypatch.setattr(
         app,
         "agent_classify_query",
-        lambda state: {
+        lambda state, config=None: {
             **state,
             "intent": "qa",
             "domain": "taxation",
@@ -85,3 +101,10 @@ def test_query_route_returns_classifier_state(monkeypatch):
     assert result["domain"] == "taxation"
     assert result["confidence"] == 0.91
     assert result["trace"] == ["classified"]
+
+
+@pytest.mark.parametrize("bad", [{"provider": "openai"}, {"top_k": 0}, {"top_k": 99}, {"as_of": "13/10/2026"}])
+def test_invalid_settings_are_rejected_with_400(bad):
+    with pytest.raises(HTTPException) as err:
+        app.chat(app.ChatRequest(query="q", **bad))
+    assert err.value.status_code == 400

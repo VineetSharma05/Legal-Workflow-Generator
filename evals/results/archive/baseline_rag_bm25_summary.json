@@ -1,0 +1,54 @@
+{
+  "overall": {
+    "n": 100,
+    "gold_provision_recall": 0.266,
+    "citation_precision": 0.254,
+    "citation_validity": 0.854,
+    "ungrounded_citation_rate": 0.004,
+    "domain_coverage": 0.776,
+    "answered_pct": 100.0,
+    "wrongly_declined": 0.0,
+    "abstain_accuracy": 0.0,
+    "avg_latency_s": 8.443,
+    "unparsed_outputs": 0
+  },
+  "single": {
+    "n": 50,
+    "gold_provision_recall": 0.472,
+    "citation_precision": 0.438,
+    "citation_validity": 0.881,
+    "ungrounded_citation_rate": 0.01,
+    "domain_coverage": 0.92,
+    "answered_pct": 100.0,
+    "wrongly_declined": 0.0,
+    "abstain_accuracy": null,
+    "avg_latency_s": 8.883,
+    "unparsed_outputs": 0
+  },
+  "multi": {
+    "n": 40,
+    "gold_provision_recall": 0.12,
+    "citation_precision": 0.117,
+    "citation_validity": 0.865,
+    "ungrounded_citation_rate": 0.0,
+    "domain_coverage": 0.597,
+    "answered_pct": 100.0,
+    "wrongly_declined": 0.0,
+    "abstain_accuracy": null,
+    "avg_latency_s": 7.261,
+    "unparsed_outputs": 0
+  },
+  "edge": {
+    "n": 10,
+    "gold_provision_recall": null,
+    "citation_precision": null,
+    "citation_validity": 0.4,
+    "ungrounded_citation_rate": 0.0,
+    "domain_coverage": null,
+    "answered_pct": 100.0,
+    "wrongly_declined": null,
+    "abstain_accuracy": 0.0,
+    "avg_latency_s": 10.971,
+    "unparsed_outputs": 0
+  }
+}

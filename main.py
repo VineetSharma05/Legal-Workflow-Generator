@@ -7,7 +7,7 @@ import legal_workflow_generator.rag as rag
 
 def main():
     if len(sys.argv) < 2:
-        print(f"Usage: {sys.argv[0]} [setup|ingest [condensed|complete]|embed|extract-keywords]")
+        print(f"Usage: {sys.argv[0]} [setup|ingest [condensed|complete]|embed [all]|extract-keywords]")
         exit(1)
 
     if sys.argv[1] == "setup":
@@ -37,7 +37,8 @@ def main():
         rag.ingestion.ingest(dataset)
 
     elif sys.argv[1] == "embed":
-        rag.embeddings.run()
+        # `embed all` recomputes every embedding (e.g. after changing what gets embedded)
+        rag.embeddings.run(reembed=len(sys.argv) > 2 and sys.argv[2] == "all")
 
     elif sys.argv[1] == "extract-keywords":
         rag.domain_keywords.run()
