@@ -29,6 +29,11 @@ Meaning of the options
                      are graded, cited and claim-checked like retrieved provisions (no extra LLM call)
   statute_search     when the question names a statute (STATUTE_ALIASES in nodes.py), also search inside that
                      statute alone and fuse it with the open search (no LLM call)
+  select_context     the grading call sees a wider pool (the top select_pool candidates plus suggestions and anchors)
+                     and also names the provisions a complete answer must cite; the generator gets those (at most
+                     select_max, in the grader's order of importance) plus suggestions and anchors (no extra LLM call)
+  fusion             how the hybrid searcher orders BM25 + vector candidates: "linear" (0.3 BM25 + 0.7 cosine, the
+                     original), "minmax" (cosine rescaled to 0-1 first) or "rrf" (reciprocal rank fusion)
   trace_timing       False removes "+1.4s" prefixes so traces are byte-for-byte reproducible
 """
 import contextvars
@@ -39,6 +44,7 @@ from dataclasses import dataclass, fields
 ALLOWED_PROVIDERS = ("gemini", "groq")
 FUTURE_PROVISION_MODES = ("annotate", "exclude")
 DOMAIN_SEARCH_MODES = ("global", "domain")
+FUSION_MODES = ("linear", "minmax", "rrf")
 MAX_TOP_K = 20
 
 
@@ -58,6 +64,10 @@ class RunSettings:
     suggest_provisions: bool = False
     suggest_cap: int = 4
     statute_search: bool = True
+    select_context: bool = False
+    select_pool: int = 20
+    select_max: int = 10
+    fusion: str = "linear"
     trace_timing: bool = True
 
     def __post_init__(self):
@@ -73,6 +83,10 @@ class RunSettings:
             raise ValueError(f"future_provisions must be one of {FUTURE_PROVISION_MODES}, got {self.future_provisions!r}")
         if not (0 <= int(self.suggest_cap) <= 10):
             raise ValueError(f"suggest_cap must be between 0 and 10, got {self.suggest_cap!r}")
+        if not (1 <= int(self.select_pool) <= MAX_TOP_K) or not (1 <= int(self.select_max) <= MAX_TOP_K):
+            raise ValueError(f"select_pool and select_max must be between 1 and {MAX_TOP_K}")
+        if self.fusion not in FUSION_MODES:
+            raise ValueError(f"fusion must be one of {FUSION_MODES}, got {self.fusion!r}")
         if self.domain_search not in DOMAIN_SEARCH_MODES:
             raise ValueError(f"domain_search must be one of {DOMAIN_SEARCH_MODES}, got {self.domain_search!r}")
         if self.as_of:
@@ -92,14 +106,16 @@ class RunSettings:
         picked = {k: v for k, v in cfg.items() if k in known and v is not None}
         if "provider" in picked:
             picked["provider"] = str(picked["provider"]).strip().lower()
-        for k in ("suggest_cap", "top_k", "act_cap", "search_depth", "bm25_candidates", "vector_candidates", "max_domain_retries"):
+        for k in ("select_pool", "select_max", "suggest_cap", "top_k", "act_cap", "search_depth", "bm25_candidates", "vector_candidates", "max_domain_retries"):
             if k in picked:
                 picked[k] = int(picked[k])
-        for k in ("verify_claims", "trace_timing", "suggest_provisions", "statute_search"):
+        for k in ("verify_claims", "trace_timing", "suggest_provisions", "statute_search", "select_context"):
             if k in picked and isinstance(picked[k], str):
                 picked[k] = picked[k].strip().lower() in ("1", "true", "yes", "on")
         if "as_of" in picked:
             picked["as_of"] = str(picked["as_of"])
+        if "fusion" in picked:
+            picked["fusion"] = str(picked["fusion"]).strip().lower()
         if "domain_search" in picked:
             picked["domain_search"] = str(picked["domain_search"]).strip().lower()
         if "future_provisions" in picked:

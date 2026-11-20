@@ -1,0 +1,156 @@
+{
+  "summary": {
+    "provider": "gemini",
+    "model": "models/gemini-3.1-flash-lite",
+    "as_of": "2026-10-15",
+    "tag": "pipeline_v4_t0",
+    "options": {
+      "suggest_provisions": "true",
+      "select_context": "true"
+    },
+    "tokens": 2404321,
+    "total": 100,
+    "scored": 100,
+    "errored": 0,
+    "overall": {
+      "n": 100,
+      "domain_recall": 0.983,
+      "domain_precision": 0.892,
+      "domain_exact_match": 0.756,
+      "primary_domain_accuracy": 0.956,
+      "citation_recall": 0.748,
+      "citation_domain_coverage": 0.955,
+      "answered_pct": 88.0,
+      "false_abstain_rate": 0.022,
+      "abstain_accuracy": 1.0,
+      "avg_elapsed_seconds": 83.226
+    },
+    "by_category": {
+      "edge": {
+        "n": 10,
+        "domain_recall": null,
+        "domain_precision": null,
+        "domain_exact_match": null,
+        "primary_domain_accuracy": null,
+        "citation_recall": null,
+        "citation_domain_coverage": null,
+        "answered_pct": 0.0,
+        "false_abstain_rate": null,
+        "abstain_accuracy": 1.0,
+        "avg_elapsed_seconds": 18.907
+      },
+      "multi_2": {
+        "n": 20,
+        "domain_recall": 0.925,
+        "domain_precision": 0.942,
+        "domain_exact_match": 0.75,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.706,
+        "citation_domain_coverage": 0.875,
+        "answered_pct": 95.0,
+        "false_abstain_rate": 0.05,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 62.505
+      },
+      "multi_3": {
+        "n": 12,
+        "domain_recall": 1.0,
+        "domain_precision": 0.979,
+        "domain_exact_match": 0.917,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.711,
+        "citation_domain_coverage": 0.889,
+        "answered_pct": 91.667,
+        "false_abstain_rate": 0.083,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 88.864
+      },
+      "multi_4": {
+        "n": 5,
+        "domain_recall": 1.0,
+        "domain_precision": 0.96,
+        "domain_exact_match": 0.8,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.8,
+        "citation_domain_coverage": 0.95,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 106.074
+      },
+      "multi_5": {
+        "n": 3,
+        "domain_recall": 1.0,
+        "domain_precision": 1.0,
+        "domain_exact_match": 1.0,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.625,
+        "citation_domain_coverage": 1.0,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 113.37
+      },
+      "multi_all": {
+        "n": 40,
+        "domain_recall": 0.963,
+        "domain_precision": 0.96,
+        "domain_exact_match": 0.825,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.712,
+        "citation_domain_coverage": 0.898,
+        "answered_pct": 95.0,
+        "false_abstain_rate": 0.05,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 79.674
+      },
+      "single": {
+        "n": 50,
+        "domain_recall": 1.0,
+        "domain_precision": 0.838,
+        "domain_exact_match": 0.7,
+        "primary_domain_accuracy": 0.92,
+        "citation_recall": 0.798,
+        "citation_domain_coverage": 1.0,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 98.932
+      }
+    },
+    "per_domain": {
+      "data_protection": {
+        "n": 34,
+        "detection_recall": 1.0,
+        "cited_recall": 0.941,
+        "false_positive_detections": 0
+      },
+      "corporate_governance": {
+        "n": 33,
+        "detection_recall": 0.939,
+        "cited_recall": 0.879,
+        "false_positive_detections": 4
+      },
+      "ip_licensing": {
+        "n": 28,
+        "detection_recall": 1.0,
+        "cited_recall": 1.0,
+        "false_positive_detections": 4
+      },
+      "taxation": {
+        "n": 33,
+        "detection_recall": 1.0,
+        "cited_recall": 0.97,
+        "false_positive_detections": 10
+      },
+      "employment": {
+        "n": 33,
+        "detection_recall": 0.97,
+        "cited_recall": 0.909,
+        "false_positive_detections": 6
+      }
+    },
+    "complete": true
+  },
+  "errors": []
+}
