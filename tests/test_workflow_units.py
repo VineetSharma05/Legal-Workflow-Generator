@@ -741,3 +741,54 @@ def test_out_of_scope_query_abstains_without_any_llm_call(wired, monkeypatch):
     monkeypatch.setattr(N, "_catalog", lambda: SCOPE_CATALOG)
     out = run_workflow("what is the penalty under section 999 of the DPDP Act", as_of="2026-10-15")
     assert out["abstain"] and "section 999" in out["abstain_reason"] and wired.calls == []
+
+
+# ── select_context: grader picks the generator's context from a wider pool ─────────
+def _pool(*ids, anchor=()):
+    return [{"provision_id": i, "title": i, "text": "t", "anchor": i in anchor} for i in ids]
+
+
+def test_grade_select_keeps_only_pool_ids_in_order(monkeypatch):
+    pool = _pool("a_sec_1", "a_sec_2", "a_sec_3")
+    monkeypatch.setattr(N, "_llm", lambda *a, **k:
+                        '{"grade": "sufficient", "reason": "r", "relevant": ["a_sec_3", "made_up_sec_9", "A_SEC_1", "a_sec_3"]}')
+    grade, reason, picked = N._grade_select("employment", "q", pool)
+    assert grade == "sufficient" and picked == ["a_sec_3", "a_sec_1"]
+
+
+def test_grade_select_unparseable_reply_is_insufficient(monkeypatch):
+    monkeypatch.setattr(N, "_llm", lambda *a, **k: "no json here")
+    assert N._grade_select("employment", "q", _pool("a_sec_1"))[0] == "insufficient"
+
+
+def test_keep_selected_adds_picks_to_the_ordinary_window():
+    pool = _pool("anc_1", *[f"r{i}" for i in range(20)], "sug_1", anchor=("anc_1",))
+    kept = [d["provision_id"] for d in N._keep_selected(pool, ["r15", "r2"], ["sug_1"], ["r0", "r1", "r2"])]
+    assert kept == ["r15", "r2", "r0", "r1", "anc_1", "sug_1"]     # picks first, window, then anchors + suggestions
+
+
+def test_keep_selected_pads_small_context_and_defaults_window():
+    pool = _pool(*[f"r{i}" for i in range(15)])
+    assert [d["provision_id"] for d in N._keep_selected(pool, [], [], ["r3"])] == ["r3", "r0", "r1", "r2", "r4"]
+    kept = N._keep_selected(pool, [], [])
+    assert kept == N._cut(pool, S.current_settings())             # default window: the ordinary top_k cut
+
+
+def test_generator_prompt_lists_key_provisions(monkeypatch):
+    seen = {}
+
+    def fake_llm(*args, **kwargs):      # works for _llm(system, user) and the structured _llm(Schema, system, user)
+        seen["u"] = next(a for a in args if isinstance(a, str) and "Legal area:" in a)
+        return '{"steps": []}'
+    monkeypatch.setattr(N, "_llm", fake_llm)
+    N._generate_domain("employment", "q", _pool("a_sec_1"), ["a_sec_1"])
+    assert "marked these provisions as needed for a complete answer: a_sec_1" in seen["u"]
+    seen.clear()
+    N._generate_domain("employment", "q", _pool("a_sec_1"))
+    assert "marked these provisions" not in seen["u"]
+
+
+def test_select_settings_validated():
+    with pytest.raises(ValueError):
+        S.RunSettings(select_pool=0)
+    assert S.RunSettings.from_config({"configurable": {"select_context": "true", "select_pool": "16"}}).select_pool == 16
