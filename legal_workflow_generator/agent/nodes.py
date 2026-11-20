@@ -885,18 +885,6 @@ Use plain topic words. Do NOT cite section numbers you are not certain exist."""
         return sub_q
 
 
-def _focus_query(domain: str, sub_q: str, fallback: str) -> str:
-    system = "You are a legal search query writer."
-    user = f"""Rewrite this question as a short standalone search query covering ONLY the
-{_DOMAIN_LABELS[domain]} aspects. Keep the concrete nouns and drop all other legal areas.
-
-Question: {sub_q}"""
-    try:
-        return _llm(SearchQuery, system, user).query.strip() or fallback
-    except Exception:
-        return fallback
-
-
 MAX_ASPECTS = 4
 
 # ── LLM-suggested provisions ─────────────────────────────────────────────────
