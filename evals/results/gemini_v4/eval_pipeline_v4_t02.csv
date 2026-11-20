@@ -1,0 +1,3 @@
+query,category,expected_domains,predicted_domains,primary_domain,domain_recall,domain_precision,domain_exact_match,citation_recall,citation_domain_coverage,abstained,abstain_correct,retry_count_retrieval,retry_count_generation,elapsed_seconds
+what notice must a data fiduciary give before collecting personal data,single,data_protection,data_protection,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,72.98
+how quickly must we report a personal data breach to the Data Protection Board and affected users,single,data_protection,data_protection,data_protection,1.0,1.0,True,1.0,1.0,False,True,0,0,154.03

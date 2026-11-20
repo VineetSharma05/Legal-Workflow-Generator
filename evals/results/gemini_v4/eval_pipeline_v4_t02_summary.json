@@ -1,0 +1,54 @@
+{
+  "summary": {
+    "provider": "gemini",
+    "model": "models/gemini-3.1-flash-lite",
+    "as_of": "2026-10-15",
+    "tag": "pipeline_v4_t02",
+    "options": {
+      "suggest_provisions": "true",
+      "select_context": "true"
+    },
+    "tokens": 24670,
+    "total": 100,
+    "scored": 2,
+    "errored": 0,
+    "overall": {
+      "n": 2,
+      "domain_recall": 1.0,
+      "domain_precision": 1.0,
+      "domain_exact_match": 1.0,
+      "primary_domain_accuracy": 1.0,
+      "citation_recall": 1.0,
+      "citation_domain_coverage": 1.0,
+      "answered_pct": 100.0,
+      "false_abstain_rate": 0.0,
+      "abstain_accuracy": null,
+      "avg_elapsed_seconds": 113.505
+    },
+    "by_category": {
+      "single": {
+        "n": 2,
+        "domain_recall": 1.0,
+        "domain_precision": 1.0,
+        "domain_exact_match": 1.0,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 1.0,
+        "citation_domain_coverage": 1.0,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 113.505
+      }
+    },
+    "per_domain": {
+      "data_protection": {
+        "n": 2,
+        "detection_recall": 1.0,
+        "cited_recall": 1.0,
+        "false_positive_detections": 0
+      }
+    },
+    "complete": false
+  },
+  "errors": []
+}
