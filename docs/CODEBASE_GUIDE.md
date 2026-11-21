@@ -47,7 +47,7 @@ For each detected domain, a worker runs concurrently (with `contextvars` propaga
 
 | Path | Role |
 |---|---|
-| [app.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/app.py) | FastAPI web server serving the chat/inspector UI (`/`) and API endpoints (`/api/chat`, `/api/test/query`, `/api/test/rag`). |
+| [app.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/app.py) | FastAPI web server with startup pre-warming (`lifespan`), serving the chat/inspector UI (`/`) and API endpoints (`/api/chat`, `/api/chat/stream` SSE, `/api/test/query`, `/api/test/rag`). |
 | [main.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/main.py) | CLI entrypoint for database lifecycle: `setup`, `ingest [condensed\|complete]`, `embed [all]`, `extract-keywords`. |
 | [docker-compose.yml](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docker-compose.yml) | Spins up `pgvector/pgvector:pg17` Postgres container on port `5432`. |
 | [pyproject.toml](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/pyproject.toml) | Project dependencies (`uv`), `pytest` configuration (deselects `integration` by default), and `coverage` settings. |
@@ -68,12 +68,13 @@ For each detected domain, a worker runs concurrently (with `contextvars` propaga
 The heart of Phase 3 (self-corrective, multi-domain agentic RAG).
 - [graph.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/graph.py): Defines the `StateGraph`, conditional routing (`route_after_classify`, `route_after_domain_pipeline`, `route_after_grades`), compiles the singleton `graph`, and exposes `run_workflow(query, ...)`.
 - [state.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/state.py): Defines `AgentState(TypedDict)` carrying query metadata, retrieved docs, per-domain results, grades, retry counters, and execution trace.
-- [nodes.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/nodes.py): Implements all graph nodes (`classify_query`, `domain_pipeline`, `verify_citations`, `grade_parallel`, `stitch_answer`, `abstain`), typed dataclasses (`Provision`, `Step`, `DomainResult`), corpus/anchor lookups, v4 context selection (`_grade_select`, `_keep_selected`), temporal filtering, and the unified `_llm()` retry/rate-limit boundary.
+- [models.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/models.py): Typed dataclasses (`Provision`, `Step`, `DomainResult`), `LLMUnavailable`, and domain constants (`VALID_DOMAINS`, `_DOMAIN_ORDER`, `_DOMAIN_LABELS`, `APPLIES_TO`).
+- [prompts.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/prompts.py): Prompt builders (`grade_domain_prompt`, `generate_domain_prompt`) for per-domain grading and workflow generation.
+- [nodes.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/nodes.py): Implements all graph nodes (`classify_query`, `domain_pipeline`, `verify_citations`, `grade_parallel`, `stitch_answer`, `abstain`), corpus/anchor lookups, v4 context selection (`_grade_select`, `_keep_selected`), temporal filtering, and the unified `_llm()` retry/rate-limit boundary.
 - [settings.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/settings.py): Immutable `RunSettings` dataclass + `contextvars` helpers (`use_settings`, `current_settings`, `build_config`) so per-request options (`provider`, `top_k`, `as_of`, `verify_claims`, `select_context`, `select_pool`, `select_max`, `fusion`, etc.) flow through LangGraph `config` into parallel worker threads.
 - [llm_limits.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/llm_limits.py): Process-wide sliding-window RPM + in-flight concurrency `RateLimiter` (`LIMITERS["gemini"]`, `LIMITERS["groq"]`).
 - [gemini_client.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/gemini_client.py): `RotatingGeminiClient` and `KeyPool` supporting comma-separated `GEMINI_API_KEY` rotation with per-key cooldowns and token usage tracking (`USAGE`).
 - [groq_client.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/groq_client.py): Token-per-minute (TPM) paced Groq completion client with usage tracking and daily-limit detection (`GroqDailyLimit`).
-- [prompts.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/prompts.py): **Empty file** (prompts live inline in `nodes.py`).
 
 ### `legal_workflow_generator/llm/` — Shared LangChain & Structured Output Layer
 - [__init__.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/llm/__init__.py): Cached `chat_model()` (Gemini) and `groq_chat_model()` (Groq), plus `structured_llm()` and `invoke_structured()` which enforce Pydantic validation and raise `StructuredOutputError` on schema mismatches.
@@ -97,11 +98,10 @@ Transforms raw text (or PDF) into a structured `LegalContext`.
 - [generator.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/rag/generator.py): Phase 2 free-form markdown answer generators (`GeminiAnswerGenerator`, `GroqAnswerGenerator`).
 - [pipeline.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/rag/pipeline.py): `RagPipeline` — wraps `HybridSearcher` + `AnswerGenerator` (used by `/api/test/rag`, `demo_query_rag.py`, and as the search backend inside `agent/nodes.py`).
 
-### `legal_workflow_generator/config/`, `typings/`, `presentation/`, `workflow/`
+### `legal_workflow_generator/config/`, `typings/`, `presentation/`
 - [config/values.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/config/values.py): Loads `.env` from repo root; validates required env vars (`PGPASSWORD`, `GEMINI_API_KEY`) and exposes DB, Gemini, Groq, and context-resolver settings.
 - [typings/types.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/typings/types.py): Shared `TypedDict`s (`LawSchema`, `NormalizedQuery`, `LegalContext`) and `QueryIntent` enum.
-- `presentation/static/` ([index.html](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/presentation/static/index.html), [app.js](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/presentation/static/app.js), [style.css](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/presentation/static/style.css)): Single-page chat and pipeline-inspector frontend served by `app.py`.
-- `workflow/` ([__init__.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/workflow/__init__.py), [evaluator.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/workflow/evaluator.py)): **Empty placeholder package**.
+- `presentation/static/` ([index.html](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/presentation/static/index.html), [app.js](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/presentation/static/app.js), [style.css](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/presentation/static/style.css)): Single-page chat and real-time streaming pipeline-inspector frontend served by `app.py`.
 
 ---
 
@@ -133,45 +133,17 @@ Transforms raw text (or PDF) into a structured `LegalContext`.
 - `tests/browser/` ([test_workflow_inspector.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/tests/browser/test_workflow_inspector.py)): Browser UI test for the workflow inspector.
 
 ### `docs/`
-- [PHASE3_EVAL_RESULTS.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/PHASE3_EVAL_RESULTS.md), [DOMAIN_CLASSIFICATION_RELIABILITY.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/DOMAIN_CLASSIFICATION_RELIABILITY.md), [EVAL_STATUS.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/EVAL_STATUS.md), [architecture.png](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/architecture.png), plus temporary/draft files (`temp.md`, `temp.pdf`, `workflow_pseudocode.py`).
+- [CODEBASE_GUIDE.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/CODEBASE_GUIDE.md), [TESTS_AND_EVALS_GUIDE.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/TESTS_AND_EVALS_GUIDE.md), [CODE_ISSUES_AND_GAPS.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/CODE_ISSUES_AND_GAPS.md), [PHASE3_EVAL_RESULTS.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/PHASE3_EVAL_RESULTS.md), [DOMAIN_CLASSIFICATION_RELIABILITY.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/DOMAIN_CLASSIFICATION_RELIABILITY.md), [EVAL_STATUS.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/EVAL_STATUS.md), [architecture.png](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/architecture.png), and [workflow_pseudocode.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/workflow_pseudocode.py).
 
 ---
 
-## 5. Possible Dead Code & Cleanup Candidates
+## 5. Remaining Optional Cleanup Candidates
 
-### A. Empty / Stub Files
-| File | Details |
+*(Empty stubs, unused functions/constants/imports, duplicate `AgentState` fields, stale `/api/test/classify` reference, and `temp.*` files have already been cleaned up.)*
+
+| File / Folder | Details |
 |---|---|
-| [legal_workflow_generator/agent/prompts.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/prompts.py) | 0 bytes. Never imported; all prompts are defined inline in `agent/nodes.py`. |
-| [legal_workflow_generator/workflow/__init__.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/workflow/__init__.py) | 0 bytes. Unused package. |
-| [legal_workflow_generator/workflow/evaluator.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/workflow/evaluator.py) | 0 bytes. Never imported; evaluation logic lives in `evals/`. |
-
-### B. Unused Functions, Constants, and Imports
-| Location | Symbol | Details |
-|---|---|---|
-| [app.py:55](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/app.py#L55) | `_serialize_context()` | Completely unused helper (leftover from before `/api/test/query` switched to `agent_classify_query`). |
-| [legal_workflow_generator/agent/nodes.py:888](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/nodes.py#L888) | `_focus_query()` | **Test-only dead code** — never called anywhere in `nodes.py` or production code; only referenced in [tests/test_structured_output.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/tests/test_structured_output.py). |
-| [legal_workflow_generator/rag/embeddings.py:13](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/rag/embeddings.py#L13) | `EMBEDDING_DIM` | Defined at module level, never referenced anywhere in the repo. |
-| [legal_workflow_generator/agent/nodes.py:26](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/nodes.py#L26) | `TypedDict` | Unused import. |
-
-### C. Duplicate Declarations & No-Op Code
-| Location | Details |
-|---|---|
-| [legal_workflow_generator/agent/state.py:56-59](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/state.py#L56-L59) | `domain_results`, `domain_gaps`, and `stitched_answer` are declared **twice** in `AgentState` (first on lines 30–33, then again on lines 56–59). |
-| [legal_workflow_generator/agent/nodes.py:323](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/nodes.py#L323) & [L744](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/agent/nodes.py#L744) | `DOMAIN_QUERY_HINTS = {d: "" for d in VALID_DOMAINS}` — intentionally emptied ("Per-domain query hints were removed"), so the lookup at line 744 is always a no-op `""`. |
-
-### D. Broken / Stale Route Reference
-| Location | Details |
-|---|---|
-| [legal_workflow_generator/presentation/static/app.js:693](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/legal_workflow_generator/presentation/static/app.js#L693) | References `/api/test/classify`, which does not exist in [app.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/app.py) (only `/api/chat`, `/api/test/query`, and `/api/test/rag` are registered). |
-
-### E. Temporary / Scratch / Superseded Files
-| File | Details |
-|---|---|
-| [datasets/temp.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/datasets/temp.py) | One-off merge script referencing `./combined_dataset.json` and `./softwarelicensing.json` (stale paths; datasets now live in `datasets/complete/` and `datasets/condensed/`). |
-| [datasets/extract_pdf_text.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/datasets/extract_pdf_text.py) | Explicitly marked `"Temporary utility"` in its docstring for one-time PDF text dumping. |
-| [docs/temp.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/temp.md) | Outdated gap analysis written against an older linear version of `agent/nodes.py` before parallel domain workers and stitching were implemented. |
-| [docs/temp.pdf](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/temp.pdf) | Temporary PDF artifact in `docs/`. |
-| [docs/workflow_pseudocode.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/workflow_pseudocode.py) | Non-runnable pseudocode sketch; superseded by the actual implementation in `agent/graph.py` and `agent/nodes.py`. |
+| [datasets/extract_pdf_text.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/datasets/extract_pdf_text.py) | Marked `"Temporary utility"` in its docstring for one-time PDF text dumping. |
+| [docs/workflow_pseudocode.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/docs/workflow_pseudocode.py) | Non-runnable pseudocode sketch; superseded by `agent/graph.py` and `agent/nodes.py`. |
 | [evals/eval_pipeline_10query.py](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/evals/eval_pipeline_10query.py) | Small ad-hoc 10-query smoke eval script; superseded by `eval_complete_multidomain.py` / `eval_pipeline.py`. |
 | `evals/results/gemini_v2/v3_default_temp/` & `evals/results/gemini_v4/v4_default_temp/` | Partial default-temperature judge runs explicitly marked as superseded in [evals/results/RUNS.md](file:///Users/yathartha/Desktop/Legal-Workflow-Generator/evals/results/RUNS.md). |

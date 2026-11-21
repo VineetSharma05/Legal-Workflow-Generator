@@ -66,120 +66,22 @@ _context_resolver = LegalContextResolver()
 _rag_pipeline = None
 _gemini_client = RotatingGeminiClient()
 
-VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
-
-_DOMAIN_ORDER = ["corporate_governance", "data_protection", "ip_licensing", "taxation", "employment"]
-_DOMAIN_LABELS = {
-    "corporate_governance": "Corporate Governance",
-    "data_protection": "Data Protection",
-    "ip_licensing": "Intellectual Property",
-    "taxation": "Taxation & GST",
-    "employment": "Employment & Workplace",
-}
-APPLIES_TO = ("private", "government", "both", "unspecified")
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Typed models
-# ══════════════════════════════════════════════════════════════════════════════
-@dataclass
-class Provision:
-    """A retrieved statutory provision. Typed at the worker boundary; `.get()` and `[]` keep the
-    dict-style call sites working. Unknown keys from the searcher are dropped by `from_dict`."""
-    provision_id: str
-    title: str = ""
-    text: str = ""
-    full_text: str = ""           # title + sub_structure clauses + text (see _full_text)
-    plain_english_summary: str = ""
-    statute_id: str = ""
-    number: str = ""
-    bm25_score: float | None = None
-    semantic_score: float | None = None
-    combined_score: float | None = None
-    anchor: bool = False
-    effective_date: Any = None    # datetime.date | None
-
-    _FIELDS = ("provision_id", "title", "text", "full_text", "plain_english_summary", "statute_id",
-               "number", "bm25_score", "semantic_score", "combined_score", "anchor", "effective_date")
-
-    _TEXT_FIELDS = ("title", "text", "full_text", "plain_english_summary", "statute_id", "number")
-
-    @classmethod
-    def from_dict(cls, d: dict) -> "Provision":
-        """Build from a searcher / DB row dict. Unknown keys are ignored; None text fields become ''."""
-        kwargs = {k: d[k] for k in cls._FIELDS if k in d}
-        for k in cls._TEXT_FIELDS:
-            if k in kwargs and kwargs[k] is None:
-                kwargs[k] = ""
-        return cls(**kwargs)
-
-    def to_dict(self) -> dict:
-        return {k: getattr(self, k) for k in self._FIELDS}
-
-    def get(self, key: str, default: Any = None) -> Any:
-        return getattr(self, key, default) if key in self._FIELDS else default
-
-    def __getitem__(self, key: str) -> Any:
-        if key not in self._FIELDS:
-            raise KeyError(key)
-        return getattr(self, key)
-
-    def __contains__(self, key: str) -> bool:
-        return key in self._FIELDS
-
-
-@dataclass
-class Step:
-    """One action in the checklist, tied to exactly one cited provision."""
-    action: str
-    provision_id: str
-    applies_to: str = "unspecified"
-    verdict: str = "unchecked"        # entailed | partial | unchecked   (unsupported steps are dropped)
-    verdict_reason: str = ""
-    note: str = ""                    # temporal note, e.g. statute superseded
-
-    @classmethod
-    def from_llm(cls, raw: Any, valid_ids: dict) -> "Step | None":
-        """Validate one step dict from the LLM. `valid_ids` maps lower-case id -> canonical id."""
-        if not isinstance(raw, dict):
-            return None
-        pid = valid_ids.get(str(raw.get("provision_id", "")).strip().lower())
-        action = str(raw.get("action", "")).strip()
-        if not pid or not action:
-            return None
-        applies = str(raw.get("applies_to", "unspecified")).strip().lower()
-        return cls(action=action, provision_id=pid, applies_to=applies if applies in APPLIES_TO else "unspecified")
-
-
-@dataclass
-class DomainResult:
-    """Everything one domain worker produced."""
-    domain: str
-    docs: list = field(default_factory=list)            # list[Provision]
-    grade: str = "insufficient"                         # sufficient | insufficient | error
-    reason: str = ""
-    retries: int = 0
-    summary: list = field(default_factory=list)         # list[str]
-    steps: list = field(default_factory=list)           # list[Step]
-    dropped_steps: list = field(default_factory=list)   # list[Step] that failed claim verification
-    not_covered: str = ""
-    cited: list = field(default_factory=list)           # list[str] provision ids
-    key_ids: list = field(default_factory=list)         # select_context: provisions the grader marked as needed
-    verification: str = "off"                           # off | ok | skipped (checker unavailable/unparseable)
-    error: str = ""
-
-    def to_dict(self) -> dict:
-        d = asdict(self)
-        d["docs"] = [{"provision_id": p.get("provision_id"), "title": p.get("title"),
-                      "combined_score": p.get("combined_score")} for p in self.docs]
-        return d
+from legal_workflow_generator.agent.models import (  # noqa: F401 (re-exported)
+    APPLIES_TO,
+    DomainResult,
+    LLMUnavailable,
+    Provision,
+    Step,
+    VALID_DOMAINS,
+    _DOMAIN_LABELS,
+    _DOMAIN_ORDER,
+)
+from legal_workflow_generator.agent.prompts import generate_domain_prompt, grade_domain_prompt
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LLM access: providers, rate limiting, errors
 # ══════════════════════════════════════════════════════════════════════════════
-class LLMUnavailable(RuntimeError):
-    """The LLM could not be reached (quota / overload) after retries. Distinct from 'no provisions found'."""
 
 
 def _call_gemini(system: str, user: str, schema: type[T] | None = None):
@@ -773,20 +675,7 @@ def _chunks(docs: list, query: str, limit: int) -> str:
 
 
 def _grade_domain(domain: str, sub_q: str, docs: list) -> tuple:
-    system = "You are a legal relevance grader."
-    chunks = _chunks(docs, sub_q, 1500)
-    user = f"""Query ({_DOMAIN_LABELS[domain]} only): {sub_q}
-
-Retrieved provisions:
-{chunks}
-
-Grade ONLY whether these provisions answer this query.
-Ignore any other legal area; do not mention other legal areas in your reason.
-All provisions are Indian statutes and the user is an Indian business. A person, contractor or work being
-located abroad does NOT make Indian provisions irrelevant; judge whether the provision answers the question
-under Indian law.
-"sufficient": at least one provision directly addresses the query.
-"insufficient": the provisions are unrelated to it."""
+    system, user = grade_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 1500))
     try:
         result = _llm(RelevanceGrade, system, user)
         return result.grade, result.reason
@@ -1050,48 +939,7 @@ def _generate_domain(domain: str, sub_q: str, docs: list, key_ids: list = None) 
     `key_ids` (select_context): provisions the grader marked as needed; the generator is asked to write a step
     for each one its text supports. Every step still goes through the claim check."""
     valid_ids = {d.get("provision_id", "").lower(): d.get("provision_id", "") for d in docs if d.get("provision_id")}
-    key_rule = ""
-    if key_ids:
-        key_rule = (f"\n- A reviewer marked these provisions as needed for a complete answer: {', '.join(key_ids)}. "
-                    "Write at least one step for each of them, stating what that provision itself requires, allows "
-                    "or provides for this query. Leave one out only if its text, as given below, does not apply "
-                    "to the query.")
-    system = "You are a legal workflow assistant for Indian tech startups."
-    user = f"""Query: {sub_q}
-Legal area: {_DOMAIN_LABELS[domain]}
-
-Using ONLY the provisions below, list the compliance actions relevant to this legal area for the query.
-Do not invent sections or obligations. Address specifics in the query (company size, employee type, etc.).
-For each step, say who the provision applies to ("private", "government", "both" or "unspecified"), based only on the text.
-
-Rules:
-- Discuss ONLY {_DOMAIN_LABELS[domain]}. Do not mention other legal areas (tax, data protection, etc.) in the summary.
-- Include a step only if the provision directly responds to the query. Skip provisions that concern other kinds of
-  workplaces (factories, mines, plantations, schools) or are unrelated to the specific question.
-- If a provision states a default rule that answers the question (for example who is the first owner of a work,
-  or what the default is when a contract is silent), INCLUDE it as a step and state both the default and its exception.
-- A provision must answer the actual question asked. Do NOT include one merely because it shares a word with the
-  query (for example "abroad" or "contractor") if it regulates a different subject (such as accident compensation
-  or migrant-worker conditions). Leave it out.
-- A provision that only gives the government or a regulator a power (to make rules, appoint or pay members,
-  run its own proceedings) is not a duty of the user. Do not turn it into a step.
-- Definitions may be used to say who a duty applies to, but prefer the provisions that state the duties themselves.
-- Cite the provision that itself creates the duty, right, condition or consequence asked about. When rules,
-  regulations or directions given below spell out how to carry out a duty created by an Act section that is also
-  given below, write one step citing the Act section (the duty) and another citing the rule (the procedure,
-  timeline or form). Do not cite only the rule.
-- When one provision states a general rule and another covers the specific situation in the query, cite the
-  specific one, and also the general one if the answer depends on it.
-- If several provisions each answer a different part of the query, write a step for each of them.{key_rule}
-- If the query asks what a law is, base the summary on what the provisions say about its scope and purpose.
-- Provisions marked NOT YET IN FORCE still count: use them when they answer the query, because the user has to
-  prepare for them. Do not write commencement dates into the action text; the system adds them to each step.
-- If nothing in the provisions answers part of the query, say so in "not_covered" instead of padding the steps.
-
-Provisions:
-{_chunks(docs, sub_q, 3000)}
-
-"""
+    system, user = generate_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 3000), key_ids)
     try:
         p = _llm(domain_workflow_model(list(valid_ids.values())), system, user)
     except Exception as e:
