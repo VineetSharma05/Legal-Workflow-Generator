@@ -4,6 +4,9 @@ from sentence_transformers import SentenceTransformer
 import legal_workflow_generator.config.values as config
 from legal_workflow_generator.rag.bm25_retriever import BM25Retriever
 
+RRF_K = 60   # reciprocal rank fusion constant (Cormack et al., 2009)
+FUSION_MODES = ("linear", "minmax", "rrf")
+
 
 class HybridSearcher:
     def __init__(self, embedding_model="sentence-transformers/all-mpnet-base-v2"):
@@ -15,7 +18,8 @@ class HybridSearcher:
         """Build BM25 index"""
         self.bm25_retriever.build_index()
 
-    def search(self, query, top_k=3, bm25_candidates=20, vector_candidates=0, domain=None, prefixes=None):
+    def search(self, query, top_k=3, bm25_candidates=20, vector_candidates=0, domain=None, prefixes=None,
+               fusion="linear"):
         """
         Hybrid search:
         1. BM25 retrieves top `bm25_candidates`
@@ -107,6 +111,29 @@ class HybridSearcher:
                 "combined_score": combined_score,
             })
 
-        # Step 5: sort by combined score descending
-        results.sort(key=lambda x: x["combined_score"], reverse=True)
+        # Step 5: rank. "linear" sorts by combined_score. Cosine similarities of the candidates span a narrow band
+        # (about 0.2-0.3) while max-normalised BM25 spans about 0.8, so the linear mix is in practice ordered by
+        # BM25: a provision ranked 6th by meaning but 70th by keywords falls out of the list. "minmax" rescales
+        # the cosine to 0-1 over the candidates before the same 0.3/0.7 mix; "rrf" fuses the two rankings
+        # (reciprocal rank fusion, k=60). combined_score itself is left unchanged (domain detection sums it).
+        if fusion == "linear" or not results:
+            results.sort(key=lambda x: x["combined_score"], reverse=True)
+        elif fusion == "minmax":
+            lo = min(r["semantic_score"] for r in results)
+            hi = max(r["semantic_score"] for r in results)
+            span = (hi - lo) or 1.0
+            for r in results:
+                r["rank_score"] = 0.3 * r["bm25_score"] + 0.7 * (r["semantic_score"] - lo) / span
+            results.sort(key=lambda x: x["rank_score"], reverse=True)
+        elif fusion == "rrf":
+            by_bm25 = sorted(results, key=lambda x: x["bm25_score"], reverse=True)
+            by_sem = sorted(results, key=lambda x: x["semantic_score"], reverse=True)
+            rb = {r["provision_id"]: i for i, r in enumerate(by_bm25) if r["bm25_score"] > 0}
+            rs = {r["provision_id"]: i for i, r in enumerate(by_sem)}
+            for r in results:
+                pid = r["provision_id"]
+                r["rank_score"] = 1.0 / (RRF_K + rs[pid] + 1) + (1.0 / (RRF_K + rb[pid] + 1) if pid in rb else 0.0)
+            results.sort(key=lambda x: x["rank_score"], reverse=True)
+        else:
+            raise ValueError(f"unknown fusion {fusion!r}; use linear, minmax or rrf")
         return results[:top_k]

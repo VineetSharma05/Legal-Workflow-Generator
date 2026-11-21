@@ -1,0 +1,30 @@
+{
+  "tag": "dev_select",
+  "provider": "gemini",
+  "model": "models/gemini-3.1-flash-lite",
+  "as_of": "2026-10-15",
+  "temperature": "",
+  "settings": {
+    "top_k": 8,
+    "act_cap": 6,
+    "search_depth": 100,
+    "bm25_candidates": 300,
+    "vector_candidates": 100,
+    "max_domain_retries": 1,
+    "verify_claims": true,
+    "future_provisions": "annotate",
+    "domain_search": "global",
+    "suggest_provisions": true,
+    "suggest_cap": 4,
+    "statute_search": true,
+    "select_context": true,
+    "select_pool": 20,
+    "select_max": 10
+  },
+  "sessions": [
+    {
+      "started": "2026-11-19T13:06:27",
+      "commit": "3f2c4b3+dirty"
+    }
+  ]
+}

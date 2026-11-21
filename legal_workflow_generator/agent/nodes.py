@@ -22,7 +22,7 @@ import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 from typing import Any, TypedDict
 
 import psycopg2
@@ -66,119 +66,22 @@ _context_resolver = LegalContextResolver()
 _rag_pipeline = None
 _gemini_client = RotatingGeminiClient()
 
-VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
-
-_DOMAIN_ORDER = ["corporate_governance", "data_protection", "ip_licensing", "taxation", "employment"]
-_DOMAIN_LABELS = {
-    "corporate_governance": "Corporate Governance",
-    "data_protection": "Data Protection",
-    "ip_licensing": "Intellectual Property",
-    "taxation": "Taxation & GST",
-    "employment": "Employment & Workplace",
-}
-APPLIES_TO = ("private", "government", "both", "unspecified")
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Typed models
-# ══════════════════════════════════════════════════════════════════════════════
-@dataclass
-class Provision:
-    """A retrieved statutory provision. Typed at the worker boundary; `.get()` and `[]` keep the
-    dict-style call sites working. Unknown keys from the searcher are dropped by `from_dict`."""
-    provision_id: str
-    title: str = ""
-    text: str = ""
-    full_text: str = ""           # title + sub_structure clauses + text (see _full_text)
-    plain_english_summary: str = ""
-    statute_id: str = ""
-    number: str = ""
-    bm25_score: float | None = None
-    semantic_score: float | None = None
-    combined_score: float | None = None
-    anchor: bool = False
-    effective_date: Any = None    # datetime.date | None
-
-    _FIELDS = ("provision_id", "title", "text", "full_text", "plain_english_summary", "statute_id",
-               "number", "bm25_score", "semantic_score", "combined_score", "anchor", "effective_date")
-
-    _TEXT_FIELDS = ("title", "text", "full_text", "plain_english_summary", "statute_id", "number")
-
-    @classmethod
-    def from_dict(cls, d: dict) -> "Provision":
-        """Build from a searcher / DB row dict. Unknown keys are ignored; None text fields become ''."""
-        kwargs = {k: d[k] for k in cls._FIELDS if k in d}
-        for k in cls._TEXT_FIELDS:
-            if k in kwargs and kwargs[k] is None:
-                kwargs[k] = ""
-        return cls(**kwargs)
-
-    def to_dict(self) -> dict:
-        return {k: getattr(self, k) for k in self._FIELDS}
-
-    def get(self, key: str, default: Any = None) -> Any:
-        return getattr(self, key, default) if key in self._FIELDS else default
-
-    def __getitem__(self, key: str) -> Any:
-        if key not in self._FIELDS:
-            raise KeyError(key)
-        return getattr(self, key)
-
-    def __contains__(self, key: str) -> bool:
-        return key in self._FIELDS
-
-
-@dataclass
-class Step:
-    """One action in the checklist, tied to exactly one cited provision."""
-    action: str
-    provision_id: str
-    applies_to: str = "unspecified"
-    verdict: str = "unchecked"        # entailed | partial | unchecked   (unsupported steps are dropped)
-    verdict_reason: str = ""
-    note: str = ""                    # temporal note, e.g. statute superseded
-
-    @classmethod
-    def from_llm(cls, raw: Any, valid_ids: dict) -> "Step | None":
-        """Validate one step dict from the LLM. `valid_ids` maps lower-case id -> canonical id."""
-        if not isinstance(raw, dict):
-            return None
-        pid = valid_ids.get(str(raw.get("provision_id", "")).strip().lower())
-        action = str(raw.get("action", "")).strip()
-        if not pid or not action:
-            return None
-        applies = str(raw.get("applies_to", "unspecified")).strip().lower()
-        return cls(action=action, provision_id=pid, applies_to=applies if applies in APPLIES_TO else "unspecified")
-
-
-@dataclass
-class DomainResult:
-    """Everything one domain worker produced."""
-    domain: str
-    docs: list = field(default_factory=list)            # list[Provision]
-    grade: str = "insufficient"                         # sufficient | insufficient | error
-    reason: str = ""
-    retries: int = 0
-    summary: list = field(default_factory=list)         # list[str]
-    steps: list = field(default_factory=list)           # list[Step]
-    dropped_steps: list = field(default_factory=list)   # list[Step] that failed claim verification
-    not_covered: str = ""
-    cited: list = field(default_factory=list)           # list[str] provision ids
-    verification: str = "off"                           # off | ok | skipped (checker unavailable/unparseable)
-    error: str = ""
-
-    def to_dict(self) -> dict:
-        d = asdict(self)
-        d["docs"] = [{"provision_id": p.get("provision_id"), "title": p.get("title"),
-                      "combined_score": p.get("combined_score")} for p in self.docs]
-        return d
+from legal_workflow_generator.agent.models import (  # noqa: F401 (re-exported)
+    APPLIES_TO,
+    DomainResult,
+    LLMUnavailable,
+    Provision,
+    Step,
+    VALID_DOMAINS,
+    _DOMAIN_LABELS,
+    _DOMAIN_ORDER,
+)
+from legal_workflow_generator.agent.prompts import generate_domain_prompt, grade_domain_prompt
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LLM access: providers, rate limiting, errors
 # ══════════════════════════════════════════════════════════════════════════════
-class LLMUnavailable(RuntimeError):
-    """The LLM could not be reached (quota / overload) after retries. Distinct from 'no provisions found'."""
 
 
 def _call_gemini(system: str, user: str, schema: type[T] | None = None):
@@ -648,12 +551,13 @@ def _el(t0: float) -> str:
 
 
 def _hybrid_search(rag, query: str, s: RunSettings, domain: str | None = None) -> list:
+    extra = {} if s.fusion == "linear" else {"fusion": s.fusion}     # linear = the searcher's default
     if domain and s.domain_search == "domain":
         return rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates,
-                                   vector_candidates=s.vector_candidates, domain=domain)
+                                   vector_candidates=s.vector_candidates, domain=domain, **extra)
     try:
         return rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates,
-                                   vector_candidates=s.vector_candidates)
+                                   vector_candidates=s.vector_candidates, **extra)
     except TypeError:   # older HybridSearcher without vector_candidates
         return rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates)
 
@@ -743,8 +647,10 @@ def _domain_candidates(rag, query: str, domain: str, prefixes=None) -> list:
     s = current_settings()
     hint = DOMAIN_QUERY_HINTS.get(domain, "")
     if prefixes:
+        extra = {} if s.fusion == "linear" else {"fusion": s.fusion}
         docs = rag.searcher.search(query, top_k=s.search_depth, bm25_candidates=s.bm25_candidates,
-                                   vector_candidates=s.vector_candidates, domain=domain, prefixes=prefixes)
+                                   vector_candidates=s.vector_candidates, domain=domain, prefixes=prefixes,
+                                   **extra)
     else:
         docs = _hybrid_search(rag, f"{query} {hint}".strip(), s, domain)
     docs = [d for d in docs if "_forms_" not in d.get("provision_id", "")
@@ -769,20 +675,7 @@ def _chunks(docs: list, query: str, limit: int) -> str:
 
 
 def _grade_domain(domain: str, sub_q: str, docs: list) -> tuple:
-    system = "You are a legal relevance grader."
-    chunks = _chunks(docs, sub_q, 1500)
-    user = f"""Query ({_DOMAIN_LABELS[domain]} only): {sub_q}
-
-Retrieved provisions:
-{chunks}
-
-Grade ONLY whether these provisions answer this query.
-Ignore any other legal area; do not mention other legal areas in your reason.
-All provisions are Indian statutes and the user is an Indian business. A person, contractor or work being
-located abroad does NOT make Indian provisions irrelevant; judge whether the provision answers the question
-under Indian law.
-"sufficient": at least one provision directly addresses the query.
-"insufficient": the provisions are unrelated to it."""
+    system, user = grade_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 1500))
     try:
         result = _llm(RelevanceGrade, system, user)
         return result.grade, result.reason
@@ -790,6 +683,78 @@ under Indian law.
         return "insufficient", "Could not parse grader response"
     except Exception:
         raise
+
+
+SELECT_MIN = 5      # if the grader picks fewer, the pool's best-ranked provisions fill the context up to this size
+
+
+def _grade_select(domain: str, sub_q: str, pool: list) -> tuple:
+    """Grade + select in one call (settings.select_context). Returns (grade, reason, picked ids in order).
+
+    The grader sees a wider candidate pool than the generator would (short snippets) and names the provisions a
+    complete answer must cite. This recovers provisions that retrieval ranks 9th-20th (the generator used to see
+    only the top 8) and gives the generator a tighter, ordered context. Picks are restricted to pool ids."""
+    s = current_settings()
+    system = "You are a legal relevance grader. Reply in JSON only."
+    user = f"""Query ({_DOMAIN_LABELS[domain]} only): {sub_q}
+
+Candidate provisions:
+{_chunks(pool, sub_q, 700)}
+
+Ignore any other legal area; do not mention other legal areas in your reason.
+All provisions are Indian statutes and the user is an Indian business. A person, contractor or work being
+located abroad does NOT make Indian provisions irrelevant; judge whether the provision answers the question
+under Indian law.
+
+1. "grade": "sufficient" if at least one candidate directly addresses the query, "insufficient" if they are
+   all unrelated to it. If the query asks about the obligations under a foreign law (for example the EU GDPR or a
+   US statute) for a business that Indian law does not reach, the grade is "insufficient": Indian provisions on a
+   similar topic do not answer a question about a foreign law.
+2. "relevant": the identifiers of the candidates that a thorough lawyer answering this query would cite, most
+   important first, at most {s.select_max}. Be complete rather than minimal: a provision that answers any part
+   of the query belongs in the list. Include:
+   - the provision that itself creates the duty, right, condition, prohibition, liability or consequence asked
+     about (for example the section that imposes the tax, requires the contribution or makes the agreement void);
+   - the rule, regulation or direction that gives its procedure, timeline, rate or form, if one is listed;
+   - for each separate part of the query, the provision that answers that part;
+   - a definition only if the query asks what something means or who is covered.
+   Leave out provisions that merely share words with the query, that concern a different kind of entity or
+   workplace, or that only give the government or a regulator a power.
+
+Reply ONLY with:
+{{"grade": "sufficient" or "insufficient", "reason": "one sentence", "relevant": ["<identifier>", ...]}}"""
+    raw = _llm(system, user, grader=True)                       # LLMUnavailable propagates
+    try:
+        p = _parse_json(raw)
+    except Exception:
+        return "insufficient", "Could not parse grader response", []
+    valid = {d.get("provision_id", "").lower(): d.get("provision_id", "") for d in pool}
+    picked = []
+    for r in p.get("relevant") or []:
+        pid = valid.get(re.sub(r"[\s\[\]\"'`]", "", str(r)).lower())
+        if pid and pid not in picked:
+            picked.append(pid)
+    return p.get("grade", "insufficient"), p.get("reason", ""), picked[:s.select_max]
+
+
+def _keep_selected(pool: list, picked: list, suggested: list, window: list = None) -> list:
+    """Generator context under select_context: the grader's picks first (in its order), then the ordinary top_k
+    window, the planner's suggestions and the anchor provisions. Picks only ever ADD to the ordinary context
+    (on the dev set, replacing the window with the picks lost as many gold provisions as it gained).
+    `window`: ids of the ordinary top_k cut; defaults to the top_k cut of the pool's retrieved provisions."""
+    s = current_settings()
+    by_id = {d.get("provision_id"): d for d in pool}
+    sug = {i.lower() for i in suggested}
+    if window is None:
+        window = [d.get("provision_id") for d in _cut([d for d in pool if not d.get("anchor")
+                                                         and d.get("provision_id", "").lower() not in sug], s)]
+    order = list(picked) + list(window)
+    order += [d["provision_id"] for d in pool if d.get("anchor") or d.get("provision_id", "").lower() in sug]
+    for d in pool:
+        if len(dict.fromkeys(order)) >= SELECT_MIN:
+            break
+        order.append(d.get("provision_id"))
+    return [by_id[p] for p in dict.fromkeys(order) if p in by_id]
 
 
 def _rewrite_for_domain(domain: str, sub_q: str, reason: str) -> str:
@@ -807,18 +772,6 @@ Use plain topic words. Do NOT cite section numbers you are not certain exist."""
         raise
     except Exception:
         return sub_q
-
-
-def _focus_query(domain: str, sub_q: str, fallback: str) -> str:
-    system = "You are a legal search query writer."
-    user = f"""Rewrite this question as a short standalone search query covering ONLY the
-{_DOMAIN_LABELS[domain]} aspects. Keep the concrete nouns and drop all other legal areas.
-
-Question: {sub_q}"""
-    try:
-        return _llm(SearchQuery, system, user).query.strip() or fallback
-    except Exception:
-        return fallback
 
 
 MAX_ASPECTS = 4
@@ -981,45 +934,12 @@ def _fused_candidates(rag, queries: list, domain: str, named_from: str = "") -> 
     return [first[p] for p in head] + [d for p, d in first.items() if p not in score]
 
 
-def _generate_domain(domain: str, sub_q: str, docs: list) -> tuple:
-    """Returns (summary bullets, validated Steps, not_covered). Invented provision ids are dropped."""
+def _generate_domain(domain: str, sub_q: str, docs: list, key_ids: list = None) -> tuple:
+    """Returns (summary bullets, validated Steps, not_covered). Invented provision ids are dropped.
+    `key_ids` (select_context): provisions the grader marked as needed; the generator is asked to write a step
+    for each one its text supports. Every step still goes through the claim check."""
     valid_ids = {d.get("provision_id", "").lower(): d.get("provision_id", "") for d in docs if d.get("provision_id")}
-    system = "You are a legal workflow assistant for Indian tech startups."
-    user = f"""Query: {sub_q}
-Legal area: {_DOMAIN_LABELS[domain]}
-
-Using ONLY the provisions below, list the compliance actions relevant to this legal area for the query.
-Do not invent sections or obligations. Address specifics in the query (company size, employee type, etc.).
-For each step, say who the provision applies to ("private", "government", "both" or "unspecified"), based only on the text.
-
-Rules:
-- Discuss ONLY {_DOMAIN_LABELS[domain]}. Do not mention other legal areas (tax, data protection, etc.) in the summary.
-- Include a step only if the provision directly responds to the query. Skip provisions that concern other kinds of
-  workplaces (factories, mines, plantations, schools) or are unrelated to the specific question.
-- If a provision states a default rule that answers the question (for example who is the first owner of a work,
-  or what the default is when a contract is silent), INCLUDE it as a step and state both the default and its exception.
-- A provision must answer the actual question asked. Do NOT include one merely because it shares a word with the
-  query (for example "abroad" or "contractor") if it regulates a different subject (such as accident compensation
-  or migrant-worker conditions). Leave it out.
-- A provision that only gives the government or a regulator a power (to make rules, appoint or pay members,
-  run its own proceedings) is not a duty of the user. Do not turn it into a step.
-- Definitions may be used to say who a duty applies to, but prefer the provisions that state the duties themselves.
-- Cite the provision that itself creates the duty, right, condition or consequence asked about. When rules,
-  regulations or directions given below spell out how to carry out a duty created by an Act section that is also
-  given below, write one step citing the Act section (the duty) and another citing the rule (the procedure,
-  timeline or form). Do not cite only the rule.
-- When one provision states a general rule and another covers the specific situation in the query, cite the
-  specific one, and also the general one if the answer depends on it.
-- If several provisions each answer a different part of the query, write a step for each of them.
-- If the query asks what a law is, base the summary on what the provisions say about its scope and purpose.
-- Provisions marked NOT YET IN FORCE still count: use them when they answer the query, because the user has to
-  prepare for them. Do not write commencement dates into the action text; the system adds them to each step.
-- If nothing in the provisions answers part of the query, say so in "not_covered" instead of padding the steps.
-
-Provisions:
-{_chunks(docs, sub_q, 3000)}
-
-"""
+    system, user = generate_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 3000), key_ids)
     try:
         p = _llm(domain_workflow_model(list(valid_ids.values())), system, user)
     except Exception as e:
@@ -1119,7 +1039,12 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
             cands = _hydrate(cands)
             exclude = s.future_provisions == "exclude"
             live = [d for d in cands if _in_force(d, as_of)] if exclude else cands
-            docs = _hydrate(_with_suggested(suggested, _with_anchors(domain, user_q, _cut(live, s))))
+            window = _cut(live, s)
+            window_ids = [d.get("provision_id") for d in window]
+            if s.select_context:            # wider pool for the grader to choose from
+                pool_n = max(s.select_pool, s.top_k)
+                window = _cut(live, replace(s, top_k=pool_n, act_cap=max(s.act_cap, pool_n - 4)))
+            docs = _hydrate(_with_suggested(suggested, _with_anchors(domain, user_q, window)))
             if exclude:
                 docs = [d for d in docs if _in_force(d, as_of)]    # anchors are checked as well
             res.docs = [Provision.from_dict(d) for d in docs]     # typed from here on
@@ -1131,7 +1056,14 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
             if n_future:
                 trace.append(f"{_el(t0)}[{domain}] {n_future} provision(s) not yet in force on {as_of} "
                              f"(kept, steps flagged with their start date)")
-            if docs:
+            if docs and s.select_context:
+                res.grade, res.reason, picked = _grade_select(domain, sub_q, docs)
+                docs = _keep_selected(docs, picked, suggested, window_ids)
+                res.docs = [Provision.from_dict(d) for d in docs]
+                res.key_ids = picked
+                trace.append(f"{_el(t0)}[{domain}] grade → {res.grade}: {res.reason}")
+                trace.append(f"{_el(t0)}[{domain}] select → {picked} ({len(docs)} docs kept)")
+            elif docs:
                 res.grade, res.reason = _grade_domain(domain, sub_q, docs)
                 trace.append(f"{_el(t0)}[{domain}] grade → {res.grade}: {res.reason}")
             else:
@@ -1143,7 +1075,7 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
             trace.append(f"{_el(t0)}[{domain}] rewrite → '{q}'")
 
         if res.grade == "sufficient":
-            res.summary, steps, res.not_covered = _generate_domain(domain, sub_q, res.docs)
+            res.summary, steps, res.not_covered = _generate_domain(domain, sub_q, res.docs, res.key_ids)
             trace.append(f"{_el(t0)}[{domain}] generate → {len(steps)} steps")
             if steps and s.verify_claims:
                 steps, res.dropped_steps, msg = _verify_claims(domain, steps, res.docs)

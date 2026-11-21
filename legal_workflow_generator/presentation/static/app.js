@@ -28,11 +28,9 @@ const dom = {
     welcomeScreen:  $('#welcome-screen'),
     chatInput:      $('#chat-input'),
     sendBtn:        $('#send-btn'),
-    providerSelect: $('#provider-select'),
     topkSlider:     $('#topk-slider'),
     topkValue:      $('#topk-value'),
     labUnit:        $('#lab-unit'),
-    labProvider:    $('#lab-provider'),
     labTopk:        $('#lab-topk'),
     labTopkValue:   $('#lab-topk-value'),
     labQuery:       $('#lab-query'),
@@ -124,6 +122,72 @@ function onSendClick() {
 // Chat Messaging
 // ═══════════════════════════════════════════════════════════════════════════════
 
+const STAGE_NEXT_LABELS = {
+    classify_query:   'Retrieving statutory provisions & generating per-domain steps...',
+    domain_pipeline:  'Verifying statutory citations...',
+    verify_citations: 'Grading groundedness & answerability...',
+    grade_parallel:   'Finalizing compliance workflow...',
+    regenerate:       'Re-running domain workers to refine answer...',
+    stitch_answer:    'Preparing final response...',
+    abstain:          'Preparing response...',
+};
+
+function createLiveAssistantMessage() {
+    const row = document.createElement('div');
+    row.className = 'message assistant';
+
+    const avatar = document.createElement('div');
+    avatar.className = 'msg-avatar';
+    avatar.innerHTML = BOT_ICON;
+
+    const body = document.createElement('div');
+    body.className = 'msg-body';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'msg-bubble live-bubble';
+
+    const statusBar = document.createElement('div');
+    statusBar.className = 'live-status-bar';
+    statusBar.innerHTML = `<span class="live-dot"></span><span class="live-status-text">Classifying query &amp; detecting legal domains...</span>`;
+    bubble.appendChild(statusBar);
+
+    const pipelineSlot = document.createElement('div');
+    pipelineSlot.className = 'live-pipeline-slot';
+    bubble.appendChild(pipelineSlot);
+
+    body.appendChild(bubble);
+    row.appendChild(avatar);
+    row.appendChild(body);
+    dom.chatMessages.appendChild(row);
+    scrollToBottom();
+
+    return {
+        row,
+        setStatus(text) {
+            statusBar.querySelector('.live-status-text').textContent = text;
+        },
+        updatePipeline(pipeline, trace) {
+            pipelineSlot.innerHTML = '';
+            const inspector = renderPipelineInspector(pipeline, trace);
+            const toggle = inspector.querySelector('.pipeline-toggle');
+            const content = inspector.querySelector('.pipeline-content');
+            if (toggle) toggle.remove();
+            if (content) content.classList.add('open');
+
+            const stages = Array.from(inspector.querySelectorAll('.stage'));
+            const nonTrace = stages.filter(s => s.querySelector('.stage-name')?.textContent !== 'Full Trace');
+            const latest = nonTrace[nonTrace.length - 1] || stages[stages.length - 1];
+            if (latest) {
+                latest.classList.add('open');
+                const stageBody = latest.querySelector('.stage-body');
+                if (stageBody) stageBody.classList.add('open');
+            }
+            pipelineSlot.appendChild(inspector);
+            scrollToBottom();
+        },
+    };
+}
+
 async function sendChatMessage() {
     const query = dom.chatInput.value.trim();
     if (!query) return;
@@ -148,19 +212,16 @@ async function sendChatMessage() {
     dom.chatInput.style.height = 'auto';
     dom.sendBtn.disabled = true;
 
-    // Show typing indicator
+    // Show live streaming card
     app.isLoading = true;
-    const typingEl = showTypingIndicator();
-    scrollToBottom();
+    const live = createLiveAssistantMessage();
 
-    // Call API
     try {
-        const res = await fetch('/api/chat', {
+        const res = await fetch('/api/chat/stream', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 query,
-                provider: dom.providerSelect.value,
                 top_k: parseInt(dom.topkSlider.value),
             }),
         });
@@ -170,26 +231,61 @@ async function sendChatMessage() {
             throw new Error(err.detail || `HTTP ${res.status}`);
         }
 
-        const data = await res.json();
+        const reader = res.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+        let finalData = null;
 
-        // Remove typing indicator
-        typingEl.remove();
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
 
-        // Add assistant message
+            const frames = buffer.split('\n\n');
+            buffer = frames.pop();
+
+            for (const frame of frames) {
+                if (!frame.trim()) continue;
+                let eventType = 'message';
+                let dataStr = '';
+                for (const line of frame.split('\n')) {
+                    if (line.startsWith('event:')) eventType = line.slice(6).trim();
+                    else if (line.startsWith('data:')) dataStr += line.slice(5).trim();
+                }
+                if (!dataStr) continue;
+                const payload = JSON.parse(dataStr);
+
+                if (eventType === 'stage') {
+                    live.setStatus(STAGE_NEXT_LABELS[payload.node] || `Completed ${payload.node}...`);
+                    live.updatePipeline(payload.pipeline, payload.trace);
+                } else if (eventType === 'done') {
+                    finalData = payload;
+                } else if (eventType === 'error') {
+                    throw new Error(payload.detail || 'Pipeline error');
+                }
+            }
+        }
+
+        if (!finalData) {
+            throw new Error('Stream ended without a final response.');
+        }
+
+        live.row.remove();
+
         const assistantMsg = {
             id: genId(),
             role: 'assistant',
-            content: data.answer,
-            pipeline: data.pipeline,
-            trace: data.trace,
-            abstained: data.abstained,
+            content: finalData.answer,
+            pipeline: finalData.pipeline,
+            trace: finalData.trace,
+            abstained: finalData.abstained,
             timestamp: new Date(),
         };
         app.messages.push(assistantMsg);
         renderMessage(assistantMsg);
 
     } catch (err) {
-        typingEl.remove();
+        live.row.remove();
         renderErrorMessage(err.message);
     } finally {
         app.isLoading = false;
@@ -676,7 +772,6 @@ async function runLabTest() {
     }
 
     const unit = dom.labUnit.value;
-    const provider = dom.labProvider.value;
     const topK = parseInt(dom.labTopk.value);
 
     // Loading state
@@ -688,16 +783,15 @@ async function runLabTest() {
 
     // Map unit to endpoint
     const endpoints = {
-        query:    '/api/test/query',
-        rag:      '/api/test/rag',
-        classify: '/api/test/classify',
+        query: '/api/test/query',
+        rag:   '/api/test/rag',
     };
 
     try {
         const res = await fetch(endpoints[unit], {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ query, provider, top_k: topK }),
+            body: JSON.stringify({ query, top_k: topK }),
         });
 
         if (!res.ok) {

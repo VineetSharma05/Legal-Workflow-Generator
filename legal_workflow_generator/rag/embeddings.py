@@ -10,7 +10,6 @@ from legal_workflow_generator.rag.ingestion import searchable_text
 
 BATCH_SIZE = 100
 EMBEDDING_MODEL = "sentence-transformers/all-mpnet-base-v2"
-EMBEDDING_DIM = 768
 MAX_BATCH_ATTEMPTS = 3
 
 

@@ -131,7 +131,8 @@ python app.py
 Run the following command to view database statistics.
 
 ```bash
-python datasets/counter.py
+cd datasets
+python counter.py
 ```
 
 
