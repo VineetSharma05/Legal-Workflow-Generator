@@ -52,23 +52,6 @@ class TestRequest(BaseModel):
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
-def _serialize_context(ctx: dict) -> dict:
-    """Convert a LegalContext dict to a JSON-safe dict."""
-    intent = ctx.get("intent")
-    return {
-        "original_query": ctx.get("original_query"),
-        "normalized_query": ctx.get("normalized_query"),
-        "intent": intent.value if hasattr(intent, "value") else str(intent),
-        "legal_domain": ctx.get("legal_domain"),
-        "keywords": ctx.get("keywords", []),
-        "confidence": ctx.get("confidence"),
-        "keyword_domain": ctx.get("keyword_domain"),
-        "domain_agreement": ctx.get("domain_agreement"),
-        "domain_confidence": ctx.get("domain_confidence"),
-        "domain_source": ctx.get("domain_source"),
-    }
-
-
 def _safe_str(val, max_len: int = 600) -> str:
     """Stringify and optionally truncate a value."""
     s = str(val) if val is not None else ""

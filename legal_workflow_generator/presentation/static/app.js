@@ -688,9 +688,8 @@ async function runLabTest() {
 
     // Map unit to endpoint
     const endpoints = {
-        query:    '/api/test/query',
-        rag:      '/api/test/rag',
-        classify: '/api/test/classify',
+        query: '/api/test/query',
+        rag:   '/api/test/rag',
     };
 
     try {

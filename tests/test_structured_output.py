@@ -98,10 +98,9 @@ def test_grade_domain_parse_failure_is_reported_as_such(monkeypatch):
     assert nodes._grade_domain("employment", "q", DOCS) == ("insufficient", "Could not parse grader response")
 
 
-def test_rewrite_and_focus_fall_back_on_empty_query(monkeypatch):
+def test_rewrite_falls_back_on_empty_query(monkeypatch):
     _fake_llm(monkeypatch, SearchQuery(query="  "))
     assert nodes._rewrite_for_domain("employment", "orig", "reason") == "orig"
-    assert nodes._focus_query("employment", "orig", "fallback") == "fallback"
 
 
 def test_generate_domain_maps_structured_steps(monkeypatch):
