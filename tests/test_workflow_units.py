@@ -799,6 +799,8 @@ def test_generator_prompt_lists_key_provisions(monkeypatch):
 
     def fake_llm(*args, **kwargs):      # works for _llm(system, user) and the structured _llm(Schema, system, user)
         seen["u"] = next(a for a in args if isinstance(a, str) and "Legal area:" in a)
+        if args and isinstance(args[0], type):
+            return args[0](summary=[], steps=[], not_covered="")
         return '{"steps": []}'
     monkeypatch.setattr(N, "_llm", fake_llm)
     N._generate_domain("employment", "q", _pool("a_sec_1"), ["a_sec_1"])
