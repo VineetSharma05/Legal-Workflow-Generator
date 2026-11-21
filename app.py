@@ -23,12 +23,14 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """Pre-warm embedding model, BM25 index, domain map, and statute catalog on server startup."""
-    try:
-        agent_nodes._get_rag_pipeline()
-        agent_nodes._load_domain_map()
-        agent_nodes._catalog()
-    except Exception as e:
-        logger.warning("Startup pre-warm skipped: %s", e)
+    import os
+    if os.getenv("SKIP_PREWARM", "").strip().lower() not in ("1", "true", "yes"):
+        try:
+            agent_nodes._get_rag_pipeline()
+            agent_nodes._load_domain_map()
+            agent_nodes._catalog()
+        except Exception as e:
+            logger.warning("Startup pre-warm skipped: %s", e)
     yield
 
 

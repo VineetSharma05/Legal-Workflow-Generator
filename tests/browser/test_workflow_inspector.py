@@ -31,6 +31,7 @@ def _free_port() -> int:
 @pytest.fixture(scope="module")
 def base_url():
     import uvicorn
+    os.environ["SKIP_PREWARM"] = "1"
     import app as app_module   # imports the FastAPI app (no DB or LLM call at import time)
 
     port = _free_port()
@@ -120,15 +121,19 @@ def send_query(page, text="Who owns code written by a contractor?"):
     page.click("#send-btn")
 
 
+def sse_done(payload: dict) -> str:
+    return f"event: done\ndata: {json.dumps(payload)}\n\n"
+
+
 # ── tests ────────────────────────────────────────────────────────────────────
 def test_top_k_selected_in_the_ui_is_sent_to_the_api(page):
     captured = {}
 
     def handle(route):
         captured["body"] = json.loads(route.request.post_data)
-        route.fulfill(status=200, content_type="application/json", body=json.dumps(chat_fixture()))
+        route.fulfill(status=200, content_type="text/event-stream", body=sse_done(chat_fixture()))
 
-    page.route("**/api/chat", handle)
+    page.route("**/api/chat/stream", handle)
     page.eval_on_selector("#topk-slider", "el => { el.value = 4; el.dispatchEvent(new Event('input')); }")
     send_query(page)
     page.wait_for_selector("text=STITCHED ANSWER")
@@ -138,16 +143,16 @@ def test_top_k_selected_in_the_ui_is_sent_to_the_api(page):
 
 
 def test_answer_shows_the_knowledge_gap_section_returned_by_the_api(page):
-    page.route("**/api/chat", lambda r: r.fulfill(status=200, content_type="application/json",
-                                                  body=json.dumps(chat_fixture())))
+    page.route("**/api/chat/stream", lambda r: r.fulfill(status=200, content_type="text/event-stream",
+                                                         body=sse_done(chat_fixture())))
     send_query(page)
     page.wait_for_selector("text=KNOWLEDGE GAPS IDENTIFIED")
     assert page.locator("text=STITCHED ANSWER").count() == 1
 
 
 def test_inspector_shows_settings_and_per_domain_claim_verdicts(page):
-    page.route("**/api/chat", lambda r: r.fulfill(status=200, content_type="application/json",
-                                                  body=json.dumps(chat_fixture())))
+    page.route("**/api/chat/stream", lambda r: r.fulfill(status=200, content_type="text/event-stream",
+                                                         body=sse_done(chat_fixture())))
     send_query(page)
     page.wait_for_selector(".pipeline-toggle")
     page.click(".pipeline-toggle")
@@ -169,7 +174,7 @@ def test_inspector_shows_settings_and_per_domain_claim_verdicts(page):
 
 
 def test_api_error_is_shown_to_the_user(page):
-    page.route("**/api/chat", lambda r: r.fulfill(
+    page.route("**/api/chat/stream", lambda r: r.fulfill(
         status=400, content_type="application/json",
         body=json.dumps({"detail": "provider must be one of ('gemini', 'groq'), got 'openai'"})))
     send_query(page, "anything")
