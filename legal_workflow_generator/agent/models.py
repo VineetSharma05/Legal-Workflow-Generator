@@ -101,6 +101,7 @@ class DomainResult:
     dropped_steps: list = field(default_factory=list)   # list[Step] that failed claim verification
     not_covered: str = ""
     cited: list = field(default_factory=list)           # list[str] provision ids
+    key_ids: list = field(default_factory=list)         # list[str] provisions marked as needed by _grade_select
     verification: str = "off"                           # off | ok | skipped (checker unavailable/unparseable)
     error: str = ""
 
