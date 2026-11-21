@@ -37,6 +37,7 @@ pythonpath = ["."]
 addopts = "-m 'not integration'"
 markers = [
     "integration: needs a live Postgres database and/or Gemini API key (deselected by default)",
+    "browser: Playwright browser-level UI tests",
 ]
 
 [tool.coverage.run]

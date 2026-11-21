@@ -28,12 +28,12 @@ class StructuredOutputError(Exception):
 
 @lru_cache(maxsize=None)
 def chat_model(temperature: float | None = None) -> ChatGoogleGenerativeAI:
-    kwargs = {} if temperature is None else {"temperature": temperature}
+    temp = 0.0 if temperature is None else temperature
     return ChatGoogleGenerativeAI(
         model=GEMINI_MODEL,
         google_api_key=GEMINI_API_KEY,
         max_retries=MAX_RETRIES,
-        **kwargs,
+        temperature=temp,
     )
 
 

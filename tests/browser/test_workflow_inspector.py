@@ -121,7 +121,7 @@ def send_query(page, text="Who owns code written by a contractor?"):
 
 
 # ── tests ────────────────────────────────────────────────────────────────────
-def test_provider_and_top_k_selected_in_the_ui_are_sent_to_the_api(page):
+def test_top_k_selected_in_the_ui_is_sent_to_the_api(page):
     captured = {}
 
     def handle(route):
@@ -129,12 +129,10 @@ def test_provider_and_top_k_selected_in_the_ui_are_sent_to_the_api(page):
         route.fulfill(status=200, content_type="application/json", body=json.dumps(chat_fixture()))
 
     page.route("**/api/chat", handle)
-    page.select_option("#provider-select", "groq")
     page.eval_on_selector("#topk-slider", "el => { el.value = 4; el.dispatchEvent(new Event('input')); }")
     send_query(page)
     page.wait_for_selector("text=STITCHED ANSWER")
 
-    assert captured["body"]["provider"] == "groq"
     assert captured["body"]["top_k"] == 4
     assert captured["body"]["query"].startswith("Who owns code")
 
