@@ -362,7 +362,7 @@ def validate() -> int:
     """Offline check: every expected provision id exists in datasets/complete/."""
     known = set()
     for path in glob.glob(str(COMPLETE_DIR / "complete_*.json")):
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             known.update(o["provision_id"] for o in json.load(f))
 
     problems = []
@@ -703,6 +703,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--resume", action="store_true", help="Keep saved rows of this tag and run the rest.")
     parser.add_argument("--option", action="append", default=[], metavar="KEY=VALUE",
                         help="Extra RunSettings option, e.g. --option top_k=8 (repeatable).")
+    parser.add_argument("--test-set", choices=["main", "fresh"], default="main",
+                        help="main: the 100 development/test queries; fresh: the 50 held-out queries in "
+                             "evals/fresh_queries.py, written after v4 was frozen.")
     parser.add_argument("--queries-file", default=None,
                         help="Run only the queries listed in this file (one query text per line, exact match).")
     parser.add_argument("--summary", action="store_true", help="Only summarise the saved rows of --tag.")
@@ -714,6 +717,9 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_args()
+    if args.test_set == "fresh":
+        from fresh_queries import TEST_QUERIES as _FRESH
+        TEST_QUERIES = _FRESH
     if args.validate:
         sys.exit(validate())
 

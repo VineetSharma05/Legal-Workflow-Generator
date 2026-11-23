@@ -1,0 +1,43 @@
+{
+  "tag": "fresh_v4_t0",
+  "provider": "gemini",
+  "model": "models/gemini-3.1-flash-lite",
+  "as_of": "2026-10-15",
+  "temperature": "0",
+  "settings": {
+    "top_k": 8,
+    "act_cap": 6,
+    "search_depth": 100,
+    "bm25_candidates": 300,
+    "vector_candidates": 100,
+    "max_domain_retries": 1,
+    "verify_claims": true,
+    "future_provisions": "annotate",
+    "domain_search": "global",
+    "suggest_provisions": true,
+    "suggest_cap": 4,
+    "statute_search": true,
+    "select_context": true,
+    "select_pool": 20,
+    "select_max": 10,
+    "fusion": "linear"
+  },
+  "sessions": [
+    {
+      "started": "2026-11-21T22:46:31",
+      "commit": "24b7f60+dirty"
+    },
+    {
+      "started": "2026-11-21T23:35:18",
+      "commit": "24b7f60+dirty"
+    },
+    {
+      "started": "2026-11-22T07:06:34",
+      "commit": "24b7f60+dirty"
+    },
+    {
+      "started": "2026-11-22T07:11:16",
+      "commit": "24b7f60+dirty"
+    }
+  ]
+}
