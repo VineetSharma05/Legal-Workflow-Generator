@@ -5,9 +5,12 @@ the LLM, the searcher and the DB are replaced by fakes. Run from the project roo
     pytest tests/test_workflow_units.py -q
 """
 import datetime
+import json
 import random
+import re
 import threading
 import time
+import typing
 
 import pytest
 
@@ -62,51 +65,68 @@ class FakeResolver:
 
 
 def _prompt_kind(system, user):
+    """Kind of a plain-text call (_llm(system, user)): query planning and the claim verifier."""
     s = (system + " " + user)
-    for key, kind in (("domain classifier", "domains"), ("search query writer", "focus"),
-                      ("relevance grader", "grade"), ("search query optimizer", "rewrite"),
-                      ("fact-checker", "verify"), ("grounding verifier", "grounded"),
-                      ("workflow assistant", "generate")):
+    for key, kind in (("search query writer", "focus"), ("fact-checker", "verify")):
         if key in s:
             return kind
     return "other"
 
 
+# Kind of a structured call (_llm(Schema, system, user)), by the schema the caller asks for.
+_SCHEMA_KIND = {"DomainList": "domains", "RelevanceGrade": "grade", "SearchQuery": "rewrite",
+                "GroundednessGrade": "grounded", "AnswerabilityGrade": "answerable", "DomainWorkflow": "generate"}
+
+
+def _workflow_ids(schema):
+    """The provision ids a domain_workflow_model(ids) schema allows (its provision_id enum)."""
+    step = typing.get_args(schema.model_fields["steps"].annotation)[0]
+    return step, list(typing.get_args(step.model_fields["provision_id"].annotation))
+
+
 class ScriptedLLM:
-    """Deterministic stand-in for the LLM. `verdicts` controls what the claim verifier answers."""
+    """Deterministic stand-in for N._llm, at its real signature:
+    structured _llm(Schema, system, user) -> Schema instance; plain-text _llm(system, user) -> str.
+    `verdicts` controls what the claim verifier answers."""
 
     def __init__(self, verdicts=("partial", "unsupported"), jitter=False, fail=None):
         self.verdicts, self.jitter, self.fail = list(verdicts), jitter, fail
         self.calls = []
         self._lock = threading.Lock()
 
-    def __call__(self, system, user, *a, **k):
+    def __call__(self, schema, system, user=None, *a, **k):
         if self.jitter:
             time.sleep(random.random() * 0.02)
         if self.fail:
             raise self.fail
-        kind = _prompt_kind(system, user)
+        if isinstance(schema, str):                       # plain-text call: (system, user)
+            system, user = schema, system
+            kind = _prompt_kind(system, user)
+        else:
+            kind = _SCHEMA_KIND.get(schema.__name__, "other")
         with self._lock:
             self.calls.append(kind)
-        import json
-        import re
         if kind == "domains":
-            return "ip_licensing, taxation, employment"
+            return schema(domains=["ip_licensing", "taxation", "employment"])
         if kind == "focus":
             m = re.search(r"covering ONLY the (.+?) aspects", user)
             return f"focus {m.group(1) if m else ''}"
         if kind == "grade":
-            return '{"grade": "sufficient", "reason": "ok"}'
+            return schema(reason="ok", grade="sufficient")
         if kind == "rewrite":
-            return "rewritten query"
+            return schema(query="rewritten query")
         if kind == "grounded":
-            return '{"grade": "grounded", "reason": "ok"}'
+            return schema(reason="ok", unsupported_claims=[], grade="grounded")
+        if kind == "answerable":
+            return schema(reason="ok", grade="answers")
         if kind == "generate":
-            ids = list(dict.fromkeys(re.findall(r"^\[([a-z0-9_]+)\]", user.split("Provisions:")[1], re.M)))
-            steps = [{"action": f"do thing {i}", "provision_id": pid, "applies_to": "private"}
-                     for i, pid in enumerate(ids[:3], 1)]
-            steps.append({"action": "invented", "provision_id": "made_up_sec_1", "applies_to": "both"})
-            return json.dumps({"summary": ["a summary"], "steps": steps, "not_covered": ""})
+            step, ids = _workflow_ids(schema)
+            out = schema(summary=["a summary"], not_covered="",
+                         steps=[{"action": f"do thing {i}", "provision_id": pid, "applies_to": "private"}
+                                for i, pid in enumerate(ids[:3], 1)])
+            # an invented id, bypassing schema validation (a provider that ignores the enum): must never surface
+            out.steps.append(step.model_construct(action="invented", provision_id="made_up_sec_1", applies_to="both"))
+            return out
         if kind == "verify":
             n = len(re.findall(r"^\d+\. CLAIM:", user, re.M))
             return json.dumps({"verdicts": [{"n": i + 1, "verdict": self.verdicts[i % len(self.verdicts)],
@@ -166,11 +186,11 @@ def test_provider_and_top_k_reach_every_worker(wired, monkeypatch):
     scripted = ScriptedLLM()
     seen = {"groq": 0}
 
-    def fake_groq(system, user):
+    def fake_groq(system, user, schema=None):          # provider callable: (system, user, schema=None)
         seen["groq"] += 1
-        return scripted(system, user)
+        return scripted(schema, system, user) if schema else scripted(system, user)
 
-    def no_gemini(system, user):
+    def no_gemini(system, user, schema=None):
         raise AssertionError("gemini must not be used when provider=groq")
 
     monkeypatch.setattr(N, "_llm", _ORIGINAL_LLM)
@@ -267,7 +287,7 @@ def test_parallel_call_cap():
 def test_quota_errors_are_reported_as_unavailable_not_as_no_provisions(wired, monkeypatch):
     monkeypatch.setattr(N.time, "sleep", lambda s: None)
     monkeypatch.setattr(N, "_llm", _ORIGINAL_LLM)
-    monkeypatch.setitem(N._PROVIDERS, "gemini", lambda s, u: (_ for _ in ()).throw(
+    monkeypatch.setitem(N._PROVIDERS, "gemini", lambda s, u, schema=None: (_ for _ in ()).throw(
         RuntimeError("429 RESOURCE_EXHAUSTED. Please retry in 0.01s")))
     out = run_workflow(QUERY, trace_timing=False)
     assert out["abstain"] is True and "LLM unavailable" in out["abstain_reason"]
@@ -278,7 +298,7 @@ def test_quota_errors_are_reported_as_unavailable_not_as_no_provisions(wired, mo
 def test_daily_quota_is_not_retried(monkeypatch):
     calls = []
     monkeypatch.setattr(N.time, "sleep", lambda s: None)
-    monkeypatch.setitem(N._PROVIDERS, "gemini", lambda s, u: calls.append(1) or (_ for _ in ()).throw(
+    monkeypatch.setitem(N._PROVIDERS, "gemini", lambda s, u, schema=None: calls.append(1) or (_ for _ in ()).throw(
         RuntimeError("429 RESOURCE_EXHAUSTED GenerateRequestsPerDayPerProjectPerModel PerDay")))
     with pytest.raises(N.LLMUnavailable):
         _ORIGINAL_LLM("s", "u")
@@ -487,9 +507,9 @@ def test_intent_classifier_raises_api_errors_only_when_asked(monkeypatch):
 def test_groundedness_grader_does_not_see_system_annotations(monkeypatch):
     seen = {}
 
-    def grader(system, user, grader=False):
+    def grader(schema, system, user, grader=False):      # structured boundary: _llm(Schema, system, user)
         seen["user"] = user
-        return '{"grade": "grounded", "reason": "r"}'
+        return schema(reason="r", unsupported_claims=[], grade="grounded")
 
     monkeypatch.setattr(N, "_llm", grader)
     answer = ("Summary\n- Data Protection: some of these obligations are not yet in force on 2026-11-04; "
@@ -504,9 +524,9 @@ def test_groundedness_grader_does_not_see_system_annotations(monkeypatch):
 def test_groundedness_grader_sees_the_full_text_of_cited_provisions_only(monkeypatch):
     seen = {}
 
-    def grader(system, user, grader=False):
+    def grader(schema, system, user, grader=False):      # structured boundary: _llm(Schema, system, user)
         seen["user"] = user
-        return '{"grade": "grounded", "reason": "r"}'
+        return schema(reason="r", unsupported_claims=[], grade="grounded")
 
     monkeypatch.setattr(N, "_llm", grader)
     long_text = "x " * 600 + "grievance redressal mechanism"          # clause past the first 800 chars
@@ -779,6 +799,8 @@ def test_generator_prompt_lists_key_provisions(monkeypatch):
 
     def fake_llm(*args, **kwargs):      # works for _llm(system, user) and the structured _llm(Schema, system, user)
         seen["u"] = next(a for a in args if isinstance(a, str) and "Legal area:" in a)
+        if args and isinstance(args[0], type):
+            return args[0](summary=[], steps=[], not_covered="")
         return '{"steps": []}'
     monkeypatch.setattr(N, "_llm", fake_llm)
     N._generate_domain("employment", "q", _pool("a_sec_1"), ["a_sec_1"])

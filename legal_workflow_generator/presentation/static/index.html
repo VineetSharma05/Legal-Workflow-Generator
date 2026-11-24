@@ -1,48 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Legal Workflow Generator</title>
-    <meta name="description" content="AI-powered legal compliance assistant for Indian tech startups. Get sourced answers with full pipeline transparency.">
+    <meta name="description"
+        content="AI-powered legal compliance assistant for Indian tech startups. Get sourced answers with full pipeline transparency.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
 
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style.css?v=5">
 </head>
+
 <body>
     <div id="app">
 
         <!-- ═══ Header ═══ -->
         <header>
             <div class="header-left">
-                <h1>Legal Workflow Generator</h1>
+                <div class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 3v18M5 7h14M7 7l-3 7h6l-3-7zM17 7l-3 7h6l-3-7zM8 21h8" stroke="currentColor"
+                            stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Legal Workflow Generator</h1>
+                    <span class="brand-subtitle">Indian Statutory Compliance</span>
+                </div>
             </div>
 
             <div class="tab-switcher" id="tab-switcher">
                 <button class="tab-btn active" data-tab="chat" id="tab-chat">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2H8l-4 3v-3H4a2 2 0 01-2-2V5z"/></svg>
-                    Chat
+                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2 5a2 2 0 012-2h12a2 2 0 012 2v7a2 2 0 01-2 2H8l-4 3v-3H4a2 2 0 01-2-2V5z" />
+                    </svg>
+                    ChatBot
                 </button>
                 <button class="tab-btn" data-tab="lab" id="tab-lab">
-                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M7 2v4l-2 6a2 2 0 002 2h6a2 2 0 002-2l-2-6V2M7 2h6M5 10h10"/><circle cx="8" cy="12" r="0.5"/><circle cx="12" cy="11" r="0.5"/></svg>
-                    Unit Testing
+                    <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 2v4l-2 6a2 2 0 002 2h6a2 2 0 002-2l-2-6V2M7 2h6M5 10h10" />
+                        <circle cx="8" cy="12" r="0.5" />
+                        <circle cx="12" cy="11" r="0.5" />
+                    </svg>
+                    Testing
                 </button>
-            </div>
+            </div> 
 
             <div class="header-right">
                 <div class="settings-group">
-                    <div class="setting-item">
-                        <span class="setting-label">Provider</span>
-                        <select class="setting-select" id="provider-select">
-                            <option value="gemini">Gemini</option>
-                            <option value="groq">Groq</option>
-                        </select>
-                    </div>
-                    <div class="setting-item topk-control">
+                    <div class="setting-item topk-control" title="Provisions retrieved per legal domain">
                         <span class="setting-label">Top-K</span>
                         <input type="range" class="topk-slider" id="topk-slider" min="1" max="10" value="3">
                         <span class="topk-value" id="topk-value">3</span>
@@ -55,20 +68,31 @@
         <section id="chat-view" class="view active">
             <div id="chat-messages" class="messages-scroll">
                 <div id="welcome-screen" class="welcome-screen">
-                    <h2>Legal Workflow Generator</h2>
-                    <p>Ask questions about Indian legal compliance for tech startups. Every answer includes full pipeline transparency.</p>
+                    <div class="welcome-badge">Statutory Compliance Engine</div>
+                    <h2>Actionable Legal Workflows, Grounded in Statute</h2>
+                    <p>Ask compliance questions across Indian corporate, tax, data protection, IP, and employment law.
+                        Every step is cited and verified against statutory text.</p>
                     <div class="suggestions">
-                        <button class="suggestion-btn" data-query="What are the steps to comply with the DPDP Act as a SaaS startup?">
-                            DPDP Act compliance steps for SaaS startups
+                        <button class="suggestion-btn"
+                            data-query="What are the steps to comply with the DPDP Act as a SaaS startup?">
+                            <span class="suggestion-tag">Data Protection</span>
+                            <span class="suggestion-text">DPDP Act compliance steps for SaaS startups</span>
                         </button>
-                        <button class="suggestion-btn" data-query="How to set up an Internal Complaints Committee under the POSH Act?">
-                            Setting up ICC under POSH Act
+                        <button class="suggestion-btn"
+                            data-query="How to set up an Internal Complaints Committee under the POSH Act?">
+                            <span class="suggestion-tag">Employment</span>
+                            <span class="suggestion-text">Setting up an Internal Committee under the POSH Act</span>
                         </button>
-                        <button class="suggestion-btn" data-query="What are the GST registration requirements for a new tech startup in India?">
-                            GST registration for tech startups
+                        <button class="suggestion-btn"
+                            data-query="What are the GST registration requirements for a new tech startup in India?">
+                            <span class="suggestion-tag">Taxation &amp; GST</span>
+                            <span class="suggestion-text">GST registration requirements for a new tech startup</span>
                         </button>
-                        <button class="suggestion-btn" data-query="What are the minimum requirements to incorporate a private limited company in India?">
-                            Company incorporation requirements
+                        <button class="suggestion-btn"
+                            data-query="What are the minimum requirements to incorporate a private limited company in India?">
+                            <span class="suggestion-tag">Corporate Law</span>
+                            <span class="suggestion-text">Minimum requirements to incorporate a Private Limited
+                                company</span>
                         </button>
                     </div>
                 </div>
@@ -76,13 +100,12 @@
 
             <div class="chat-input-area">
                 <div class="input-wrapper">
-                    <textarea id="chat-input"
-                              placeholder="Ask a legal compliance question..."
-                              rows="1"
-                              aria-label="Chat input"></textarea>
+                    <textarea id="chat-input" placeholder="Ask a legal compliance question..." rows="1"
+                        aria-label="Chat input"></textarea>
                     <button class="send-btn" id="send-btn" disabled aria-label="Send message">
                         <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                            <path
+                                d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                         </svg>
                     </button>
                 </div>
@@ -103,13 +126,6 @@
                         <option value="rag">RAG Pipeline (hybrid search → LLM generation)</option>
                     </select>
                     <div class="lab-settings">
-                        <div class="setting-item">
-                            <span class="setting-label">Provider</span>
-                            <select class="setting-select" id="lab-provider">
-                                <option value="gemini">Gemini</option>
-                                <option value="groq">Groq</option>
-                            </select>
-                        </div>
                         <div class="setting-item topk-control">
                             <span class="setting-label">Top-K</span>
                             <input type="range" class="topk-slider" id="lab-topk" min="1" max="10" value="3">
@@ -119,9 +135,8 @@
                 </div>
 
                 <div class="lab-input-area">
-                    <textarea class="lab-textarea" id="lab-query"
-                              placeholder="Enter your query to test..."
-                              rows="3"></textarea>
+                    <textarea class="lab-textarea" id="lab-query" placeholder="Enter your query to test..."
+                        rows="3"></textarea>
                 </div>
 
                 <button class="lab-run-btn" id="lab-run-btn">
@@ -141,6 +156,7 @@
 
     </div>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/app.js?v=6"></script>
 </body>
+
 </html>

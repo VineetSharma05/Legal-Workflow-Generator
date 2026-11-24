@@ -27,7 +27,10 @@ class AgentState(TypedDict):
 
     # Node 4: generate
     answer: str
+    stitched_answer: str
     citations: List[str]        # ["dpdp_act_2023_sec_6", ...]
+    domain_results: List[dict]
+    domain_gaps: List[str]
 
     # Node 5: verify citations
     verified_citations: List[str]
@@ -50,10 +53,7 @@ class AgentState(TypedDict):
     abstain_reason: str
 
     # Typed per-domain results (DomainResult.to_dict()), date basis, final output
-    domain_results: List[dict]
-    domain_gaps: List[str]
     gap_domains: List[str]
-    stitched_answer: str
     as_of: str                  # ISO date the answer is valid on
 
     # Eval logging

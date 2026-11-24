@@ -26,6 +26,8 @@ from dataclasses import asdict, dataclass, field, replace
 from typing import Any, TypedDict
 
 import psycopg2
+from pydantic import BaseModel
+from typing import TypeVar
 
 try:
     from langchain_core.runnables import RunnableConfig
@@ -44,6 +46,17 @@ from legal_workflow_generator.query.context_resolver import LegalContextResolver
 from legal_workflow_generator.query.domain_guide import DOMAIN_GUIDE, guide_text
 from legal_workflow_generator.config.values import GEMINI_MODEL
 import legal_workflow_generator.config.values as app_config
+from legal_workflow_generator.llm import StructuredOutputError, invoke_structured, structured_llm
+from legal_workflow_generator.llm.schemas import (
+    AnswerabilityGrade,
+    DomainList,
+    GroundednessGrade,
+    RelevanceGrade,
+    SearchQuery,
+    domain_workflow_model,
+)
+
+T = TypeVar("T", bound=BaseModel)
 
 logger = logging.getLogger(__name__)
 
@@ -54,144 +67,59 @@ _context_resolver = LegalContextResolver()
 _rag_pipeline = None
 _gemini_client = RotatingGeminiClient()
 
-VALID_DOMAINS = ["data_protection", "corporate_governance", "ip_licensing", "taxation", "employment"]
-
-_DOMAIN_ORDER = ["corporate_governance", "data_protection", "ip_licensing", "taxation", "employment"]
-_DOMAIN_LABELS = {
-    "corporate_governance": "Corporate Governance",
-    "data_protection": "Data Protection",
-    "ip_licensing": "Intellectual Property",
-    "taxation": "Taxation & GST",
-    "employment": "Employment & Workplace",
-}
-APPLIES_TO = ("private", "government", "both", "unspecified")
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# Typed models
-# ══════════════════════════════════════════════════════════════════════════════
-@dataclass
-class Provision:
-    """A retrieved statutory provision. Typed at the worker boundary; `.get()` and `[]` keep the
-    dict-style call sites working. Unknown keys from the searcher are dropped by `from_dict`."""
-    provision_id: str
-    title: str = ""
-    text: str = ""
-    full_text: str = ""           # title + sub_structure clauses + text (see _full_text)
-    plain_english_summary: str = ""
-    statute_id: str = ""
-    number: str = ""
-    bm25_score: float | None = None
-    semantic_score: float | None = None
-    combined_score: float | None = None
-    anchor: bool = False
-    effective_date: Any = None    # datetime.date | None
-
-    _FIELDS = ("provision_id", "title", "text", "full_text", "plain_english_summary", "statute_id",
-               "number", "bm25_score", "semantic_score", "combined_score", "anchor", "effective_date")
-
-    _TEXT_FIELDS = ("title", "text", "full_text", "plain_english_summary", "statute_id", "number")
-
-    @classmethod
-    def from_dict(cls, d: dict) -> "Provision":
-        """Build from a searcher / DB row dict. Unknown keys are ignored; None text fields become ''."""
-        kwargs = {k: d[k] for k in cls._FIELDS if k in d}
-        for k in cls._TEXT_FIELDS:
-            if k in kwargs and kwargs[k] is None:
-                kwargs[k] = ""
-        return cls(**kwargs)
-
-    def to_dict(self) -> dict:
-        return {k: getattr(self, k) for k in self._FIELDS}
-
-    def get(self, key: str, default: Any = None) -> Any:
-        return getattr(self, key, default) if key in self._FIELDS else default
-
-    def __getitem__(self, key: str) -> Any:
-        if key not in self._FIELDS:
-            raise KeyError(key)
-        return getattr(self, key)
-
-    def __contains__(self, key: str) -> bool:
-        return key in self._FIELDS
-
-
-@dataclass
-class Step:
-    """One action in the checklist, tied to exactly one cited provision."""
-    action: str
-    provision_id: str
-    applies_to: str = "unspecified"
-    verdict: str = "unchecked"        # entailed | partial | unchecked   (unsupported steps are dropped)
-    verdict_reason: str = ""
-    note: str = ""                    # temporal note, e.g. statute superseded
-
-    @classmethod
-    def from_llm(cls, raw: Any, valid_ids: dict) -> "Step | None":
-        """Validate one step dict from the LLM. `valid_ids` maps lower-case id -> canonical id."""
-        if not isinstance(raw, dict):
-            return None
-        pid = valid_ids.get(str(raw.get("provision_id", "")).strip().lower())
-        action = str(raw.get("action", "")).strip()
-        if not pid or not action:
-            return None
-        applies = str(raw.get("applies_to", "unspecified")).strip().lower()
-        return cls(action=action, provision_id=pid, applies_to=applies if applies in APPLIES_TO else "unspecified")
-
-
-@dataclass
-class DomainResult:
-    """Everything one domain worker produced."""
-    domain: str
-    docs: list = field(default_factory=list)            # list[Provision]
-    grade: str = "insufficient"                         # sufficient | insufficient | error
-    reason: str = ""
-    retries: int = 0
-    summary: list = field(default_factory=list)         # list[str]
-    steps: list = field(default_factory=list)           # list[Step]
-    dropped_steps: list = field(default_factory=list)   # list[Step] that failed claim verification
-    not_covered: str = ""
-    cited: list = field(default_factory=list)           # list[str] provision ids
-    key_ids: list = field(default_factory=list)         # select_context: provisions the grader marked as needed
-    verification: str = "off"                           # off | ok | skipped (checker unavailable/unparseable)
-    error: str = ""
-
-    def to_dict(self) -> dict:
-        d = asdict(self)
-        d["docs"] = [{"provision_id": p.get("provision_id"), "title": p.get("title"),
-                      "combined_score": p.get("combined_score")} for p in self.docs]
-        return d
+from legal_workflow_generator.agent.models import (  # noqa: F401 (re-exported)
+    APPLIES_TO,
+    DomainResult,
+    LLMUnavailable,
+    Provision,
+    Step,
+    VALID_DOMAINS,
+    _DOMAIN_LABELS,
+    _DOMAIN_ORDER,
+)
+from legal_workflow_generator.agent.prompts import generate_domain_prompt, grade_domain_prompt
 
 
 # ══════════════════════════════════════════════════════════════════════════════
 # LLM access: providers, rate limiting, errors
 # ══════════════════════════════════════════════════════════════════════════════
-class LLMUnavailable(RuntimeError):
-    """The LLM could not be reached (quota / overload) after retries. Distinct from 'no provisions found'."""
 
 
-def _call_gemini(system: str, user: str) -> str:
+def _call_gemini(system: str, user: str, schema: type[T] | None = None):
+    if schema is not None:
+        return invoke_structured(structured_llm(schema, provider="gemini"), system, user)
     response = _gemini_client.models.generate_content(model=GEMINI_MODEL, contents=f"{system}\n\n{user}")
     return response.text.strip()
 
 
-def _call_groq(system: str, user: str) -> str:
+def _call_groq(system: str, user: str, schema: type[T] | None = None):
+    if schema is not None:
+        return invoke_structured(structured_llm(schema, provider="groq"), system, user)
     return groq_client.complete(system, user)
 
 
+# provider -> call(system, user, schema=None): a schema instance when `schema` is given, else plain text.
 _PROVIDERS = {"gemini": _call_gemini, "groq": _call_groq}
 _RETRYABLE = ("429", "500", "503", "UNAVAILABLE", "RESOURCE_EXHAUSTED", "overloaded", "rate_limit")
 
 
-def _llm(system: str, user: str, grader: bool = False, max_retries: int = 5) -> str:
-    """One LLM call through the provider chosen in the run settings, rate limited, retried on 429/5xx.
-    Raises LLMUnavailable when quota/overload persists; other errors propagate unchanged."""
+def _llm(schema: type[T] | str, system: str, user: str | None = None, grader: bool = False,
+         max_retries: int = 5) -> T | str:
+    """The one LLM boundary: routed to the run's provider, rate limited, retried on 429/5xx.
+
+    Structured:  _llm(Schema, system, user) -> Schema instance (raises StructuredOutputError on a bad reply).
+    Plain text:  _llm(system, user)         -> str (query planning and the claim verifier still parse JSON).
+    """
+    if isinstance(schema, str):                       # plain-text form: shift the arguments
+        schema, system, user = None, schema, system
     provider = current_settings().provider
     call, limiter = _PROVIDERS[provider], LIMITERS[provider]
 
     def once():
         with limiter.slot():
-            return call(system, user)
+            if schema is None:
+                return call(system, user or "")
+            return call(system, user or "", schema=schema)
     return _with_retries(provider, once, max_retries)
 
 
@@ -577,12 +505,13 @@ Example: data_protection, employment"""
         return list(dict.fromkeys(picked))
     prompt = f"""This query may span multiple legal domains.
 Query: {query}
-Domains: data_protection, corporate_governance, ip_licensing, taxation, employment
 
-Reply with ONLY the relevant domain names comma separated. Include ALL that apply.
-Example: data_protection, employment"""
-    raw = _llm("You are a legal domain classifier.", prompt)      # LLMUnavailable propagates to the caller
-    return [d.strip() for d in raw.split(",") if d.strip() in VALID_DOMAINS]
+List every legal domain the query touches. Include ALL that apply."""
+    try:
+        result = _llm(DomainList, "You are a legal domain classifier.", prompt)
+        return list(dict.fromkeys(d for d in result.domains if d in VALID_DOMAINS))
+    except Exception:
+        return []
 
 
 _SECTION_REF = re.compile(r"\b(?:section|sec\.?|s\.)\s*(\d+[a-z]*)\b", re.I)
@@ -852,27 +781,15 @@ def _strict_pick_rule() -> str:
 
 
 def _grade_domain(domain: str, sub_q: str, docs: list) -> tuple:
-    system = "You are a legal relevance grader. Reply in JSON only."
-    user = f"""Query ({_DOMAIN_LABELS[domain]} only): {sub_q}
-
-Retrieved provisions:
-{_chunks(docs, sub_q, 1500)}
-
-Grade ONLY whether these provisions answer this query.
-Ignore any other legal area; do not mention other legal areas in your reason.
-All provisions are Indian statutes and the user is an Indian business. A person, contractor or work being
-located abroad does NOT make Indian provisions irrelevant; judge whether the provision answers the question
-under Indian law.{_strict_rule(domain)}
-"sufficient": at least one provision directly addresses the query.
-"insufficient": the provisions are unrelated to it.
-Reply ONLY with:
-{{"grade": "sufficient" or "insufficient", "reason": "one sentence"}}"""
-    raw = _llm(system, user, grader=True)                       # LLMUnavailable propagates
+    system, user = grade_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 1500),
+                                       strict_rule=_strict_rule(domain))
     try:
-        p = _parse_json(raw)
-        return p.get("grade", "insufficient"), p.get("reason", "")
-    except Exception:
+        result = _llm(RelevanceGrade, system, user)
+        return result.grade, result.reason
+    except StructuredOutputError:
         return "insufficient", "Could not parse grader response"
+    except Exception:
+        raise
 
 
 SELECT_MIN = 5      # if the grader picks fewer, the pool's best-ranked provisions fill the context up to this size
@@ -955,10 +872,9 @@ Why retrieval failed: {reason}
 Write a better search query for Indian statutes about THIS query only.
 Stay strictly on the topic of the query above; do not switch to any other legal area.
 Search Indian statutes only: never use foreign-law names, other countries' laws or non-English words.
-Use plain topic words. Do NOT cite section numbers you are not certain exist.
-Reply with ONLY the query."""
+Use plain topic words. Do NOT cite section numbers you are not certain exist."""
     try:
-        return _llm(system, user).strip() or sub_q
+        return _llm(SearchQuery, system, user).query.strip() or sub_q
     except LLMUnavailable:
         raise
     except Exception:
@@ -1130,59 +1046,18 @@ def _generate_domain(domain: str, sub_q: str, docs: list, key_ids: list = None) 
     `key_ids` (select_context): provisions the grader marked as needed; the generator is asked to write a step
     for each one its text supports. Every step still goes through the claim check."""
     valid_ids = {d.get("provision_id", "").lower(): d.get("provision_id", "") for d in docs if d.get("provision_id")}
-    key_rule = ""
-    if key_ids:
-        key_rule = (f"\n- A reviewer marked these provisions as needed for a complete answer: {', '.join(key_ids)}. "
-                    "Write at least one step for each of them, stating what that provision itself requires, allows "
-                    "or provides for this query. Leave one out only if its text, as given below, does not apply "
-                    "to the query.")
-    system = "You are a legal workflow assistant for Indian tech startups."
-    user = f"""Query: {sub_q}
-Legal area: {_DOMAIN_LABELS[domain]}
-
-Using ONLY the provisions below, list the compliance actions relevant to this legal area for the query.
-Do not invent sections or obligations. Address specifics in the query (company size, employee type, etc.).
-For each step, say who the provision applies to ("private", "government", "both" or "unspecified"), based only on the text.
-
-Rules:
-- Discuss ONLY {_DOMAIN_LABELS[domain]}. Do not mention other legal areas (tax, data protection, etc.) in the summary.
-- Include a step only if the provision directly responds to the query. Skip provisions that concern other kinds of
-  workplaces (factories, mines, plantations, schools) or are unrelated to the specific question.
-- If a provision states a default rule that answers the question (for example who is the first owner of a work,
-  or what the default is when a contract is silent), INCLUDE it as a step and state both the default and its exception.
-- A provision must answer the actual question asked. Do NOT include one merely because it shares a word with the
-  query (for example "abroad" or "contractor") if it regulates a different subject (such as accident compensation
-  or migrant-worker conditions). Leave it out.
-- A provision that only gives the government or a regulator a power (to make rules, appoint or pay members,
-  run its own proceedings) is not a duty of the user. Do not turn it into a step.
-- Definitions may be used to say who a duty applies to, but prefer the provisions that state the duties themselves.
-- Cite the provision that itself creates the duty, right, condition or consequence asked about. When rules,
-  regulations or directions given below spell out how to carry out a duty created by an Act section that is also
-  given below, write one step citing the Act section (the duty) and another citing the rule (the procedure,
-  timeline or form). Do not cite only the rule.
-- When one provision states a general rule and another covers the specific situation in the query, cite the
-  specific one, and also the general one if the answer depends on it.
-- If several provisions each answer a different part of the query, write a step for each of them.{key_rule}
-- If the query asks what a law is, base the summary on what the provisions say about its scope and purpose.
-- Provisions marked NOT YET IN FORCE still count: use them when they answer the query, because the user has to
-  prepare for them. Do not write commencement dates into the action text; the system adds them to each step.
-- If nothing in the provisions answers part of the query, say so in "not_covered" instead of padding the steps.
-
-Provisions:
-{_chunks(docs, sub_q, 3000)}
-
-Reply ONLY with JSON:
-{{"summary": ["1-2 short bullets"],
- "steps": [{{"action": "...", "provision_id": "<exact id from above>", "applies_to": "private|government|both|unspecified"}}],
- "not_covered": "part of the query these provisions do not address, or empty string"}}"""
-    raw = _llm(system, user)                                    # LLMUnavailable propagates
+    system, user = generate_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 3000), key_ids)
     try:
-        p = _parse_json(raw)
+        p = _llm(domain_workflow_model(list(valid_ids.values())), system, user)
     except Exception as e:
-        logger.warning("generate[%s] JSON parse failed: %s | raw=%r", domain, e, raw[:500])
+        logger.warning("generate[%s] structured generation failed: %s", domain, e)
         return [], [], ""
-    steps = [st for st in (Step.from_llm(s, valid_ids) for s in p.get("steps", []) or []) if st]
-    return [str(x) for x in (p.get("summary") or [])][:3], steps, str(p.get("not_covered", "") or "").strip()
+    # The schema's provision_id enum already rejects unknown ids; check again in case a provider skips validation.
+    steps = [
+        Step(action=s.action.strip(), provision_id=valid_ids[str(s.provision_id).lower()], applies_to=s.applies_to)
+        for s in p.steps if s.action.strip() and str(s.provision_id).lower() in valid_ids
+    ]
+    return [str(x) for x in p.summary if str(x).strip()][:3], steps, str(p.not_covered or "").strip()
 
 
 _NUM = re.compile(r"(?<![\w.])\d+(?:\.\d+)?(?![\w])")
@@ -1491,7 +1366,7 @@ def _groundedness(state: AgentState) -> tuple:
     chunks = "\n\n".join(f"[{d.get('provision_id', '')}]: {(d.get('full_text') or d.get('text', ''))[:limit]}"
                          for d in docs)
     multi = len(state.get("all_domains", [state["domain"]])) > 1
-    system = """You are a legal grounding verifier. Reply in JSON only.
+    system = """You are a legal grounding verifier.
 Be lenient: grade as 'grounded' if the main claims are supported by context.
 Only grade 'not_grounded' if the answer makes specific legal claims that
 directly contradict or are completely absent from the retrieved context.
@@ -1507,34 +1382,49 @@ Retrieved context:
 
 {"Note: This is a multi-domain query. The answer may draw on multiple legal areas — grade as grounded if each domain's claims are supported by at least some of the retrieved chunks." if multi else ""}
 
-Is every claim in the answer supported by the retrieved context?
-Reply ONLY with:
-{{"grade": "grounded" or "not_grounded", "reason": "one sentence"}}"""
+Is every claim in the answer supported by the retrieved context?"""
     try:
-        raw = _llm(system, user, grader=True)
+        g = _llm(GroundednessGrade, system, user)
+        grade, reason = g.grade, g.reason
+        unsupported = g.unsupported_claims
+    except StructuredOutputError:
+        grade, reason, unsupported = "not_grounded", "Could not parse grader response", []
     except LLMUnavailable as e:
         return ({"groundedness_grade": "unverified", "groundedness_reason": f"LLM unavailable: {e}"},
                 "grade_groundedness → unverified (LLM unavailable)")
-    try:
-        p = _parse_json(raw)
-        grade, reason = p.get("grade", "not_grounded"), p.get("reason", "")
     except Exception:
-        grade, reason = "not_grounded", "Could not parse grader response"
-    return {"groundedness_grade": grade, "groundedness_reason": reason}, f"grade_groundedness → {grade}"
+        grade, reason, unsupported = "not_grounded", "Could not parse grader response", []
+    line = f"grade_groundedness → {grade}"
+    if unsupported:
+        line += f" (unsupported: {unsupported})"
+    return {"groundedness_grade": grade, "groundedness_reason": reason}, line
 
 
 def _answerability(state: AgentState) -> tuple:
-    """Computed in code, no LLM: answers = every queried domain has a verified cited step."""
+    """Grade answerability with a structured LLM, preserving deterministic coverage fallback."""
     all_domains = state.get("all_domains") or [state["domain"]]
-    verified = state.get("verified_citations", [])
-    covered = [d for d in all_domains if any(_domain_of(c) == d for c in verified)]
-    missing = [d for d in all_domains if d not in covered]
-    if not covered:
-        grade, reason = "off_target", "No queried legal area was covered by verified provisions."
-    elif missing:
-        grade, reason = "partial", f"Covered: {', '.join(covered)}. Not covered: {', '.join(missing)}."
-    else:
-        grade, reason = "answers", f"All queried areas covered: {', '.join(covered)}."
+    system = "You are a legal answer quality checker."
+    user = f"""Query: {state['query']}
+Answer: {state['answer'][:3000]}
+
+Does this answer address the main compliance areas asked about?
+{"For multi-domain queries, grade 'answers' if the answer covers the key compliance areas." if len(all_domains) > 1 else ""}
+Grade 'off_target' only if the answer is completely unrelated to what was asked."""
+    try:
+        g = _llm(AnswerabilityGrade, system, user)
+        grade, reason = g.grade, g.reason
+    except StructuredOutputError:
+        grade, reason = "off_target", "Could not parse grader response"
+    except Exception:
+        verified = state.get("verified_citations", [])
+        covered = [d for d in all_domains if any(_domain_of(c) == d for c in verified)]
+        missing = [d for d in all_domains if d not in covered]
+        if not covered:
+            grade, reason = "off_target", "No queried legal area was covered by verified provisions."
+        elif missing:
+            grade, reason = "partial", f"Covered: {', '.join(covered)}. Not covered: {', '.join(missing)}."
+        else:
+            grade, reason = "answers", f"All queried areas covered: {', '.join(covered)}."
     return {"answerability_grade": grade, "answerability_reason": reason}, f"grade_answerability → {grade}: {reason}"
 
 
