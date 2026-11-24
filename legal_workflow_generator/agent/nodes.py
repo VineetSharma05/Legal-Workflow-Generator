@@ -43,6 +43,7 @@ from legal_workflow_generator.rag.pipeline import RagPipeline
 from legal_workflow_generator.query.normalizer import QueryNormalizer
 from legal_workflow_generator.query.intent_classifier import IntentClassifier
 from legal_workflow_generator.query.context_resolver import LegalContextResolver
+from legal_workflow_generator.query.domain_guide import DOMAIN_GUIDE, guide_text
 from legal_workflow_generator.config.values import GEMINI_MODEL
 import legal_workflow_generator.config.values as app_config
 from legal_workflow_generator.llm import StructuredOutputError, invoke_structured, structured_llm
@@ -351,11 +352,59 @@ def _with_suggested(ids: list, docs: list) -> list:
 _STOP = {"which", "under", "where", "other", "there", "their", "about", "whether", "being", "would", "could"}
 
 
+_WORD = re.compile(r"[a-z]{4,}")
+_SNIP_STOP = _STOP | {"shall", "such", "that", "this", "with", "from", "have", "been", "into", "upon", "said",
+                      "section", "provided", "person", "made", "under", "they", "them", "will", "what", "when",
+                      "does", "must", "need", "also", "only", "than", "then", "each", "every", "after", "before"}
+
+
+def _stem(w: str) -> str:
+    return w[:6]           # crude, but "refunds"/"refund", "registered"/"registration" meet
+
+
+def _overlap_snippet(text: str, query: str, limit: int) -> str:
+    """v5 (snippet_mode="overlap"): the provision's opening (which usually states the main rule) plus the window
+    that shares the most query/claim words with the text, each word weighted by how rare it is in this provision.
+    The v4 window was centred on the single rarest query word, which in long sections (CGST s.54, Income-tax s.47)
+    is often a passing mention far from the sentence the claim is about."""
+    low = text.lower()
+    q = {_stem(w) for w in _WORD.findall(query.lower()) if w not in _SNIP_STOP}
+    head_n = min(300, limit // 5)
+    if not q:
+        return text[:limit]
+    toks = [(m.start(), _stem(m.group())) for m in _WORD.finditer(low)]
+    freq = {}
+    for _, t in toks:
+        if t in q:
+            freq[t] = freq.get(t, 0) + 1
+    if not freq:
+        return text[:limit]
+    weight = {t: 1.0 / (1.0 + n) ** 0.5 for t, n in freq.items()}
+    win = limit - head_n - 2
+    step = max(100, win // 6)
+    best, best_score = 0, -1.0
+    for start in range(0, max(1, len(text) - win + step), step):
+        seen = {t for pos, t in toks if start <= pos < start + win and t in weight}
+        score = sum(weight[t] for t in seen)
+        if score > best_score + 1e-9:
+            best, best_score = start, score
+    if best <= head_n:                       # the best window already contains the opening
+        return text[:limit]
+    # start the window at a sentence or clause boundary when one is close
+    cut = max(low.rfind(". ", best - 150, best), low.rfind("\n", best - 150, best), low.rfind("; ", best - 150, best))
+    if cut > head_n:
+        best = cut + 2
+    return text[:head_n] + " … " + text[best:best + win]
+
+
 def _snippet(text, query: str, limit: int) -> str:
-    """Up to `limit` chars of text, centred on the rarest query keyword found in it."""
+    """Up to `limit` chars of text, centred on the rarest query keyword found in it (snippet_mode="rarest", v4),
+    or chosen by word overlap (snippet_mode="overlap", v5; see _overlap_snippet)."""
     text = str(text or "")
     if len(text) <= limit:
         return text
+    if current_settings().snippet_mode == "overlap":
+        return _overlap_snippet(text, query, limit)
     low = text.lower()
     words = {w.lower() for w in re.findall(r"[A-Za-z]{5,}", query)} - _STOP
     counts = {w: low.count(w) for w in words if low.count(w) > 0}
@@ -434,7 +483,26 @@ def _detect_domains_from_retrieval(query: str) -> list:
         return []
 
 
-def _llm_domains(query: str) -> list:
+def _llm_domains(query: str) -> list | None:
+    """Domains the LLM thinks the query touches. With settings.domain_guide (v5) the prompt says what each domain
+    holds and may answer NONE; that answer returns None (distinct from [] = nothing usable parsed)."""
+    if current_settings().domain_guide:
+        prompt = f"""This query may span several legal domains of an Indian law knowledge base.
+Query: {query}
+
+The knowledge base has five domains. What each one holds:
+{guide_text()}
+
+Pick every domain whose statutes govern part of this query, judging by the legal subject, not by shared words.
+If the query's legal subject is not held by any domain, reply NONE.
+Reply with ONLY the domain names comma separated, or NONE.
+Example: data_protection, employment"""
+        raw = _llm("You are a legal domain classifier.", prompt)
+        picked = [d.strip().lower() for d in raw.replace("\n", ",").split(",")]
+        picked = [d for d in picked if d in VALID_DOMAINS]
+        if not picked and re.search(r"\bnone\b", raw, re.I):
+            return None
+        return list(dict.fromkeys(picked))
     prompt = f"""This query may span multiple legal domains.
 Query: {query}
 
@@ -490,7 +558,8 @@ def classify_query(state: AgentState, config: RunnableConfig = None) -> AgentSta
         intent, confidence = _with_retries(s.provider, lambda: _intent_classifier.classify(
             normalized, provider=s.provider, raise_errors=True))
         context = _with_retries(s.provider, lambda: _context_resolver.resolve(
-            normalized, intent, confidence, provider=s.provider, raise_errors=True))
+            normalized, intent, confidence, provider=s.provider, raise_errors=True,
+            **({"domain_guide": guide_text()} if s.domain_guide else {})))
     except Exception as e:  # noqa  (LLMUnavailable, bad model name, missing key, ...)
         # The LLM could not be reached: say so instead of abstaining with "please rephrase".
         state.update(intent="unknown", domain="unknown", all_domains=[], tentative_domains=[],
@@ -522,6 +591,26 @@ def classify_query(state: AgentState, config: RunnableConfig = None) -> AgentSta
             llm_domains, llm_note = [], f" [LLM domain detection unavailable: {e}]"
         except Exception as e:  # noqa: BLE001
             llm_domains, llm_note = [], f" [LLM domain detection failed: {type(e).__name__}]"
+
+    said_none = llm_domains is None
+    llm_domains = llm_domains or []
+    if s.domain_guide:
+        if said_none and s.none_abstain and not any(re.search(p, state["query"].lower())
+                                                    for p, _ in STATUTE_ALIASES):
+            # both the guided list and (usually) the resolver see no domain, and no corpus statute is named
+            state["scope_error"] = ("The question's legal subject is not covered by the knowledge base "
+                                    "(corporate, data protection, IP, tax and employment law of India).")
+            state.update(domain="unknown", all_domains=[], tentative_domains=[],
+                         domain_detection_method="guided llm: none")
+            state["trace"] = [f"classify → out of scope (guided domain list: NONE; resolver={context['legal_domain']})"]
+            return state
+        if (state["domain"] not in VALID_DOMAINS and llm_domains
+                and not state["intent"].lower().endswith("unknown")):
+            # v4 declined here ("could not determine the legal domain") even when the guided list found one.
+            # Only for questions the intent classifier accepted as legal: when it said "unknown" (a poem, a cloud
+            # provider recommendation) the decline stands.
+            llm_note += f" [resolver said {state['domain']}; using guided domain {llm_domains[0]}]"
+            state["domain"] = llm_domains[0]
 
     combined = list(dict.fromkeys(retrieval_domains + llm_domains + [state["domain"]]))
     combined = [d for d in combined if d in VALID_DOMAINS]
@@ -674,8 +763,26 @@ def _chunks(docs: list, query: str, limit: int) -> str:
         for d in docs)
 
 
+def _strict_rule(domain: str) -> str:
+    """settings.strict_grade (v5): judge by legal subject, not by shared words, and know what the domain holds."""
+    if not current_settings().strict_grade:
+        return ""
+    return f"""
+Judge by legal subject, not by shared words. A provision that uses the same words as the query but governs a
+different legal subject does NOT address the query. This domain's provisions come from: {DOMAIN_GUIDE[domain]}. If the subject the query
+is mainly about is governed by some other law, grade "insufficient"."""
+
+
+def _strict_pick_rule() -> str:
+    if not current_settings().strict_grade:
+        return ""
+    return ('If the grade is "insufficient", "relevant" must be []. If any candidate answers part of the query, '
+            'the grade is "sufficient".\n\n')
+
+
 def _grade_domain(domain: str, sub_q: str, docs: list) -> tuple:
-    system, user = grade_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 1500))
+    system, user = grade_domain_prompt(_DOMAIN_LABELS[domain], sub_q, _chunks(docs, sub_q, 1500),
+                                       strict_rule=_strict_rule(domain))
     try:
         result = _llm(RelevanceGrade, system, user)
         return result.grade, result.reason
@@ -704,7 +811,7 @@ Candidate provisions:
 Ignore any other legal area; do not mention other legal areas in your reason.
 All provisions are Indian statutes and the user is an Indian business. A person, contractor or work being
 located abroad does NOT make Indian provisions irrelevant; judge whether the provision answers the question
-under Indian law.
+under Indian law.{_strict_rule(domain)}
 
 1. "grade": "sufficient" if at least one candidate directly addresses the query, "insufficient" if they are
    all unrelated to it. If the query asks about the obligations under a foreign law (for example the EU GDPR or a
@@ -721,7 +828,7 @@ under Indian law.
    Leave out provisions that merely share words with the query, that concern a different kind of entity or
    workplace, or that only give the government or a regulator a power.
 
-Reply ONLY with:
+{_strict_pick_rule()}Reply ONLY with:
 {{"grade": "sufficient" or "insufficient", "reason": "one sentence", "relevant": ["<identifier>", ...]}}"""
     raw = _llm(system, user, grader=True)                       # LLMUnavailable propagates
     try:
@@ -971,7 +1078,7 @@ def _verify_claims(domain: str, steps: list, docs: list) -> tuple:
     blocks = []
     for i, st in enumerate(steps, 1):
         d = by_id.get(st.provision_id, {})
-        text = _snippet(d.get("full_text") or d.get("text", ""), st.action, 1500)
+        text = _snippet(d.get("full_text") or d.get("text", ""), st.action, current_settings().verify_chars)
         blocks.append(f"{i}. CLAIM: {st.action}\n   CITED: [{st.provision_id}] {d.get('title', '')}\n   PROVISION TEXT: {text}")
     system = "You are a strict legal fact-checker. Reply in JSON only."
     user = f"""For each numbered claim, decide whether the PROVISION TEXT given for it supports the claim.
@@ -1058,6 +1165,11 @@ def _domain_worker(domain: str, search_q: str, user_q: str, rag, multi: bool = F
                              f"(kept, steps flagged with their start date)")
             if docs and s.select_context:
                 res.grade, res.reason, picked = _grade_select(domain, sub_q, docs)
+                if s.strict_grade and res.grade != "sufficient" and picked:
+                    # the grader named provisions a complete answer must cite but graded "insufficient" (v4 then
+                    # wrote no steps); its picks win, and the generator and claim check still apply
+                    trace.append(f"{_el(t0)}[{domain}] grade {res.grade} with {len(picked)} pick(s) → sufficient")
+                    res.grade = "sufficient"
                 docs = _keep_selected(docs, picked, suggested, window_ids)
                 res.docs = [Provision.from_dict(d) for d in docs]
                 res.key_ids = picked

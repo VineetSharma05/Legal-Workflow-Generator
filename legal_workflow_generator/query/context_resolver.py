@@ -91,9 +91,11 @@ class LegalContextResolver:
         confidence: float,
         provider: str = "gemini",
         raise_errors: bool = False,
+        domain_guide: str = "",
     ) -> LegalContext:
         """provider picks the LLM ("gemini" or "groq"). With raise_errors, an LLM API error is re-raised
-        instead of being treated as "no LLM domain", so the agent can report an outage."""
+        instead of being treated as "no LLM domain", so the agent can report an outage. domain_guide (v5): text
+        describing what each domain holds, added to the LLM system prompt."""
         query_text = normalized_query["normalized"]
 
         if intent == QueryIntent.UNKNOWN and confidence >= 0.8:
@@ -125,10 +127,10 @@ class LegalContextResolver:
         if call_llm:
             if self.self_consistency:
                 llm_domain, llm_keywords, domain_confidence = self._resolve_with_self_consistency(
-                    query_text, provider, raise_errors)
+                    query_text, provider, raise_errors, domain_guide)
             else:
                 llm_domain, llm_keywords = self._resolve_with_llm(query_text, provider=provider,
-                                                                 raise_errors=raise_errors)
+                                                                 raise_errors=raise_errors, domain_guide=domain_guide)
 
         if not keyword_matched:
             # Nothing for the keyword classifier to contribute — LLM decides alone.
@@ -177,7 +179,8 @@ class LegalContextResolver:
         )
 
     def _resolve_with_self_consistency(self, query: str, provider: str = "gemini",
-                                       raise_errors: bool = False) -> tuple[str, list[str], float]:
+                                       raise_errors: bool = False,
+                                       domain_guide: str = "") -> tuple[str, list[str], float]:
         """
         Sample the domain classification prompt N times at temperature>0 and
         majority-vote the domain. The winning share (e.g. 2/3) is returned as
@@ -189,7 +192,7 @@ class LegalContextResolver:
 
         for _ in range(self.self_consistency_samples):
             domain, keywords = self._resolve_with_llm(query, sample=True, provider=provider,
-                                                    raise_errors=raise_errors)
+                                                    raise_errors=raise_errors, domain_guide=domain_guide)
             if not domain:
                 continue
             domains.append(domain)
@@ -211,13 +214,16 @@ class LegalContextResolver:
         return majority_domain, keywords_by_domain.get(majority_domain, []), agreement_ratio
 
     def _resolve_with_llm(self, query: str, sample: bool = False, provider: str = "gemini",
-                          raise_errors: bool = False) -> tuple[str, list[str]]:
+                          raise_errors: bool = False, domain_guide: str = "") -> tuple[str, list[str]]:
         """gemini: structured output. groq: plain-text call through groq_client, parsed from labelled lines.
         Each call holds a slot of the shared limiter (looked up at call time)."""
         system = (
             "You are a legal domain classifier for Indian startup compliance. Given a query, identify "
             "the single legal domain it belongs to (or unknown) and up to 5 important legal keywords from it."
         )
+        if domain_guide:
+            system += ("\n\nWhat each domain holds (choose by the legal subject of the query, not by shared "
+                       "words; answer unknown if no domain holds it):\n" + domain_guide)
         try:
             with llm_limits.LIMITERS[provider].slot():
                 if provider == "groq":

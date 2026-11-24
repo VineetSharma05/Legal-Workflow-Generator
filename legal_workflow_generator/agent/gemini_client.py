@@ -35,6 +35,10 @@ DEFAULT_TEMPERATURE = os.getenv("GEMINI_TEMPERATURE", "").strip()
 USAGE = {"calls": 0, "prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 _usage_lock = threading.Lock()
 
+# Per-request timeout in milliseconds (GEMINI_TIMEOUT_MS). Without one, a dropped connection can block a call
+# forever; a timed-out call raises and the key rotation / retry logic treats it like any other failure.
+_TIMEOUT_MS = int(os.getenv("GEMINI_TIMEOUT_MS", "300000"))
+
 
 def _with_default_temperature(kwargs: dict) -> dict:
     if not DEFAULT_TEMPERATURE:
@@ -143,7 +147,8 @@ class RotatingGeminiClient:
     def _client(self, idx: int) -> genai.Client:
         with self._lock:
             if idx not in self._clients:
-                self._clients[idx] = genai.Client(api_key=self.pool.keys[idx])
+                self._clients[idx] = genai.Client(api_key=self.pool.keys[idx],
+                                                  http_options=genai.types.HttpOptions(timeout=_TIMEOUT_MS))
             return self._clients[idx]
 
 

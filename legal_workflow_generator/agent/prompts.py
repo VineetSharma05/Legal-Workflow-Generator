@@ -1,7 +1,6 @@
 """Prompt builders for the LangGraph agent pipeline."""
 
-
-def grade_domain_prompt(domain_label: str, sub_q: str, chunks: str) -> tuple[str, str]:
+def grade_domain_prompt(domain_label: str, sub_q: str, chunks: str, strict_rule: str = "") -> tuple[str, str]:
     system = "You are a legal relevance grader."
     user = f"""Query ({domain_label} only): {sub_q}
 
@@ -12,7 +11,7 @@ Grade ONLY whether these provisions answer the {domain_label} part of the query.
 A multi-part question may also ask about other legal areas (e.g. employment, tax, IP, corporate, data protection) — NEVER mark "insufficient" because other parts of the question belong to a different domain, and do not mention other legal areas in your reason.
 All provisions are Indian statutes and the user is an Indian business. A person, contractor or work being
 located abroad does NOT make Indian provisions irrelevant; judge whether the provision answers the question
-under Indian law.
+under Indian law.{strict_rule}
 "sufficient": at least one provision directly addresses the {domain_label} part of the query.
 "insufficient": none of the provisions address the {domain_label} part of the query."""
     return system, user

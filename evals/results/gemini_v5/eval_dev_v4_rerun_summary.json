@@ -1,0 +1,143 @@
+{
+  "summary": {
+    "provider": "gemini",
+    "model": "models/gemini-3.1-flash-lite",
+    "as_of": "2026-10-15",
+    "tag": "dev_v4_rerun",
+    "options": {
+      "suggest_provisions": "true",
+      "select_context": "true"
+    },
+    "tokens": 1796101,
+    "total": 64,
+    "scored": 64,
+    "errored": 0,
+    "overall": {
+      "n": 64,
+      "domain_recall": 0.977,
+      "domain_precision": 0.872,
+      "domain_exact_match": 0.703,
+      "primary_domain_accuracy": 0.938,
+      "citation_recall": 0.677,
+      "citation_domain_coverage": 0.957,
+      "answered_pct": 98.438,
+      "false_abstain_rate": 0.016,
+      "abstain_accuracy": null,
+      "avg_elapsed_seconds": 61.873
+    },
+    "by_category": {
+      "multi_2": {
+        "n": 17,
+        "domain_recall": 0.912,
+        "domain_precision": 0.951,
+        "domain_exact_match": 0.765,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.711,
+        "citation_domain_coverage": 0.912,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 55.217
+      },
+      "multi_3": {
+        "n": 9,
+        "domain_recall": 1.0,
+        "domain_precision": 0.972,
+        "domain_exact_match": 0.889,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.621,
+        "citation_domain_coverage": 0.889,
+        "answered_pct": 88.889,
+        "false_abstain_rate": 0.111,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 82.247
+      },
+      "multi_4": {
+        "n": 4,
+        "domain_recall": 1.0,
+        "domain_precision": 0.95,
+        "domain_exact_match": 0.75,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.75,
+        "citation_domain_coverage": 0.938,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 96.52
+      },
+      "multi_5": {
+        "n": 2,
+        "domain_recall": 1.0,
+        "domain_precision": 1.0,
+        "domain_exact_match": 1.0,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.455,
+        "citation_domain_coverage": 1.0,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 110.03
+      },
+      "multi_all": {
+        "n": 32,
+        "domain_recall": 0.953,
+        "domain_precision": 0.96,
+        "domain_exact_match": 0.812,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.663,
+        "citation_domain_coverage": 0.914,
+        "answered_pct": 96.875,
+        "false_abstain_rate": 0.031,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 71.408
+      },
+      "single": {
+        "n": 32,
+        "domain_recall": 1.0,
+        "domain_precision": 0.784,
+        "domain_exact_match": 0.594,
+        "primary_domain_accuracy": 0.875,
+        "citation_recall": 0.7,
+        "citation_domain_coverage": 1.0,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 52.337
+      }
+    },
+    "per_domain": {
+      "data_protection": {
+        "n": 24,
+        "detection_recall": 1.0,
+        "cited_recall": 0.958,
+        "false_positive_detections": 0
+      },
+      "corporate_governance": {
+        "n": 26,
+        "detection_recall": 0.923,
+        "cited_recall": 0.846,
+        "false_positive_detections": 4
+      },
+      "ip_licensing": {
+        "n": 18,
+        "detection_recall": 1.0,
+        "cited_recall": 1.0,
+        "false_positive_detections": 2
+      },
+      "taxation": {
+        "n": 24,
+        "detection_recall": 1.0,
+        "cited_recall": 1.0,
+        "false_positive_detections": 10
+      },
+      "employment": {
+        "n": 27,
+        "detection_recall": 0.963,
+        "cited_recall": 0.926,
+        "false_positive_detections": 4
+      }
+    },
+    "complete": true
+  },
+  "errors": []
+}
