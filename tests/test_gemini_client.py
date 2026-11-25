@@ -21,7 +21,7 @@ def fake_keys(monkeypatch):
     log, failing = [], {}
 
     class _Client:
-        def __init__(self, api_key):
+        def __init__(self, api_key, http_options=None):
             self.models = _Models(api_key, log, failing)
 
     monkeypatch.setattr(gc.genai, "Client", _Client)

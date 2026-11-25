@@ -61,6 +61,9 @@ from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+# Sample at temperature 0 like the baselines (evals/runner.py sets the same), also when this script is run
+# directly; must be set before gemini_client is imported. Override with GEMINI_TEMPERATURE=<t>.
+os.environ.setdefault("GEMINI_TEMPERATURE", "0")
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -359,7 +362,7 @@ def validate() -> int:
     """Offline check: every expected provision id exists in datasets/complete/."""
     known = set()
     for path in glob.glob(str(COMPLETE_DIR / "complete_*.json")):
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             known.update(o["provision_id"] for o in json.load(f))
 
     problems = []
@@ -700,6 +703,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--resume", action="store_true", help="Keep saved rows of this tag and run the rest.")
     parser.add_argument("--option", action="append", default=[], metavar="KEY=VALUE",
                         help="Extra RunSettings option, e.g. --option top_k=8 (repeatable).")
+    parser.add_argument("--test-set", choices=["main", "fresh"], default="main",
+                        help="main: the 100 development/test queries; fresh: the 50 held-out queries in "
+                             "evals/fresh_queries.py, written after v4 was frozen.")
+    parser.add_argument("--queries-file", default=None,
+                        help="Run only the queries listed in this file (one query text per line, exact match).")
     parser.add_argument("--summary", action="store_true", help="Only summarise the saved rows of --tag.")
     parser.add_argument("--validate", action="store_true",
                         help="Offline: verify every expected provision id exists in datasets/complete/ "
@@ -709,6 +717,9 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_args()
+    if args.test_set == "fresh":
+        from fresh_queries import TEST_QUERIES as _FRESH
+        TEST_QUERIES = _FRESH
     if args.validate:
         sys.exit(validate())
 
@@ -718,6 +729,12 @@ if __name__ == "__main__":
         or (args.category == "multi" and category(t).startswith("multi_"))
         or category(t) == args.category
     ]
+    if args.queries_file:
+        wanted = {ln.strip() for ln in Path(args.queries_file).read_text(encoding="utf-8").splitlines() if ln.strip()}
+        unknown = wanted - {t["query"] for t in selected}
+        if unknown:
+            sys.exit(f"--queries-file: {len(unknown)} line(s) match no test query, e.g. {sorted(unknown)[0]!r}")
+        selected = [t for t in selected if t["query"] in wanted]
     if args.limit:
         selected = selected[: args.limit]
     options = dict(o.split("=", 1) for o in args.option)

@@ -1,0 +1,64 @@
+how quickly must we report a personal data breach to the Data Protection Board and affected users
+what reasonable security safeguards are mandatory under the DPDP rules
+can we transfer personal data of Indian users to servers outside India
+how long must we retain ICT system logs under the CERT-In directions
+what counts as sensitive personal data or information under the SPDI rules
+compensation liability of a body corporate that fails to protect sensitive personal data
+how to convert a private limited company into an LLP
+is a non-compete clause in a commercial contract enforceable in India
+when must a company spend on corporate social responsibility
+process for appointing the auditor of a company at the annual general meeting
+issuing new shares to existing shareholders through a rights issue
+who is not eligible to be a resolution applicant under the insolvency code
+unfair trade practices by an e-commerce marketplace towards consumers
+how long does a patent last in India
+licensing our trademark to a franchisee as a registered user
+what is piracy of a registered design
+legal validity of contracts formed electronically through click-wrap acceptance
+turnover threshold for compulsory GST registration
+can a small startup opt for the GST composition scheme
+advance tax instalments and due dates under the Income Tax Act 2025
+TDS obligations on salary paid to employees
+tax exemptions available to a unit set up in a Special Economic Zone
+consequences of executing a share purchase agreement that is not duly stamped
+can an Indian startup set up a wholly owned subsidiary abroad under FEMA
+maternity benefit eligibility and payment under the Code on Social Security
+is a creche facility mandatory for our office
+social security schemes for gig and platform workers and the aggregator contribution
+minimum and maximum statutory bonus payable to employees
+employer contributions to the Employees Provident Fund
+obligations of employers who engage apprentices
+non-discrimination against persons with disabilities in employment and equal opportunity policy
+licence requirements for engaging contract labour through a contractor
+we want to collect biometric attendance data from employees — what consent and employer duties apply
+are company directors and officers personally liable when the company suffers a data breach
+we license our proprietary database to clients — copyright in the database and duties for the personal data inside it
+an employee who invented a patentable process is being retrenched — who can apply for the patent and what retrenchment conditions apply
+gratuity payable to a resigning employee and TDS on the final salary settlement
+Companies Act allotment rules and stamp duty when issuing shares to investors
+converting our partnership firm into an LLP and transferring the firm's registered trademark to it
+can we enforce a non-compete against a terminated employee and what retrenchment compensation is due
+withholding tax on royalty paid to a foreign company for a software patent licence
+our e-commerce marketplace shares customer data with sellers — consumer protection and data protection obligations
+handling a sexual harassment complaint while keeping the complainant's personal data confidential
+ESI — which employees must be insured and how the principal employer pays contributions
+our app uses Aadhaar authentication — restrictions on sharing Aadhaar data and copyright protection for the app code
+our company is in liquidation — what happens to unpaid employee wages and provident fund dues
+exporting software from an SEZ unit — zero-rated GST supply and copyright protection for the software
+what must the annual report disclose about POSH compliance and CSR spending
+vendor contract for outsourced processing of customer data — indemnity clause and data fiduciary obligations
+hiring a freelance developer abroad — who owns the code, withholding tax on payments to a non-resident, and is he a workman
+an employee leaked customer data — breach reporting, penalty for disclosure, and liability of the company's officers
+selling our startup's patents and trademarks to an acquirer — assignment formalities and stamp duty
+fintech lending app — payment data localisation, GST on processing fees and liability for misleading advertisements
+our factory — worker safety duties of the employer, CCTV monitoring of workers and protecting our product design
+winding up an LLP — settling employee gratuity and bonus dues, and stamp duty on the deed transferring its assets
+hiring persons with disabilities — non-discrimination duties, consent for processing their data, and counting it towards CSR
+online gaming platform — GST on online services, intermediary safe harbour and copyright in game content
+outsourced payroll — TDS on salaries, ESI contributions and protecting employees' financial data
+we are a 50-person SaaS company with many women employees, we collect user data and bill overseas clients — what are all our compliance obligations
+edtech startup — incorporating the company, trademarking the brand, GST on online courses and consent for children's data
+acquiring a smaller startup — transferring employees' gratuity, stamp duty on the share transfer, assigning their patents and issuing our shares as consideration
+healthtech clinic chain run as an LLP — security of patient health data, nurses' maternity benefits and GST on services
+complete legal compliance checklist for an Indian AI startup with employees, user data, proprietary model code, GST billing and outside investors
+we manufacture IoT devices in an SEZ, employ 200 factory workers, collect device telemetry, hold design registrations and are issuing new shares — what laws apply

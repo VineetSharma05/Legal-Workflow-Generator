@@ -1,0 +1,142 @@
+{
+  "summary": {
+    "provider": "gemini",
+    "model": "models/gemini-3.1-flash-lite",
+    "as_of": "2026-10-15",
+    "tag": "dev_base",
+    "options": {
+      "suggest_provisions": "true"
+    },
+    "tokens": 1367406,
+    "total": 64,
+    "scored": 64,
+    "errored": 0,
+    "overall": {
+      "n": 64,
+      "domain_recall": 0.933,
+      "domain_precision": 0.902,
+      "domain_exact_match": 0.656,
+      "primary_domain_accuracy": 0.938,
+      "citation_recall": 0.578,
+      "citation_domain_coverage": 0.882,
+      "answered_pct": 98.438,
+      "false_abstain_rate": 0.016,
+      "abstain_accuracy": null,
+      "avg_elapsed_seconds": 66.377
+    },
+    "by_category": {
+      "multi_2": {
+        "n": 17,
+        "domain_recall": 0.853,
+        "domain_precision": 0.971,
+        "domain_exact_match": 0.706,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.489,
+        "citation_domain_coverage": 0.794,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 58.989
+      },
+      "multi_3": {
+        "n": 9,
+        "domain_recall": 0.852,
+        "domain_precision": 0.972,
+        "domain_exact_match": 0.444,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.517,
+        "citation_domain_coverage": 0.741,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 97.488
+      },
+      "multi_4": {
+        "n": 4,
+        "domain_recall": 0.938,
+        "domain_precision": 0.938,
+        "domain_exact_match": 0.75,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.688,
+        "citation_domain_coverage": 0.875,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 103.14
+      },
+      "multi_5": {
+        "n": 2,
+        "domain_recall": 0.9,
+        "domain_precision": 1.0,
+        "domain_exact_match": 0.5,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.545,
+        "citation_domain_coverage": 0.9,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 106.685
+      },
+      "multi_all": {
+        "n": 32,
+        "domain_recall": 0.866,
+        "domain_precision": 0.969,
+        "domain_exact_match": 0.625,
+        "primary_domain_accuracy": 1.0,
+        "citation_recall": 0.535,
+        "citation_domain_coverage": 0.796,
+        "answered_pct": 100.0,
+        "false_abstain_rate": 0.0,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 78.317
+      },
+      "single": {
+        "n": 32,
+        "domain_recall": 1.0,
+        "domain_precision": 0.836,
+        "domain_exact_match": 0.688,
+        "primary_domain_accuracy": 0.875,
+        "citation_recall": 0.65,
+        "citation_domain_coverage": 0.969,
+        "answered_pct": 96.875,
+        "false_abstain_rate": 0.031,
+        "abstain_accuracy": null,
+        "avg_elapsed_seconds": 54.437
+      }
+    },
+    "per_domain": {
+      "data_protection": {
+        "n": 24,
+        "detection_recall": 1.0,
+        "cited_recall": 0.958,
+        "false_positive_detections": 0
+      },
+      "corporate_governance": {
+        "n": 26,
+        "detection_recall": 0.692,
+        "cited_recall": 0.654,
+        "false_positive_detections": 4
+      },
+      "ip_licensing": {
+        "n": 18,
+        "detection_recall": 0.944,
+        "cited_recall": 0.944,
+        "false_positive_detections": 2
+      },
+      "taxation": {
+        "n": 24,
+        "detection_recall": 1.0,
+        "cited_recall": 0.917,
+        "false_positive_detections": 6
+      },
+      "employment": {
+        "n": 27,
+        "detection_recall": 0.926,
+        "cited_recall": 0.815,
+        "false_positive_detections": 3
+      }
+    },
+    "complete": true
+  },
+  "errors": []
+}
